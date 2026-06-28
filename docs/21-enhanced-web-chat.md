@@ -1,24 +1,34 @@
 # Migrate Enhanced Web Chat
 
-Use this guide when a Service Agent is exposed through Enhanced Web Chat or Messaging for In-App and Web on a website.
+Use this when a Service Agent is exposed through Enhanced Web Chat or Messaging for In-App and Web.
 
 > **Required before deploy:** This guide covers migration of an existing web messaging setup from sandbox to production. It does not cover designing a new channel from scratch.
 
 ## Read first
 
-Salesforce's current public guidance makes Web Chat migration a high-risk area:
+Web Chat migration is high risk:
 
 - Change sets do not carry Enhanced Chat Embedded Service Deployment.
 - Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported and shows deployment failures involving generated site metadata.
-- The practical fallback is to rebuild and publish the Embedded Service Deployment in the target org, then reconnect it to the deployed agent and routing setup.
+- The practical fallback is to rebuild and publish in the target org, then reconnect agent and routing setup.
 
 > **Stop if:** The deployment plan requires change sets to move the Enhanced Web Chat deployment. Use Metadata API validation in a sandbox or rebuild the deployment manually in the target org.
 
 > **Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or override Salesforce Known Issue W-15932771.
 
+## Values needed
+
+| Value | Use |
+|---|---|
+| `<SOURCE_ORG_ALIAS>` | Source sandbox for metadata review or retrieve |
+| `<TARGET_ORG_ALIAS>` | Target org for dry run, setup, and validation |
+| `<PACKAGE_XML_PATH>` | Web Chat candidate package manifest |
+| `<MESSAGING_CHANNEL_API_NAME>` | Target messaging channel check |
+| `<MESSAGING_SESSION_ID>` | Only after a website smoke test creates a session |
+
 ## Capture source values
 
-Fill this worksheet from the source sandbox before handoff.
+Fill this from the source sandbox before handoff.
 
 | Value | Source value |
 |---|---|
@@ -39,7 +49,7 @@ Fill this worksheet from the source sandbox before handoff.
 
 ## Package candidate metadata
 
-Use this list as a validation checklist, not a guarantee that the full Web Chat deployment will move cleanly.
+Use this as a validation checklist, not a guarantee that Web Chat will migrate cleanly.
 
 | Area | Candidate metadata |
 |---|---|
@@ -68,7 +78,7 @@ sf org list metadata --json --metadata-type QueueRoutingConfig --target-org <SOU
 sf org list metadata --json --metadata-type CorsWhitelistOrigin --target-org <SOURCE_ORG_ALIAS>
 ```
 
-Retrieve the selected metadata into a DX project, review source-org references, and dry-run deploy to a target sandbox:
+Retrieve selected metadata, review source-org references, and dry-run deploy to a target sandbox:
 
 ```bash
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
@@ -77,23 +87,23 @@ sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-
 
 > **Stop if:** The dry run fails on generated site metadata, missing site references, label length, or `EmbeddedServiceConfig` site fields. Use the manual target rebuild path.
 
-If the dry run succeeds, keep the manual after-deploy steps. Web Chat still needs target-org publish, CORS, domain, snippet or Embedded Messaging component, routing, and conversation smoke testing.
+If the dry run succeeds, still complete target publish, CORS, domain, snippet or Embedded Messaging component, routing, and conversation smoke testing.
 
 ## Rebuild or finish setup in the target org
 
-Use this path when the metadata path is not validated end to end.
+Use this path when metadata migration is not validated end to end.
 
 1. Confirm the Service Agent package is deployed, live-previewed, published, and active.
 2. Confirm the Omni routing flow, queue, and routing configuration exist in the target org.
-3. Confirm at least one target Omni user belongs to the queue and can select a Messaging-available status in the service console.
+3. Confirm at least one target Omni user belongs to the queue and can select a Messaging-available status.
 4. In Setup, open Embedded Service Deployments.
 5. Recreate or update the target Enhanced Chat Web deployment to match the source worksheet.
 6. Select the target messaging channel.
 7. Set the website domain.
 8. Configure branding, pre-chat, custom labels, business hours, and auth settings.
 9. Publish the deployment.
-10. Add the customer website domain to CORS and generated site iframe allowed origins if the setup exposes that setting.
-11. Install the target-org code snippet on the website, or use the Embedded Messaging component on the Experience Builder site.
+10. Add the website domain to CORS and generated-site iframe allowed origins if exposed.
+11. Install the target-org snippet, or use the Embedded Messaging component on the Experience Builder site.
 
 > **Manual after deploy:** Always publish or republish the target Embedded Service Deployment after configuration changes.
 > **Manual after deploy:** A real Omni user must sign in, accept any org notices themselves, select a Messaging-available status, and stay online during the smoke test.
@@ -113,25 +123,25 @@ Before website testing, use the target org's built-in test page.
 
 ## External website setup
 
-For an external website, copy the target-org code snippet from Embedded Service Deployment Settings and place it before the closing body tag on each page where the chat button appears. Add the website origin to CORS.
+For an external website, copy the target-org snippet from Embedded Service Deployment Settings and place it before the closing body tag on each page with chat. Add the website origin to CORS.
 
-If the browser console reports a `frame-ancestors` or iframe-blocking error for the generated `ESW...` site, add the website origin to the generated site's iframe allowed origins or rebuild/publish the deployment with the correct website domain.
+If the browser console reports `frame-ancestors` or iframe blocking for the generated `ESW...` site, add the website origin to iframe allowed origins or rebuild/publish with the correct domain.
 
 > **Stop if:** The page uses a referrer policy that prevents Enhanced Web Chat from loading. Adjust the website policy before troubleshooting Salesforce metadata.
 
 ## Experience Builder setup
 
-For an Experience Builder site, use the Embedded Messaging component. Select the target Embedded Web Deployment, Enhanced Service URL, and Site Endpoint from the target org.
+For Experience Builder, use the Embedded Messaging component. Select the target Embedded Web Deployment, Enhanced Service URL, and Site Endpoint.
 
 Add the Experience Builder site domain to CORS. If preview testing fails, also add the live-preview domain.
 
-Do not reuse or manually modify the generated Enhanced Web Chat site that Salesforce creates for iframe isolation.
+Do not reuse or modify the generated Enhanced Web Chat isolation site.
 
 > **Stop if:** The only URL available for testing is the generated `ESW...` site. Test the actual customer website or Experience Builder site that hosts the snippet or Embedded Messaging component.
 
 ## Validate
 
-Use the UI checks first. The CLI checks are optional verification for the deployment owner.
+Use UI checks first. CLI checks are optional.
 
 1. Open the target website or Experience Builder site.
 2. Confirm the chat button loads.
@@ -152,7 +162,7 @@ sf data query --json --query "SELECT Id, WorkItemId, RoutingType, IsReadyForRout
 sf data query --json --query "SELECT Id, WorkItemId, UserId, Status, ServiceChannelId, CreatedDate FROM AgentWork WHERE WorkItemId = '<MESSAGING_SESSION_ID>' ORDER BY CreatedDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
 ```
 
-The first query should show the target channel is active with `MessageType` `EmbeddedMessaging` and `PlatformType` `Enhanced`. After the website test, the second query should show a new session record whose `MessagingChannel.DeveloperName` matches `<MESSAGING_CHANNEL_API_NAME>`. If the session is waiting, the routing query should show the intended queue, and `AgentWork` should appear after an Omni user accepts the work item.
+The first query should show active `EmbeddedMessaging` / `Enhanced`. After the website test, the second query should show a new session for `<MESSAGING_CHANNEL_API_NAME>`. If the session is waiting, routing should show the intended queue, and `AgentWork` should appear after Omni acceptance.
 
 > **Stop if:** No new `MessagingSession` appears after the website test. Fix publish status, snippet or component selection, CORS/domain settings, and routing before declaring the channel ready.
 > **Stop if:** The session stays `Waiting` and no `AgentWork` appears. Confirm queue membership, service presence configuration, Omni user availability, and routing before declaring the channel ready.

@@ -1,8 +1,18 @@
 # Deploy a Package
 
-Use this guide to validate and deploy a `package.xml` package into a sandbox or production org.
+Validate and deploy a `package.xml` package into a sandbox or production org.
 
 > **Required before deploy:** Complete [Before You Start](00-before-you-start.md), confirm the target org, and confirm the package has no unreplaced placeholders.
+
+## Values needed
+
+| Value | Use |
+|---|---|
+| `<TARGET_ORG_ALIAS>` | Org you deploy into |
+| `<PACKAGE_XML_PATH>` | Final package manifest |
+| `<JOB_ID_FROM_VALIDATE>` | Successful production validation job ID |
+| `<JOB_ID>` | Sandbox dry-run, deploy, or report job ID |
+| `<SOURCE_ORG_ALIAS>` | Only when retrieving from the source sandbox |
 
 ## What the package contains
 
@@ -24,13 +34,13 @@ deploy-package/
     └── permissionsets/
 ```
 
-`package.xml` is the typed component list. It can include agent source and dependencies such as Apex, Flows, prompt templates, Custom Lightning Types, LWC editor/renderer components, objects, fields, permission sets, Named Credentials, and External Credentials.
+`package.xml` lists typed components. It can include agent source, Apex, Flows, prompt templates, Custom Lightning Types, LWC editor/renderer components, objects, fields, permission sets, Named Credentials, and External Credentials.
 
 > **Do not package:** Do not merge Data 360 metadata into the agent package. Use [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md). Do not add Lead Nurturing managed-template runtime metadata to the dependencies package.
 
 ## What to hand off
 
-Give the deployment owner the whole `deploy-package` folder, not only `package.xml`. The manifest lists components, but Salesforce CLI deploys the files under `force-app/main/default`.
+Hand off the whole `deploy-package` folder, not only `package.xml`. Salesforce CLI deploys files under `force-app/main/default`.
 
 Before handoff, confirm:
 
@@ -38,14 +48,14 @@ Before handoff, confirm:
 - `manifest/package.xml` is the final manifest.
 - Every listed component exists under `force-app/main/default`.
 - No source-org usernames, domains, credential secrets, or connector auth values remain in the package.
-- The deployment owner knows to start with [Agentforce Deployment Guides](index.md).
+- The deployment owner starts with [Agentforce Deployment Guides](index.md).
 - Package-specific manual steps are linked or named in the handoff notes.
-- Source worksheets are complete for package-specific values such as agent users, Data Kit names, Lead Nurturing email setup, and Web Chat domains.
+- Source worksheets are complete for agent users, Data Kit names, Lead Nurturing email setup, and Web Chat domains.
 - Any prior validation output or job IDs are included with the handoff notes.
 
 ## Validate and deploy to production
 
-> **Production path:** Production deploys that include Apex run tests. Include the matching test classes in the package.
+> **Production path:** Production deploys with Apex run tests. Include matching test classes.
 
 Validate first:
 
@@ -53,7 +63,7 @@ Validate first:
 sf project deploy validate --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
 ```
 
-If validation succeeds, copy the job ID from `result.id` and quick deploy it:
+If validation succeeds, copy `result.id` and quick deploy it:
 
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
@@ -69,12 +79,12 @@ sf project deploy quick --json --use-most-recent --target-org <TARGET_ORG_ALIAS>
 
 > **Stop if:** The validation output includes Apex but reports zero tests run. Send the JSON output to the deployment owner before deploying.
 
-After each validation or deploy command, check both values in the JSON output:
+After each validation or deploy command, check:
 
 - Top-level `"status": 0`
 - `result.status` is `Succeeded`
 
-Copy `result.id` as `<JOB_ID_FROM_VALIDATE>` for production validation, or `<JOB_ID>` for sandbox dry runs and deployed packages.
+Use `result.id` as `<JOB_ID_FROM_VALIDATE>` for production validation, or `<JOB_ID>` for sandbox dry runs and deployed packages.
 
 ## Validate and deploy to a sandbox
 
@@ -106,7 +116,7 @@ sf project deploy report --json --use-most-recent --target-org <TARGET_ORG_ALIAS
 
 ## Retrieve from a source sandbox
 
-Use retrieve when preparing the customer package from the source sandbox:
+Retrieve when preparing the package from the source sandbox:
 
 ```bash
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
@@ -121,6 +131,6 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 |---|---|
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
-| Lead Nurturing | [Deploy Lead Nurturing Dependencies](12-lead-nurture-sdr.md) |
+| Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
 | Data Kit | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
 | Enhanced Web Chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |

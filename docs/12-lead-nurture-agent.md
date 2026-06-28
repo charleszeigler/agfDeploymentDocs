@@ -1,6 +1,6 @@
-# Deploy Lead Nurturing Dependencies
+# Deploy Lead Nurture Agent Dependencies
 
-Use this guide to move customer-specific dependencies for Agentforce Lead Nurturing, formerly Agentforce SDR.
+Move customer-specific dependencies for the Agentforce Lead Nurture Agent.
 
 > **Required before deploy:** This guide is dependencies-only for the managed Lead Nurturing template. Configure and activate the managed agent in the target org after deploying dependencies.
 
@@ -14,13 +14,19 @@ Use this guide to move customer-specific dependencies for Agentforce Lead Nurtur
 
 > **Do not package:** Do not list `Bot`, `BotVersion`, `GenAiPlannerBundle`, `GenAiPlugin`, or `GenAiFunction` for the managed-template handoff unless Salesforce confirms a metadata path for that exact org and release.
 
+## Values needed
+
+| Value | Use |
+|---|---|
+| `<TARGET_ORG_ALIAS>` | Target org for dependency deploy and setup validation |
+| `<PACKAGE_XML_PATH>` | Lead Nurture dependency package manifest |
+| `<SOURCE_ORG_ALIAS>` | Only when retrieving dependency metadata from the source sandbox |
+
+The email sender, EAC status, cadence, data library, meeting source, prompt overrides, and opt-out process are captured in the worksheet below, not in the general setup guide.
+
 ## Prepare the dependency package
 
-Start from `manifests/lead-nurture-sdr-agent-package.xml`, then replace XML-safe placeholders with real API names.
-
-```bash
-cp manifests/lead-nurture-sdr-agent-package.xml manifest/package.xml
-```
+Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`, then replace XML-safe placeholders with real API names.
 
 Common dependencies:
 
@@ -36,11 +42,11 @@ Common dependencies:
 | Data access and setup permissions | `PermissionSet` |
 | Data 360 dependencies | Separate Data Kit package |
 
-Generic Lead, email, or SDR-named flows in the source org are not automatically Lead Nurturing runtime. Include only flows, prompt templates, Apex actions, and email templates that the implementation owner confirms are customer-owned dependencies.
+Generic Lead, email, or nurture-related flows are not automatically Lead Nurturing runtime. Include only confirmed customer-owned flows, prompts, Apex actions, and email templates.
 
-Salesforce-provided or OOTB Lead Nurturing email templates, including templates in folders such as `Email Templates from Salesforce`, are managed setup artifacts. Do not package those templates. Package only customer-owned templates or customer-owned copies that the implementation owner confirms are part of the deployment.
+Salesforce-provided Lead Nurturing email templates, including templates in folders such as `Email Templates from Salesforce`, are managed setup artifacts. Package only confirmed customer-owned templates or copies.
 
-Prompt templates can reference target-org fields, data providers, and output schemas that are not obvious from `package.xml`. Review each included prompt for `{!$Input:...}` merge fields, `{!$Flow:...}` data providers, `templateDataProviders`, `outputSchema`, and `SOBJECT://...` inputs. Include the required fields, features, provider flows or actions, and `LightningTypeBundle` schemas, or update the prompt before handoff.
+Prompt templates can hide target dependencies. Review each included prompt for `{!$Input:...}` fields, `{!$Flow:...}` providers, `templateDataProviders`, `outputSchema`, and `SOBJECT://...` inputs. Include required fields, features, provider flows/actions, and `LightningTypeBundle` schemas, or update the prompt before handoff.
 
 > **Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
 
@@ -52,7 +58,7 @@ Deploy the dependency package with [Deploy a Package](01-deploy-package.md).
 
 > **Manual after deploy:** Lead Nurturing email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
 
-In the target org, an admin completes the current Salesforce setup flow for Agentforce Lead Nurturing:
+In the target org, complete the current Salesforce setup flow:
 
 1. Turn on Lead Nurturing and supporting features.
 2. Assign manager and sales-user permissions.
@@ -66,7 +72,7 @@ Sales users who need to see, edit, reschedule, or cancel agent emails must conne
 
 ## Validate email setup
 
-Lead Nurturing emails are target-org runtime setup. The dependency package can include customer-owned email templates, prompt overrides, fields, actions, and permissions, but it does not connect mailboxes or create Builder activation state.
+Lead Nurturing email is target-org runtime setup. The dependency package can include customer-owned email templates, prompt overrides, fields, actions, and permissions; it does not connect mailboxes or create Builder activation state.
 
 1. Use a test lead or a customer-approved lead record.
 2. Confirm the Lead Nurturing agent user has an active email account connection.
@@ -77,7 +83,7 @@ Lead Nurturing emails are target-org runtime setup. The dependency package can i
 
 ## Fill the implementation worksheet
 
-Capture these source-org values before handoff:
+Capture these values before handoff:
 
 | Setting | Source value |
 |---|---|

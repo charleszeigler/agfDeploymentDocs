@@ -9,7 +9,10 @@
     "---",
     "10-service-agent",
     "11-employee-agent",
-    "12-lead-nurture-sdr",
+    {
+      "title": "Lead Nurture Agent",
+      "slug": "12-lead-nurture-agent"
+    },
     "---",
     "20-data-cloud-data-kit",
     "21-enhanced-web-chat",

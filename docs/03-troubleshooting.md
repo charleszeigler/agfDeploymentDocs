@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Use this guide when a deployment, publish, activation, or channel setup step fails.
+Use this when deployment, publish, activation, or channel setup fails.
 
 ## Package deployment
 
@@ -56,4 +56,4 @@ Use this guide when a deployment, publish, activation, or channel setup step fai
 
 ## What to send for help
 
-Send the command, full JSON output, package type, target org type, and the step where you stopped. Do not continue to publish or activate after a failed validation.
+Send the command, full JSON output, package type, target org type, and failed step. Do not publish or activate after failed validation.

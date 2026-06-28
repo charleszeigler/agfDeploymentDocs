@@ -1,12 +1,21 @@
 # Publish and Activate
 
-Use this guide after a successful metadata deploy.
+Use this after a successful metadata deploy.
 
 > **Required before deploy:** Publishing is not a substitute for setup. Complete the target-org manual steps in the package-specific guide before publishing or activating.
 
+## Values needed
+
+| Value | Use |
+|---|---|
+| `<TARGET_ORG_ALIAS>` | Org where the agent was deployed |
+| `<AGENT_API_NAME>` | Service or Employee Agent API name |
+| `<SESSION_ID>` | Session ID returned by preview start |
+| `<VERSION_NUMBER>` | Optional explicit version to activate |
+
 ## Service and Employee Agents
 
-For Service and Employee Agents, `sf project deploy` moves the editable `AiAuthoringBundle` source. It does not create a runnable active agent. Publish compiles the source into a runnable version, and activate makes that version available.
+`sf project deploy` moves editable `AiAuthoringBundle` source. Publish creates a runnable version; activate makes it available.
 
 Validate the deployed bundle:
 
@@ -20,7 +29,7 @@ Start live preview before publishing:
 sf agent preview start --json --authoring-bundle <AGENT_API_NAME> --use-live-actions --target-org <TARGET_ORG_ALIAS>
 ```
 
-Send a representative message using the returned `result.sessionId`:
+Send a representative message with the returned `result.sessionId`:
 
 ```bash
 sf agent preview send --json --authoring-bundle <AGENT_API_NAME> --session-id <SESSION_ID> --utterance "Test the main happy path" --target-org <TARGET_ORG_ALIAS>
@@ -60,19 +69,19 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 
 > **Stop if:** Live preview fails, returns no expected data, or reports missing agent-user permissions. Fix target-org access before publishing.
 
-> **Manual after deploy:** For Employee Agents, the published-agent CLI preview can fail if the session API cannot infer a user ID. If that happens, confirm the `BotVersion` is active, confirm the employee has Salesforce Agentforce user access and the package permission set with `agentAccesses`, then smoke test from the Lightning Agentforce panel as an assigned non-admin employee.
+> **Manual after deploy:** For Employee Agents, published-agent CLI preview can fail if the session API cannot infer a user ID. If so, confirm active `BotVersion`, Agentforce user access, and `agentAccesses`, then smoke test from the Lightning Agentforce panel as a non-admin employee.
 
 > **Manual after deploy:** For clean-target Employee Agent deployments, deploy or update the permission set that contains `agentAccesses` only after publish and activation create the target `BotDefinition`.
 
 ## Lead Nurturing
 
-Lead Nurturing managed-template agents are configured and activated in Agentforce Builder. The dependency package does not ship the managed runtime.
+Lead Nurturing managed-template agents are configured and activated in Agentforce Builder. The dependency package does not ship managed runtime.
 
 > **Manual after deploy:** Complete Lead Nurturing setup, connect the agent email account, confirm Einstein Activity Capture, configure the data library, then activate in Builder.
 
 ## Data 360
 
-Do not publish an agent that depends on Data 360 until the Data Kit has been deployed and the target data is refreshed.
+Do not publish a Data 360-dependent agent until the Data Kit is deployed and target data is refreshed.
 
 > **Data 360 prerequisite:** The target org must deploy Data Kit components, reauthorize inactive connectors, and run the required streams, mappings, identity, calculated insight, search, or data graph processes before agent live preview.
 

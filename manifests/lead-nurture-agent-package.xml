@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  LEAD NURTURE (SDR) — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
+  LEAD NURTURE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
   ============================================================================
-  FOR THE MANAGED Lead Nurturing / SDR TEMPLATE AGENT — DEPENDENCIES ONLY.
+  FOR THE MANAGED LEAD NURTURE AGENT — DEPENDENCIES ONLY.
       Do NOT add Bot / BotVersion / GenAiPlannerBundle / GenAiPlugin / GenAiFunction here.
       The AGENT is rebuilt from the "Lead Nurturing" template in the target org's
-      setup flow and Agentforce Builder. See docs/12-lead-nurture-sdr.md.
+      setup flow and Agentforce Builder. See docs/12-lead-nurture-agent.md.
 
       This is a managed-template packaging rule, not because BotVersion is legacy.
       BotVersion is current metadata for Agentforce Agent versions.
 
-      NOTE: a CUSTOM Agent Script SDR/outreach agent (one with its own .agent
+      NOTE: a CUSTOM Agent Script sales outreach agent (one with its own .agent
       source) is NOT subject to this restriction — deploy it like a Service or
       Employee Agent using docs/10-service-agent.md or docs/11-employee-agent.md instead.
   ============================================================================
@@ -82,7 +82,7 @@
   </types>
   -->
 
-  <!-- Permission set: must include "Configure Agentforce SDR Agent" + data access -->
+  <!-- Permission set: must include the current Lead Nurture Agent setup permission + data access -->
   <types>
     <members>LEAD_NURTURE_PERMISSION_SET_API_NAME</members>
     <name>PermissionSet</name>

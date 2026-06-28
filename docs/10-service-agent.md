@@ -1,6 +1,6 @@
 # Deploy and Activate a Service Agent
 
-Use this guide to deploy a customer-facing Agentforce Service Agent from sandbox to production.
+Deploy a customer-facing Agentforce Service Agent from sandbox to production.
 
 > **Required before deploy:** A Service Agent runs as a dedicated Einstein Agent User. The target-org agent username is a per-org value and must be set before publish.
 
@@ -13,15 +13,21 @@ Use this guide to deploy a customer-facing Agentforce Service Agent from sandbox
 | Running user | `default_agent_user` is required |
 | Publish path | Deploy source, live preview, publish, activate |
 
+## Values needed
+
+| Value | Use |
+|---|---|
+| `<SOURCE_ORG_ALIAS>` | Source sandbox for validation or retrieve |
+| `<TARGET_ORG_ALIAS>` | Target org for validation, deploy, user setup, and publish |
+| `<PACKAGE_XML_PATH>` | Final package manifest |
+| `<AGENT_API_NAME>` | Service Agent API name |
+| `<AGENT_USER_USERNAME>` | Target-org Einstein Agent User username |
+
 ## Prepare the package
 
-Start from `manifests/service-agent-package.xml`, then replace XML-safe placeholders with real API names.
+Copy `manifests/service-agent-package.xml` to `manifest/package.xml`, then replace XML-safe placeholders with real API names.
 
-```bash
-cp manifests/service-agent-package.xml manifest/package.xml
-```
-
-Include all dependencies the agent references:
+Include referenced dependencies:
 
 | Dependency | Metadata type |
 |---|---|
@@ -61,16 +67,14 @@ Create a dedicated target-org agent user, unless one already exists:
 sf org create agent-user --json --target-org <TARGET_ORG_ALIAS>
 ```
 
-Copy the exact `result.username` value from the JSON output.
-
-This command creates an Einstein Agent User and assigns the Salesforce base Agentforce permission sets required for Service Agent runtime. It does not assign customer-specific data access.
+Copy the exact `result.username`. The command creates an Einstein Agent User and assigns Salesforce base Agentforce permissions. It does not assign customer-specific data access.
 
 > **Customer-specific value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
 > **Do not package:** Do not move the source sandbox agent user. User records, user licenses, and the final target username are target-org setup.
 
 ## Set `default_agent_user`
 
-Open the target package copy of the `.agent` file and set the username in the `config` block:
+In the target package copy of the `.agent` file, set the username in `config`:
 
 ```text
 config:
@@ -98,13 +102,13 @@ Assign the custom access permission set shipped with the package:
 sf org assign permset --json --name Service_Agent_Access --on-behalf-of <AGENT_USER_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-The custom permission set must cover Apex, Flows, prompt templates, objects, fields, and callouts the agent uses.
+The custom permission set must cover the Apex, Flows, prompt templates, objects, fields, and callouts the agent uses.
 
 > **Manual after deploy:** Record sharing is not solved by metadata alone. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
 
 ## Preview, publish, activate
 
-Run the live-action preview, publish, activate, and smoke test steps in [Publish and Activate](02-publish-and-activate.md).
+Run [Publish and Activate](02-publish-and-activate.md).
 
 ## Channel setup
 

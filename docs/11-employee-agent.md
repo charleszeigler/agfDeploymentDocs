@@ -1,6 +1,6 @@
 # Deploy and Activate an Employee Agent
 
-Use this guide to deploy an employee-facing Agentforce Employee Agent from sandbox to production.
+Deploy an employee-facing Agentforce Employee Agent from sandbox to production.
 
 > **Required before deploy:** Employee Agents run as the logged-in employee. Do not use `default_agent_user` for an Employee Agent.
 
@@ -13,15 +13,21 @@ Use this guide to deploy an employee-facing Agentforce Employee Agent from sandb
 | Running user | Logged-in user |
 | Publish path | Deploy source, live preview, publish, activate |
 
+## Values needed
+
+| Value | Use |
+|---|---|
+| `<SOURCE_ORG_ALIAS>` | Source sandbox for validation or retrieve |
+| `<TARGET_ORG_ALIAS>` | Target org for validation, deploy, access, and publish |
+| `<PACKAGE_XML_PATH>` | Final source package manifest |
+| `<AGENT_API_NAME>` | Employee Agent API name |
+| `<EMPLOYEE_USERNAME>` | Target-org employee user for assignment and smoke test |
+
 ## Prepare the package
 
-Start from `manifests/employee-agent-package.xml` for the first source package, then replace XML-safe placeholders with real API names.
+Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package, then replace XML-safe placeholders with real API names.
 
-```bash
-cp manifests/employee-agent-package.xml manifest/package.xml
-```
-
-Include all dependencies the agent references:
+Include referenced dependencies:
 
 | Dependency | Metadata type |
 |---|---|
@@ -42,7 +48,7 @@ Include all dependencies the agent references:
 
 ## Clean target order
 
-Use this order when the target org does not already have the Employee Agent.
+Use this order when the target org does not already have the Employee Agent:
 
 | Step | Package or action | Includes |
 |---|---|---|
@@ -75,11 +81,11 @@ Deploy with [Deploy a Package](01-deploy-package.md). Stop if validation or depl
 
 ## Publish and activate
 
-Run the live-action preview, publish, activate, and smoke test steps in [Publish and Activate](02-publish-and-activate.md).
+Run [Publish and Activate](02-publish-and-activate.md).
 
 ## Deploy and assign employee access
 
-Assign the shipped permission set or permission set group to the employees who will use the agent.
+Assign the shipped permission set or permission set group to agent users.
 
 The permission set that grants Employee Agent access must include `agentAccesses` for the agent API name:
 
@@ -90,10 +96,9 @@ The permission set that grants Employee Agent access must include `agentAccesses
 </agentAccesses>
 ```
 
-For a clean target org, prepare a second manifest from `manifests/employee-agent-access-package.xml`, then deploy that access package after publish and activation:
+For a clean target org, copy `manifests/employee-agent-access-package.xml` to `manifest/employee-agent-access-package.xml`, then deploy it after publish and activation:
 
 ```bash
-cp manifests/employee-agent-access-package.xml manifest/employee-agent-access-package.xml
 sf project deploy start --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
@@ -110,11 +115,11 @@ sf org assign permsetlicense --json --name EinsteinGPTCopilotPsl --on-behalf-of 
 sf org assign permset --json --name CopilotSalesforceUser --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-If you are doing this in Setup instead of CLI, open the employee user record and assign the equivalent Agentforce permission set license and permission set, then assign the package permission set or permission set group.
+In Setup, assign the equivalent Agentforce permission set license and permission set on the employee user record, then assign the package permission set or group.
 
 > **Customer-specific value:** Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
 
-Because Employee Agents run as the logged-in user, each employee must have object, field, record, Apex, Flow, prompt template, and callout access required by the action path.
+Because Employee Agents run as the logged-in user, each employee needs the object, field, record, Apex, Flow, prompt template, and callout access required by the action path.
 
 > **Manual after deploy:** If published-agent CLI preview returns `Invalid user ID provided on start session`, verify activation with `BotVersion`, confirm the employee has Agentforce user access and the permission set with `agentAccesses`, then test from the Lightning Agentforce panel as an assigned employee.
 

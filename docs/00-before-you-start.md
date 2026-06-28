@@ -1,37 +1,30 @@
 # Before You Start
 
-Use this guide to prepare for a sandbox-to-production deployment with Salesforce CLI and `package.xml`.
+Prepare for sandbox-to-production deployment with Salesforce CLI and `package.xml`.
 
 > **Required before deploy:** Confirm the target org is ready before running deploy commands. Missing Agentforce, Data 360, Messaging, or permission prerequisites should be fixed first.
 
 ## Gather values
 
+Gather only the values that apply to the guide you are following. Every deployment path needs these:
+
 | Value | Use |
 |---|---|
-| `<SOURCE_ORG_ALIAS>` | Alias for the sandbox you retrieve from |
-| `<TARGET_ORG_ALIAS>` | Alias for the org you deploy into |
-| `<PACKAGE_XML_PATH>` | Manifest path, usually `manifest/package.xml` |
-| `<AGENT_API_NAME>` | Service or Employee Agent API name |
-| `<DATA_KIT_DEVELOPER_NAME>` | Data Kit developer name, if Data 360 is used |
-| `<DATA_CLOUD_TABLE_NAME>` | Data Cloud DLO or DMO table name, if row-count validation is used |
-| `<MESSAGING_CHANNEL_API_NAME>` | Enhanced Web Chat messaging channel API name, if Web Chat is used |
-| `<MESSAGING_SESSION_ID>` | Messaging Session record ID created during an Enhanced Web Chat smoke test |
-| `<AGENT_USER_USERNAME>` | Username of the Service Agent user in the target org |
-| `<EMPLOYEE_USERNAME>` | Username of an employee who will use the Employee Agent |
-| `<SESSION_ID>` | Session ID returned by an agent preview command |
-| `<VERSION_NUMBER>` | Agent version number returned by publish or activation status |
-| `<JOB_ID>` | Deploy or Data Kit job ID returned by Salesforce CLI or REST API |
-| `<JOB_ID_FROM_VALIDATE>` | Job ID from a successful production validation command |
+| `<TARGET_ORG_ALIAS>` | The production org or sandbox you deploy into |
+| `<PACKAGE_XML_PATH>` | Package manifest path, usually `manifest/package.xml` |
 
-## Run command boxes
+Package-specific guides list their own extra values, such as agent name, agent user, employee username, Data Kit name, Web Chat channel, or Lead Nurturing email settings.
 
-The gray command boxes in these guides are meant to be copied into Terminal one at a time.
+## Run commands
+
+Copy gray command boxes into Terminal one at a time.
 
 1. Replace every placeholder before you run the command.
 2. Do not include the angle brackets.
 3. Press Return and wait for the command to finish.
 4. If the command returns JSON, look for `"status": 0`.
 5. For deploy commands, also confirm `result.status` is `Succeeded`.
+6. If a deploy is `InProgress` or `Pending`, do not run the deploy again. Use the deploy report command in [Deploy a Package](01-deploy-package.md).
 
 If a command prints an error, stop on that step and use [Troubleshooting](03-troubleshooting.md). Do not continue to the next command until the error is resolved.
 
@@ -51,7 +44,7 @@ npm install --global @salesforce/cli
 
 ## Open the package folder
 
-Open Terminal and move to the deployment folder. This is the folder that contains `sfdx-project.json`.
+Open Terminal and move to the folder that contains `sfdx-project.json`.
 
 ```bash
 cd /path/to/deploy-package
@@ -110,12 +103,4 @@ sf org list metadata --json --metadata-type GenAiPromptTemplate --target-org <TA
 sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <TARGET_ORG_ALIAS> --stream-to-file data-kits-check.json
 ```
 
-Open `data-kits-check.json`. A success response lists Data Kits or returns an empty list. Stop if the response contains `FUNCTIONALITY_NOT_ENABLED`, `CdpDataKit`, or an `errorCode`.
-
-## Command rules
-
-- Run one command at a time.
-- Replace every placeholder before running the command.
-- Most commands return JSON. A top-level `"status": 0` means the command ran, but deploy commands also need `result.status` to be `Succeeded`.
-- If a deploy is `InProgress` or `Pending`, do not run the deploy again. Use the deploy report command in [Deploy a Package](01-deploy-package.md).
-- If a command fails, stop and use [Troubleshooting](03-troubleshooting.md).
+Open `data-kits-check.json`. A success response lists Data Kits or returns an empty list. Stop on `FUNCTIONALITY_NOT_ENABLED`, `CdpDataKit`, or any `errorCode`.

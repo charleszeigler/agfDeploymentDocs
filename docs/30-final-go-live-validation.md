@@ -1,6 +1,6 @@
 # Final Go-Live Validation
 
-Use this checklist after the deployment package has been validated, deployed, and any package-specific setup guide has been completed.
+Use this after package validation, deploy, and package-specific setup.
 
 > **Required before deploy:** This page does not replace package validation. Start here only after the deployment owner confirms the package deploy succeeded.
 
@@ -8,9 +8,9 @@ Use this checklist after the deployment package has been validated, deployed, an
 
 ## How to use this checklist
 
-If you do not use Salesforce CLI, complete these checks from Salesforce Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
+If you do not use Salesforce CLI, complete these checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
 
-For each item, record `Pass`, `Fail`, or `N/A`. Mark an item `N/A` only when that feature is not part of the deployment.
+Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when that feature is not part of the deployment.
 
 ## Confirm the package deployed
 
@@ -24,7 +24,7 @@ For each item, record `Pass`, `Fail`, or `N/A`. Mark an item `N/A` only when tha
 
 ## Service Agent
 
-Complete this section when the deployment includes a customer-facing Service Agent.
+For customer-facing Service Agents:
 
 1. Confirm the target org has the correct Agentforce features enabled.
 2. Confirm the target Service Agent user exists.
@@ -40,7 +40,7 @@ Complete this section when the deployment includes a customer-facing Service Age
 
 ## Employee Agent
 
-Complete this section when the deployment includes an employee-facing agent.
+For employee-facing agents:
 
 1. Confirm the agent package is deployed, published, and active.
 2. Confirm the access package or permission set that contains agent access was deployed after activation.
@@ -52,7 +52,7 @@ Complete this section when the deployment includes an employee-facing agent.
 
 ## Data 360 / Data Cloud
 
-Complete this section when the agent depends on Data 360 or Data Cloud.
+For Data 360 or Data Cloud:
 
 1. In Data Cloud Setup, confirm the target data space is active.
 2. Open Developer Tools -> Data Kits and confirm the deployed Data Kit is visible.
@@ -68,7 +68,7 @@ Complete this section when the agent depends on Data 360 or Data Cloud.
 
 ## Lead Nurturing
 
-Complete this section when the deployment includes Agentforce Lead Nurturing dependencies.
+For Agentforce Lead Nurturing dependencies:
 
 1. Confirm the dependency package contains only customer-owned dependencies.
 2. Enable and complete the current Lead Nurturing setup flow in the target org.
@@ -86,7 +86,7 @@ Complete this section when the deployment includes Agentforce Lead Nurturing dep
 
 ## Enhanced Web Chat
 
-Complete this section when the Service Agent is exposed through Enhanced Web Chat or Messaging for In-App and Web on a website.
+For Service Agents exposed through Enhanced Web Chat or Messaging for In-App and Web:
 
 1. Confirm the Service Agent is active.
 2. Confirm the target Embedded Service Deployment is published.
