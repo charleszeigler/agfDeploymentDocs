@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SERVICE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
+  ============================================================================
+  Replace every placeholder and Object__c.Field__c with real API names, and
+  remove any block you don't use before handing this to a customer.
+
+  Primary path: this manifest moves the .agent SOURCE (AiAuthoringBundle) plus
+  the agent's DEPENDENCIES. After deploying it, publish the authoring bundle,
+  then activate it in JSON mode (see docs/10-service-agent.md).
+
+  Data 360 / Data Cloud dependencies are separate. Use a Data Kit manifest from
+  docs/20-data-cloud-data-kit.md; do not mix Data 360 metadata into this agent package.
+
+  Optional Appendix route: to move a COMMITTED agent version via Metadata API
+  instead of `sf agent publish`, uncomment the BotVersion / GenAiPlannerBundle /
+  AiAuthoringBundle / GenAiPlugin / GenAiFunction blocks at the bottom.
+  In Markdown docs this value appears as <AGENT_API_NAME>; in XML use AGENT_API_NAME.
+-->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+  <!-- Agent Script editable source. Current Agentforce DX examples use API 66.0. -->
+  <types>
+    <members>AGENT_API_NAME</members>
+    <name>AiAuthoringBundle</name>
+  </types>
+
+  <!-- Apex action targets (apex://) + their test classes for production coverage -->
+  <types>
+    <members>APEX_CLASS_API_NAME</members>
+    <members>APEX_CLASS_TEST_API_NAME</members>
+    <name>ApexClass</name>
+  </types>
+
+  <!-- Flow action targets (flow://) -->
+  <types>
+    <members>FLOW_API_NAME</members>
+    <name>Flow</name>
+  </types>
+
+  <!-- Prompt templates used as generatePromptResponse actions (must be Published) -->
+  <types>
+    <members>PROMPT_TEMPLATE_API_NAME</members>
+    <name>GenAiPromptTemplate</name>
+  </types>
+
+  <!-- Custom Lightning Types used by structured action inputs/outputs -->
+  <!--
+  <types>
+    <members>LIGHTNING_TYPE_API_NAME</members>
+    <name>LightningTypeBundle</name>
+  </types>
+  -->
+
+  <!-- Custom LWC editor/renderer components for Custom Lightning Types, if used -->
+  <!--
+  <types>
+    <members>CLT_RENDERER_OR_EDITOR_LWC_API_NAME</members>
+    <name>LightningComponentBundle</name>
+  </types>
+  -->
+
+  <!-- Custom objects / fields the agent reads or writes.
+       CustomField members MUST be Object.Field (the bare field name will not resolve). -->
+  <types>
+    <members>Object__c</members>
+    <name>CustomObject</name>
+  </types>
+  <types>
+    <members>Object__c.Field__c</members>
+    <members>Case.Custom_Field__c</members>
+    <name>CustomField</name>
+  </types>
+
+  <!-- Permission set for the dedicated Einstein Agent User
+       (AgentforceServiceAgentUser is assigned by `sf org create agent-user`; this is your CUSTOM set) -->
+  <types>
+    <members>AGENT_ACCESS_PERMISSION_SET_API_NAME</members>
+    <name>PermissionSet</name>
+  </types>
+
+  <!-- Callout config, if the agent makes external calls -->
+  <!--
+  <types>
+    <members>NAMED_CREDENTIAL_API_NAME</members>
+    <name>NamedCredential</name>
+  </types>
+  <types>
+    <members>EXTERNAL_CREDENTIAL_API_NAME</members>
+    <name>ExternalCredential</name>
+  </types>
+  -->
+
+  <!-- Data 360 / Data Cloud metadata:
+       NOT HERE. Create a separate DevOps Data Kit package using docs/20-data-cloud-data-kit.md. -->
+
+  <!-- ============================================================
+       APPENDIX (optional) — move a COMMITTED agent version via package.xml.
+       This is not a first-time seed path; Salesforce requires the full agent
+       to already exist in the target org before deploying a single BotVersion.
+       BotVersion is current Agentforce version metadata, not legacy-only.
+       Finish with activation. Include the matching versioned AiAuthoringBundle.
+       Its version suffix can diverge from BotVersion; inspect bundle-meta.xml <target>. Naming:
+       BotVersion uses a DOT (Agent.vN); GenAiPlannerBundle uses
+       an UNDERSCORE (Agent_vN). Replace plugin/function members with the
+       exact generated names from a source-org retrieve (no wildcards).
+       ============================================================
+  <types><members>AGENT_API_NAME_1</members><name>AiAuthoringBundle</name></types>
+  <types><members>AGENT_API_NAME.v1</members><name>BotVersion</name></types>
+  <types><members>AGENT_API_NAME_v1</members><name>GenAiPlannerBundle</name></types>
+  <types><members>AGENT_API_NAME_Topic</members><name>GenAiPlugin</name></types>
+  <types><members>AGENT_API_NAME_Action</members><name>GenAiFunction</name></types>
+  -->
+
+  <version>66.0</version>
+</Package>

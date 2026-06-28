@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  LEAD NURTURE (SDR) — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
+  ============================================================================
+  FOR THE MANAGED Lead Nurturing / SDR TEMPLATE AGENT — DEPENDENCIES ONLY.
+      Do NOT add Bot / BotVersion / GenAiPlannerBundle / GenAiPlugin / GenAiFunction here.
+      The AGENT is rebuilt from the "Lead Nurturing" template in the target org's
+      setup flow and Agentforce Builder. See docs/12-lead-nurture-sdr.md.
+
+      This is a managed-template packaging rule, not because BotVersion is legacy.
+      BotVersion is current metadata for Agentforce Agent versions.
+
+      NOTE: a CUSTOM Agent Script SDR/outreach agent (one with its own .agent
+      source) is NOT subject to this restriction — deploy it like a Service or
+      Employee Agent using docs/10-service-agent.md or docs/11-employee-agent.md instead.
+  ============================================================================
+  Replace every placeholder and Object.Field__c with real API names, and remove
+  any block you don't use before handing this to a customer.
+
+  Data 360 / Data Cloud dependencies are separate. Use a Data Kit manifest from
+  docs/20-data-cloud-data-kit.md; do not mix Data 360 metadata into this dependencies package.
+-->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+  <!-- Sales data dependencies the agent reads (qualification / scoring / routing) -->
+  <types>
+    <members>Lead.Custom_Field__c</members>
+    <members>Contact.Custom_Field__c</members>
+    <name>CustomField</name>
+  </types>
+
+  <!-- Custom objects, if you added nurture-tracking data -->
+  <!--
+  <types>
+    <members>NURTURE_CUSTOM_OBJECT__c</members>
+    <name>CustomObject</name>
+  </types>
+  -->
+
+  <!-- Customized email / response prompt templates (must be Published) -->
+  <types>
+    <members>PROMPT_TEMPLATE_API_NAME</members>
+    <name>GenAiPromptTemplate</name>
+  </types>
+
+  <!-- Custom Lightning Types used by custom action inputs/outputs, if used -->
+  <!--
+  <types>
+    <members>LIGHTNING_TYPE_API_NAME</members>
+    <name>LightningTypeBundle</name>
+  </types>
+  -->
+
+  <!-- Custom LWC editor/renderer components for Custom Lightning Types, if used -->
+  <!--
+  <types>
+    <members>CLT_RENDERER_OR_EDITOR_LWC_API_NAME</members>
+    <name>LightningComponentBundle</name>
+  </types>
+  -->
+
+  <!-- Custom actions ONLY if you added non-standard ones (the template ships its own) -->
+  <!--
+  <types>
+    <members>APEX_CLASS_API_NAME</members>
+    <members>APEX_CLASS_TEST_API_NAME</members>
+    <name>ApexClass</name>
+  </types>
+  <types>
+    <members>FLOW_API_NAME</members>
+    <name>Flow</name>
+  </types>
+  -->
+
+  <!-- Customer-owned outreach email template, if separate from managed setup.
+       Do not package the Lead Nurturing agent user's mailbox, EAC connection,
+       generated emails, cadence runtime state, or Builder activation state. -->
+  <!--
+  <types>
+    <members>EMAIL_TEMPLATE_FOLDER/EMAIL_TEMPLATE_API_NAME</members>
+    <name>EmailTemplate</name>
+  </types>
+  -->
+
+  <!-- Permission set: must include "Configure Agentforce SDR Agent" + data access -->
+  <types>
+    <members>LEAD_NURTURE_PERMISSION_SET_API_NAME</members>
+    <name>PermissionSet</name>
+  </types>
+
+  <!-- Callout config for enrichment / outbound systems, if used -->
+  <!--
+  <types>
+    <members>NAMED_CREDENTIAL_API_NAME</members>
+    <name>NamedCredential</name>
+  </types>
+  <types>
+    <members>EXTERNAL_CREDENTIAL_API_NAME</members>
+    <name>ExternalCredential</name>
+  </types>
+  -->
+
+  <!-- Data 360 / Data Cloud metadata:
+       NOT HERE. Create a separate DevOps Data Kit package using docs/20-data-cloud-data-kit.md. -->
+
+  <!--
+    NOT INCLUDED (by design):
+      Bot, BotVersion, GenAiPlannerBundle  - managed template runtime, not part of this package
+      Prebuilt subagents / actions / prompt templates - come from the template
+  -->
+
+  <version>66.0</version>
+</Package>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EMPLOYEE AGENT ACCESS MANIFEST  (POST-PUBLISH TEMPLATE — not deploy-ready)
+  ============================================================================
+  Use this package after the Employee Agent source package is deployed, published,
+  and activated in the target org.
+
+  The permission set listed here must include <agentAccesses> for AGENT_API_NAME.
+  In a clean target org, deploying that permission set before publish can fail
+  with: In field: botDefinition - no Bot named AGENT_API_NAME found.
+
+  Replace every placeholder with real API names before handoff.
+-->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <members>EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME</members>
+    <name>PermissionSet</name>
+  </types>
+
+  <!-- Often cleaner as a group assigned to many employees: -->
+  <!--
+  <types>
+    <members>EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_GROUP_API_NAME</members>
+    <name>PermissionSetGroup</name>
+  </types>
+  -->
+
+  <version>66.0</version>
+</Package>

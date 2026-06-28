@@ -1,0 +1,19 @@
+{
+  "title": "Agentforce Deployment",
+  "pages": [
+    "index",
+    "00-before-you-start",
+    "01-deploy-package",
+    "02-publish-and-activate",
+    "03-troubleshooting",
+    "---",
+    "10-service-agent",
+    "11-employee-agent",
+    "12-lead-nurture-sdr",
+    "---",
+    "20-data-cloud-data-kit",
+    "21-enhanced-web-chat",
+    "---",
+    "30-final-go-live-validation"
+  ]
+}
