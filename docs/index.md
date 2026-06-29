@@ -4,6 +4,29 @@ Move an existing Agentforce implementation from sandbox to production with Sales
 
 > **Required before deploy:** Confirm the package type first. Service and Employee Agents use Agent Script metadata. Lead Nurturing packages dependencies only. Data 360 assets use a separate Data Kit package.
 
+## Which docs should I use?
+
+Customer receives a prepared package:
+
+- [Before You Start](00-before-you-start.md)
+- [Deploy a Package](01-deploy-package.md)
+- Relevant package-specific setup guide
+- [Publish and Activate](02-publish-and-activate.md), when an agent must be published
+- [Final Go-Live Validation](30-final-go-live-validation.md)
+
+Internal team prepares the package:
+
+- [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md)
+- Relevant package-specific guide
+- Matching manifest template
+- [Deploy a Package](01-deploy-package.md) for validation
+
+Customer or internal team runs end to end:
+
+- Start here and follow the full sequence below.
+
+Do not send retrieve/package-prep steps to a deploy-only customer unless they must pull metadata from the source sandbox.
+
 ## Deploy an agent end to end
 
 Use this sequence. Skip package types that do not apply.

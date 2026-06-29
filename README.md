@@ -10,6 +10,14 @@ Start with [docs/index.md](docs/index.md).
 - Public navigation: [docs/meta.json](docs/meta.json)
 - Scope rule: each guide lists only the values needed for that path.
 
+## Handoff paths
+
+| Situation | Use |
+|---|---|
+| Customer gets a prepared package | `00-before-you-start`, `01-deploy-package`, relevant package-specific setup guide, `02-publish-and-activate` when needed, `30-final-go-live-validation` |
+| Internal package prep | `01-prepare-and-retrieve-package`, package-specific guide, matching manifest, `01-deploy-package` for validation |
+| End-to-end refresher | `docs/index.md` full sequence |
+
 ## Package templates
 
 Use [manifests](manifests) as starting points. Replace placeholders and remove unused blocks before deployment.
