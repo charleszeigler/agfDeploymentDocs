@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "00-before-you-start",
+    "01-prepare-and-retrieve-package",
     "01-deploy-package",
     "02-publish-and-activate",
     "03-troubleshooting",
@@ -12,6 +13,10 @@
     {
       "title": "Lead Nurture Agent",
       "slug": "12-lead-nurture-agent"
+    },
+    {
+      "title": "Reusable Agent Assets",
+      "slug": "13-reusable-agent-assets"
     },
     "---",
     "20-data-cloud-data-kit",

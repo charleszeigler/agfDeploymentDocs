@@ -64,6 +64,8 @@ Identify action targets in the source bundle:
 3. Search in the file for `flow://`.
 4. Add every referenced Apex class and Flow to the source package manifest.
 
+If the source files are not already in the package folder, use the two-pass retrieve flow in [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md): retrieve the `AiAuthoringBundle`, inspect the `.agent` file for dependencies, update `package.xml`, then retrieve again.
+
 ## Validate in the source sandbox
 
 ```bash
@@ -75,7 +77,7 @@ Fix validation errors before handoff.
 
 ## Deploy the source package
 
-Deploy with [Deploy a Package](01-deploy-package.md). Stop if validation or deploy fails.
+If the source files have not been retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md). Stop if validation or deploy fails.
 
 > **Stop if:** Deploy fails with `In field: botDefinition - no Bot named <AGENT_API_NAME> found`. The package included `agentAccesses` too early. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 

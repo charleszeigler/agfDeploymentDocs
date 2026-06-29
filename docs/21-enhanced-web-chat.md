@@ -115,6 +115,7 @@ Use this path when metadata migration is not validated end to end.
 
 > **Manual after deploy:** Always publish or republish the target Embedded Service Deployment after configuration changes.
 > **Manual after deploy:** A real Omni user must sign in, accept any org notices themselves, select a Messaging-available status, and stay online during the smoke test.
+> **Manual after deploy:** If the Builder or setup UI hides inbound flow, external app, or channel-specific connection settings while the agent or deployment is still draft, publish first, then finish that target-org wiring.
 
 ## Run the built-in setup smoke
 

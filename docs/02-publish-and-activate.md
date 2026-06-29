@@ -29,6 +29,8 @@ Start live preview before publishing:
 sf agent preview start --json --authoring-bundle <AGENT_API_NAME> --use-live-actions --target-org <TARGET_ORG_ALIAS>
 ```
 
+Use live preview for deployment readiness. Simulated preview can use mock data or relaxed checks, so it does not prove target-org permissions, records, flows, prompts, callouts, or Data 360 access.
+
 Send a representative message with the returned `result.sessionId`:
 
 ```bash
@@ -58,6 +60,8 @@ For audited rollouts, activate an explicit version:
 ```bash
 sf agent activate --json --api-name <AGENT_API_NAME> --version <VERSION_NUMBER> --target-org <TARGET_ORG_ALIAS>
 ```
+
+Activating a new version sends new sessions to that version. Existing sessions can continue on the version that started them.
 
 Smoke test the active agent:
 

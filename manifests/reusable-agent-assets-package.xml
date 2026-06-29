@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  REUSABLE AGENT ASSETS MANIFEST  (TEMPLATE - not deploy-ready)
+  ============================================================================
+  Use this for customer-owned reusable subagents/actions that should appear in
+  Agentforce Builder's Asset Library. This is the GenAiPlugin / GenAiFunction
+  path for legacy Agent Builder and committed Builder assets, not the primary
+  Agent Script .agent source path. Replace every placeholder and remove any
+  block you do not use before handing this to a customer.
+
+  In Markdown docs these values appear as <REUSABLE_SUBAGENT_API_NAME> and
+  <REUSABLE_ACTION_API_NAME>; in XML use XML-safe placeholders without brackets.
+
+  For managed Lead Nurture Agent projects, this package can move customer-owned
+  reusable assets only. It does not move the managed agent template, generated
+  runtime state, mailbox connections, Builder activation state, or users.
+-->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+  <!-- Reusable subagent / topic -->
+  <types>
+    <members>REUSABLE_SUBAGENT_API_NAME</members>
+    <name>GenAiPlugin</name>
+  </types>
+
+  <!-- Reusable action -->
+  <types>
+    <members>REUSABLE_ACTION_API_NAME</members>
+    <name>GenAiFunction</name>
+  </types>
+
+  <!-- Apex backing target + test class, if the action uses Apex -->
+  <types>
+    <members>BACKING_APEX_CLASS_API_NAME</members>
+    <members>BACKING_APEX_CLASS_TEST_API_NAME</members>
+    <name>ApexClass</name>
+  </types>
+
+  <!-- Flow backing target, if the action uses Flow -->
+  <!--
+  <types>
+    <members>BACKING_FLOW_API_NAME</members>
+    <name>Flow</name>
+  </types>
+  -->
+
+  <!-- Prompt template backing target, if the action uses Prompt Builder -->
+  <!--
+  <types>
+    <members>PROMPT_TEMPLATE_API_NAME</members>
+    <name>GenAiPromptTemplate</name>
+  </types>
+  -->
+
+  <!-- Custom Lightning Types used by structured action inputs/outputs -->
+  <!--
+  <types>
+    <members>LIGHTNING_TYPE_API_NAME</members>
+    <name>LightningTypeBundle</name>
+  </types>
+  -->
+
+  <!-- Custom LWC editor/renderer components for Custom Lightning Types, if used -->
+  <!--
+  <types>
+    <members>CLT_RENDERER_OR_EDITOR_LWC_API_NAME</members>
+    <name>LightningComponentBundle</name>
+  </types>
+  -->
+
+  <!-- Custom objects / fields used by the action.
+       CustomField members MUST be Object.Field. -->
+  <!--
+  <types>
+    <members>Object__c</members>
+    <name>CustomObject</name>
+  </types>
+  <types>
+    <members>Object__c.Field__c</members>
+    <name>CustomField</name>
+  </types>
+  -->
+
+  <!-- Permission set that gives the target agent/user runtime access -->
+  <!--
+  <types>
+    <members>AGENT_ACCESS_PERMISSION_SET_API_NAME</members>
+    <name>PermissionSet</name>
+  </types>
+  -->
+
+  <version>67.0</version>
+</Package>

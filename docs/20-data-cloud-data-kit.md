@@ -48,6 +48,8 @@ sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <SOURCE_O
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
+This is the same retrieve step covered in [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md), but the Data Kit manifest must come from the source Data Kit.
+
 ## Remove key qualifier files
 
 Salesforce calls out key qualifier removal as an important Data Kit deployment step.

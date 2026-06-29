@@ -12,7 +12,6 @@ Validate and deploy a `package.xml` package into a sandbox or production org.
 | `<PACKAGE_XML_PATH>` | Final package manifest |
 | `<JOB_ID_FROM_VALIDATE>` | Successful production validation job ID |
 | `<JOB_ID>` | Sandbox dry-run, deploy, or report job ID |
-| `<SOURCE_ORG_ALIAS>` | Only when retrieving from the source sandbox |
 
 ## What the package contains
 
@@ -114,17 +113,6 @@ If you no longer have the job ID, check the most recent deploy:
 sf project deploy report --json --use-most-recent --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
 
-## Retrieve from a source sandbox
-
-Retrieve when preparing the package from the source sandbox:
-
-```bash
-sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
-```
-
-> **Customer-specific value:** After retrieve, replace only documented target-org values in editable source or config files. Service Agent `default_agent_user`, credential secrets, connector auth, domains, CORS entries, and Web Chat publish state are target-org values.
-> **Stop if:** The value is inside committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit member metadata. Do not edit generated metadata unless Salesforce documentation or Salesforce Support confirms the exact change.
-
 ## Continue after deploy
 
 > **Manual after deploy:** A successful package deploy is not the finish line. Complete the package-specific post-deploy guide below before go-live.
@@ -134,5 +122,6 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
+| Reusable Agent Assets | [Move Reusable Agent Assets](13-reusable-agent-assets.md) |
 | Data Kit | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
 | Enhanced Web Chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |

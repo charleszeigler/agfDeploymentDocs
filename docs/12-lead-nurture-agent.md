@@ -23,6 +23,8 @@ Salesforce previously used a sales-development name for this managed agent. Trea
 |---|---|
 | Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, CLTs, LWC renderers, and separate customer-owned email templates | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
+Customer-owned reusable subagents and actions can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). This can make target setup easier because the asset can be added from the Asset Library instead of recreated by hand.
+
 ## Values needed
 
 | Value | Use |
@@ -50,6 +52,7 @@ Common dependencies:
 | Customer-owned email templates or customer-owned copies, if separate from managed setup | `EmailTemplate` |
 | Data access and setup permissions | `PermissionSet` |
 | Data 360 dependencies | Separate Data Kit package |
+| Customer-owned reusable subagents or actions | Separate reusable assets package |
 
 Generic Lead, email, or nurture-related flows are not automatically Lead Nurturing runtime. Include only confirmed customer-owned flows, prompts, Apex actions, and email templates.
 
@@ -59,9 +62,24 @@ Prompt templates can hide target dependencies. Review each included prompt for `
 
 > **Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
 
-Deploy the dependency package with [Deploy a Package](01-deploy-package.md).
+Retrieve the customer-owned dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy the dependency package with [Deploy a Package](01-deploy-package.md).
 
 > **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only customer-owned metadata such as fields, prompt overrides, custom actions, and separate email templates.
+
+## Optional reusable assets
+
+Use this only for customer-owned reusable subagents or actions. It does not move or update the managed Lead Nurture Agent itself.
+
+Reusable assets are not Lead Nurture-specific. They use the `GenAiPlugin` and `GenAiFunction` metadata path for legacy Agent Builder and committed Builder assets, and can also help other Agentforce projects that use Asset Library assets.
+
+1. Prepare the managed Lead Nurture Agent in the target org.
+2. Deploy the reusable assets with [Move Reusable Agent Assets](13-reusable-agent-assets.md).
+3. Open the target agent draft in Agentforce Builder.
+4. Select **Add Resource** > **Add from Asset Library**.
+5. Add the reusable customer asset.
+6. Preview generated email behavior and action behavior before activation.
+
+> **Manual after deploy:** Adding a reusable asset to the managed target agent is a Builder step. The package only makes the reusable asset available.
 
 ## Complete target setup
 
@@ -127,6 +145,7 @@ Capture these values before handoff:
 
 - [ ] Dependency package contains no managed-template runtime metadata.
 - [ ] Custom fields, objects, prompt templates, actions, CLTs, LWC components, and permission sets are included when used.
+- [ ] Reusable customer assets are packaged separately when used.
 - [ ] Data 360 package prepared separately when used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target manual steps, not `package.xml` members.
 - [ ] Worksheet completed from the source org.
