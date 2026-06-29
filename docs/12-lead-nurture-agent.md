@@ -3,6 +3,9 @@
 Move customer-specific dependencies for the Agentforce Lead Nurture Agent.
 
 > **Required before deploy:** This guide is dependencies-only for the managed Lead Nurturing template. Configure and activate the managed agent in the target org after deploying dependencies.
+> **Stop if:** The plan is to move the managed Lead Nurturing agent itself, or managed Lead Nurturing agent changes, by change set, Metadata API, or Salesforce CLI. Salesforce documents that this path is not supported. Create and configure the managed agent directly in the target org.
+
+Salesforce previously used a sales-development name for this managed agent. Treat the managed Lead Nurturing sales engagement template as covered by this deployment limitation unless Salesforce Support confirms otherwise for the customer's exact org and release.
 
 ## Confirm the agent type
 
@@ -12,7 +15,13 @@ Move customer-specific dependencies for the Agentforce Lead Nurture Agent.
 | Custom `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` source | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
 | Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
 
-> **Do not package:** Do not list `Bot`, `BotVersion`, `GenAiPlannerBundle`, `GenAiPlugin`, or `GenAiFunction` for the managed-template handoff unless Salesforce confirms a metadata path for that exact org and release.
+> **Do not package:** Do not list `Bot`, `BotVersion`, `GenAiPlannerBundle`, `GenAiPlugin`, or `GenAiFunction` for the managed Lead Nurturing template. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurturing agent.
+
+## What can be deployed
+
+| Can move with metadata | Must be configured in the target org |
+|---|---|
+| Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, CLTs, LWC renderers, and separate customer-owned email templates | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
 ## Values needed
 
@@ -65,8 +74,9 @@ In the target org, complete the current Salesforce setup flow:
 3. Create or select the Lead Nurturing agent user.
 4. Connect the agent user's email account.
 5. Confirm Einstein Activity Capture uses user-level authentication for the agent user.
-6. Configure the Lead Nurturing data library.
-7. Configure behavior, cadence, language, tone, assignment, and activation in Builder.
+6. Confirm the connected email address matches the Email field on the Lead Nurturing agent user record and is not connected to another user.
+7. Configure the Lead Nurturing data library.
+8. Configure behavior, cadence, language, tone, assignment, meeting scheduling, opt-out handling, and activation in Builder.
 
 Sales users who need to see, edit, reschedule, or cancel agent emails must connect their own email accounts to Einstein Activity Capture in the target org.
 
@@ -78,8 +88,9 @@ Lead Nurturing email is target-org runtime setup. The dependency package can inc
 2. Confirm the Lead Nurturing agent user has an active email account connection.
 3. Confirm Einstein Activity Capture is active for the agent user and any sales users who manage agent emails.
 4. Confirm sender address, cadence, send caps, meeting-booking source, opt-out handling, and assignment rules.
-5. Preview the managed agent in Builder and confirm the generated email uses the expected prompt templates and source values.
-6. Do not enable automatic sending until the customer approves the previewed email behavior.
+5. If Send as Seller is on, confirm record owners have Inbox and Einstein Activity Capture access.
+6. Preview the managed agent in Builder and confirm the generated email uses the expected prompt templates and source values.
+7. Do not enable automatic sending until the customer approves the previewed email behavior.
 
 ## Fill the implementation worksheet
 
@@ -123,5 +134,7 @@ Capture these values before handoff:
 
 ## Sources
 
+- Considerations for Using Agentforce Lead Nurturing: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_considerations.htm&type=5
+- Agentforce metadata deployment and retrieval limitations knowledge article: https://help.salesforce.com/s/articleView?id=005228853&type=1
 - Set Up Agentforce Lead Nurturing: https://help.salesforce.com/s/articleView?id=sales.einstein_sdr_setup.htm&type=5
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html

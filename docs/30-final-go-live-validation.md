@@ -64,7 +64,7 @@ For Data 360 or Data Cloud:
 
 > **Data 360 prerequisite:** A successful `package.xml` deploy does not deploy Data Kit components, refresh data, or reauthorize connectors.
 
-> **Stop if:** The Data Kit is visible but components are not deployed or target data is not refreshed. Do not publish a Data 360-dependent agent yet.
+> **Stop if:** The Data Kit is visible but components are not deployed, connectors are not authorized, or target row counts are zero for data the agent needs. Do not publish a Data 360-dependent agent yet.
 
 ## Lead Nurturing
 
@@ -76,9 +76,10 @@ For Agentforce Lead Nurturing dependencies:
 4. Connect the agent user's email account.
 5. Confirm Einstein Activity Capture is active for the agent user.
 6. Confirm required sales users connected their email accounts when they need to manage agent emails.
-7. Confirm the data library, cadence, sender, assignment, meeting-booking source, and opt-out process.
-8. Preview generated emails in Builder with a test lead or customer-approved lead.
-9. Activate automatic sending only after the customer approves the previewed behavior.
+7. Confirm the connected email matches the Lead Nurturing agent user's Email field and is not connected to another user.
+8. Confirm the data library, cadence, sender, assignment, meeting-booking source, and opt-out process.
+9. Preview generated emails in Builder with a test lead or customer-approved lead.
+10. Activate automatic sending only after the customer approves the previewed behavior.
 
 > **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state.
 
@@ -101,7 +102,7 @@ For Service Agents exposed through Enhanced Web Chat or Messaging for In-App and
 
 > **Manual after deploy:** Always publish or republish the Embedded Service Deployment after target setup changes.
 
-> **Stop if:** No new Messaging Session appears, the session stays waiting, or no user or active agent handles the conversation. Fix publish state, website embedding, CORS/domain settings, service presence, queue membership, and routing before go-live.
+> **Stop if:** There is no real customer website or Experience Builder host page to test, no new Messaging Session appears, the session stays waiting, or no user or active agent handles the conversation. Fix host embedding, publish state, CORS/domain settings, service presence, queue membership, and routing before go-live.
 
 ## Handoff record
 

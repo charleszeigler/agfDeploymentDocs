@@ -21,6 +21,17 @@ Open only the guides that match the package. Each guide lists the values it need
 | Move Enhanced Web Chat configuration | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |
 | Confirm target-org runtime readiness | [Final Go-Live Validation](30-final-go-live-validation.md) |
 
+## Confirm the agent metadata model
+
+Agentforce metadata changed across legacy Agent Builder, committed Agentforce Builder versions, and Agent Script. Match the source package before you deploy.
+
+| Source shape | Package path | Target-org finish |
+|---|---|---|
+| Draft Agent Script source in `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` | Service or Employee Agent guide | Set target users/access, live-preview, publish, activate |
+| Committed custom agent version | Package-specific retrieve/deploy instructions | Do not edit generated metadata; create a new target version for user or behavior changes |
+| Legacy custom agent without Agent Script | Package-specific `Bot` / `BotVersion` instructions | Validate in a sandbox before production |
+| Managed Lead Nurturing or Sales Coach agent | Lead Nurturing dependencies guide | Create and configure the managed agent directly in the target org |
+
 ## Placeholder rule
 
 Replace placeholders before running commands. Do not type the angle brackets. For example, if the target alias is `customerProduction`, use `--target-org customerProduction`, not `--target-org <customerProduction>`.
@@ -35,6 +46,7 @@ Manifest XML uses XML-safe placeholders such as `AGENT_API_NAME`; raw `<AGENT_AP
 |---|---|
 | Service Agent user | Target org setup before publish |
 | Employee Agent access | Target org permission assignment |
+| Committed agent user changes | New target-org version or Builder setup |
 | Lead Nurturing email and EAC connections | Target org Lead Nurturing setup |
 | Credential secrets and OAuth tokens | Target org credential setup |
 | Data 360 runtime deploy and refresh | Target org Data 360 setup |

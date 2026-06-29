@@ -6,6 +6,8 @@
       Do NOT add Bot / BotVersion / GenAiPlannerBundle / GenAiPlugin / GenAiFunction here.
       The AGENT is rebuilt from the "Lead Nurturing" template in the target org's
       setup flow and Agentforce Builder. See docs/12-lead-nurture-agent.md.
+      Salesforce documents metadata deployment/retrieval as unsupported for the
+      packaged Lead Nurturing agent, even when behavior varies by org.
 
       This is a managed-template packaging rule, not because BotVersion is legacy.
       BotVersion is current metadata for Agentforce Agent versions.

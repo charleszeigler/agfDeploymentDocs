@@ -50,7 +50,7 @@ Before handoff, confirm:
 - No source-org usernames, domains, credential secrets, or connector auth values remain in the package.
 - The deployment owner starts with [Agentforce Deployment Guides](index.md).
 - Package-specific manual steps are linked or named in the handoff notes.
-- Source worksheets are complete for agent users, Data Kit names, Lead Nurturing email setup, and Web Chat domains.
+- Any package-specific worksheet values are complete for the guides in scope, such as agent users, Data Kit names, Lead Nurturing email setup, or Web Chat domains.
 - Any prior validation output or job IDs are included with the handoff notes.
 
 ## Validate and deploy to production
@@ -126,6 +126,8 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 > **Stop if:** The value is inside committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit member metadata. Do not edit generated metadata unless Salesforce documentation or Salesforce Support confirms the exact change.
 
 ## Continue after deploy
+
+> **Manual after deploy:** A successful package deploy is not the finish line. Complete the package-specific post-deploy guide below before go-live.
 
 | Package type | Next step |
 |---|---|

@@ -1,6 +1,6 @@
 # Before You Start
 
-Prepare for sandbox-to-production deployment with Salesforce CLI and `package.xml`.
+Prepare for sandbox-to-production deployment with Salesforce CLI and `package.xml`. You do not need prior CLI experience; copy each command box exactly after replacing the documented placeholders.
 
 > **Required before deploy:** Confirm the target org is ready before running deploy commands. Missing Agentforce, Data 360, Messaging, or permission prerequisites should be fixed first.
 
@@ -55,6 +55,8 @@ Confirm the expected files exist:
 ```bash
 ls sfdx-project.json <PACKAGE_XML_PATH>
 ```
+
+Open `sfdx-project.json` and confirm `sourceApiVersion` is `64.0` or later. Agentforce metadata uses newer types such as `GenAiPlannerBundle`; older API versions can miss or fail those components.
 
 ## Log in to the target org
 

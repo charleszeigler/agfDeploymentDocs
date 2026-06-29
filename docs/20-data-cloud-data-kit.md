@@ -8,6 +8,12 @@ Use this when an Agentforce deployment depends on Data 360 / Data Cloud metadata
 
 Data Kit metadata moves definitions such as streams, mappings, calculated insights, segments, search indexes, data graphs, and related Data 360 components. It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
 
+## What can be completed
+
+| Deployment owner can do | Customer-specific input still required |
+|---|---|
+| Create the source Data Kit, retrieve the generated manifest, deploy the metadata package, deploy components by UI or reviewed API payload, and verify target rows | Target data space choice, connector credentials, OAuth consent, source-system data availability, component payload approval, refresh timing, and row-count acceptance |
+
 ## Values needed
 
 | Value | Use |
@@ -113,7 +119,9 @@ Salesforce documents two technical deployment surfaces:
 - Connect REST API: `POST /services/data/v67.0/ssot/data-kits/<DATA_KIT_DEVELOPER_NAME>`
 - REST invocable flow: `/services/data/v67.0/actions/custom/flow/sfdatakit__DeployDataKitComponents`
 
-These surfaces are org-version and component dependent. If the REST flow action or payload is not ready, use the UI path. Use API deployment only after sandbox validation.
+The flow path requires `dataKitNameInput`, optional `dataKitDataSpaceInput`, and `dataKitComponentsInput` with the component payload list. The Connect REST path uses component-type-specific payload configuration. If the REST flow action or payload is not ready, use the UI path. Use API deployment only after sandbox validation.
+
+> **Stop if:** Data Cloud SQL row counts are zero for tables the agent needs. The Data Kit metadata can be correct while the target runtime is still not ready.
 
 ## Deployment order
 

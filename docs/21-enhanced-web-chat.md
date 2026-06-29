@@ -16,6 +16,14 @@ Web Chat migration is high risk:
 
 > **Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or override Salesforce Known Issue W-15932771.
 
+## What can be completed
+
+| Deployment owner can do | Customer-specific input still required |
+|---|---|
+| Deploy validated metadata, publish the target Embedded Service Deployment, confirm the messaging channel, set Omni availability, and use the built-in test page | Real customer website or Experience Builder host page, target-org snippet or component selection, allowed domains, authentication settings, and a smoke test that creates a `MessagingSession` |
+
+A temporary test host can prove the target snippet works, but it is new setup. For migration handoff, the final evidence must come from the real customer website or Experience Builder page that will go live.
+
 ## Values needed
 
 | Value | Use |
@@ -119,7 +127,7 @@ Before website testing, use the target org's built-in test page.
 5. Confirm the test page shows a chat launcher, not only setup instructions.
 6. Send a test message and confirm a new Messaging Session appears in Salesforce.
 
-> **Stop if:** The test page opens but no chat launcher appears. Fix publish state, generated site access, CORS/domain settings, and routing before continuing to website testing.
+> **Stop if:** The test page opens but no chat launcher appears, or the browser console blocks the generated site bootstrap assets. Fix publish state, generated site access, CORS/domain settings, and routing before continuing to website testing.
 
 ## External website setup
 
@@ -128,6 +136,8 @@ For an external website, copy the target-org snippet from Embedded Service Deplo
 If the browser console reports `frame-ancestors` or iframe blocking for the generated `ESW...` site, add the website origin to iframe allowed origins or rebuild/publish with the correct domain.
 
 > **Stop if:** The page uses a referrer policy that prevents Enhanced Web Chat from loading. Adjust the website policy before troubleshooting Salesforce metadata.
+
+> **Stop if:** The deployment has no customer website URL, no Experience Builder page, and no approved temporary test host. There is no surface that can create a `MessagingSession`, so runtime validation cannot finish.
 
 ## Experience Builder setup
 
@@ -138,6 +148,7 @@ Add the Experience Builder site domain to CORS. If preview testing fails, also a
 Do not reuse or modify the generated Enhanced Web Chat isolation site.
 
 > **Stop if:** The only URL available for testing is the generated `ESW...` site. Test the actual customer website or Experience Builder site that hosts the snippet or Embedded Messaging component.
+> **Stop if:** The generated `ESW...` site returns HTTP 200 but shows a blank page or browser `postMessage` origin errors when opened directly. That site is the isolation shell, not the customer-facing chat test surface.
 
 ## Validate
 
@@ -157,12 +168,13 @@ Optional CLI verification:
 
 ```bash
 sf data query --json --query "SELECT Id, DeveloperName, MasterLabel, IsActive, MessageType, PlatformType, RoutingType, TargetQueueId, FallbackQueueId, RoutingConfigurationId FROM MessagingChannel WHERE DeveloperName = '<MESSAGING_CHANNEL_API_NAME>' LIMIT 1" --target-org <TARGET_ORG_ALIAS>
+sf data query --json --query "SELECT Id, UserId, User.Name, ServicePresenceStatus.MasterLabel, StatusStartDate, StatusEndDate, IsCurrentState FROM UserServicePresence WHERE IsCurrentState = true ORDER BY StatusStartDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
 sf data query --json --query "SELECT Id, CreatedDate, StartTime, Status, MessagingChannelId, MessagingChannel.DeveloperName, ChannelName, ChannelType, AgentType FROM MessagingSession ORDER BY CreatedDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
 sf data query --json --query "SELECT Id, WorkItemId, RoutingType, IsReadyForRouting, RoutingModel, ServiceChannelId, QueueId FROM PendingServiceRouting WHERE WorkItemId = '<MESSAGING_SESSION_ID>' LIMIT 1" --target-org <TARGET_ORG_ALIAS>
 sf data query --json --query "SELECT Id, WorkItemId, UserId, Status, ServiceChannelId, CreatedDate FROM AgentWork WHERE WorkItemId = '<MESSAGING_SESSION_ID>' ORDER BY CreatedDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
 ```
 
-The first query should show active `EmbeddedMessaging` / `Enhanced`. After the website test, the second query should show a new session for `<MESSAGING_CHANNEL_API_NAME>`. If the session is waiting, routing should show the intended queue, and `AgentWork` should appear after Omni acceptance.
+The first query should show active `EmbeddedMessaging` / `Enhanced`. The presence query should show a current Messaging-available user, but that is not a website smoke test. After the website test, the session query should show a new session for `<MESSAGING_CHANNEL_API_NAME>`. If the session is waiting, routing should show the intended queue, and `AgentWork` should appear after Omni acceptance.
 
 > **Stop if:** No new `MessagingSession` appears after the website test. Fix publish status, snippet or component selection, CORS/domain settings, and routing before declaring the channel ready.
 > **Stop if:** The session stays `Waiting` and no `AgentWork` appears. Confirm queue membership, service presence configuration, Omni user availability, and routing before declaring the channel ready.
