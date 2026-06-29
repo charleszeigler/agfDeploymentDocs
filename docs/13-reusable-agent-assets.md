@@ -1,8 +1,8 @@
 # Move Reusable Agent Assets
 
-Move customer-owned reusable Agentforce subagents and actions from sandbox to another org.
+Move project-owned reusable Agentforce subagents and actions from sandbox to another org.
 
-> **Required before deploy:** Use this guide only for customer-owned reusable assets. For a full Service or Employee Agent, use the agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for reusable customer assets that you add to it.
+**Required before deploy:** Use this guide only for reusable assets that the implementation team controls. For a full Service or Employee Agent, use the agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for reusable assets that you add to it.
 
 ## Metadata model
 
@@ -48,8 +48,8 @@ Common dependencies:
 | Invocable Apex action and tests | `ApexClass` |
 | Flow action | `Flow` |
 | Prompt template action | `GenAiPromptTemplate` |
-| Structured action schemas | `LightningTypeBundle` |
-| Custom CLT editor or renderer components | `LightningComponentBundle` |
+| Structured custom action schemas, if the reusable action uses Custom Lightning Types | `LightningTypeBundle` |
+| Custom Lightning Type editor or renderer components, if used by those schemas | `LightningComponentBundle` |
 | Objects and fields used by the action | `CustomObject`, `CustomField` |
 | Runtime data access | `PermissionSet` |
 
@@ -79,17 +79,18 @@ Use when the source agent has local-only topics or actions that do not appear in
 1. Retrieve the committed custom agent version into a sandbox working package.
 2. Find the local topic under `genAiPlannerBundles/.../localPlugins/`.
 3. Find the local action under `genAiPlannerBundles/.../localActions/`.
-4. Create a new standalone `GenAiPlugin` with a customer-owned API name.
-5. Create a new standalone `GenAiFunction` with a customer-owned API name.
+4. Create a new standalone `GenAiPlugin` with a reusable asset API name.
+5. Create a new standalone `GenAiFunction` with a reusable asset API name.
 6. Copy the local action `input/schema.json` and `output/schema.json` into the standalone function folder.
-7. Point the standalone function to the same customer-owned Apex, Flow, or prompt target.
+7. Point the standalone function to the same backing Apex, Flow, or prompt target.
 8. Point the standalone plugin to the standalone function by API name.
 9. Deploy the standalone assets to the source sandbox first.
 10. Retrieve the standalone assets by name.
 11. Deploy the retrieved package to the target org.
 
-> **Stop if:** The local asset belongs to the managed Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
-> **Do not package:** Do not edit generated `GenAiPlannerBundle`, local plugin, or local action metadata for direct customer deployment. Use it only as the source for a new customer-owned reusable asset.
+**Stop if:** The local asset belongs to the managed Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
+
+**Do not package:** Do not edit generated planner, plugin, or action metadata for direct deployment. Use it only as the source for a new deployable reusable asset.
 
 ## Verify the target org
 
@@ -118,24 +119,25 @@ Expected result:
 
 In Agentforce Builder, open a draft agent and select **Add Resource** > **Add from Asset Library**. The reusable subagent should appear there.
 
-> **Manual after deploy:** Add the reusable asset to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
-> **Customer-specific value:** After a reusable asset is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone asset later does not prove the already-added agent copy is updated.
+**Manual after deploy:** Add the reusable asset to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
+
+**Customer-specific value:** After a reusable asset is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone asset later does not prove the already-added agent copy is updated.
 
 ## Lead Nurture Agent use
 
 For the managed Lead Nurture Agent:
 
 1. Create and configure the managed agent in the target org.
-2. Deploy customer-owned reusable assets with this guide.
+2. Deploy reusable assets with this guide.
 3. Add them from the target org Asset Library.
 
 This can reduce rebuild work for custom topics or actions. It does not make the managed Lead Nurture Agent itself deployable. The same pattern applies to other Asset Library projects.
 
 ## Checklist
 
-- [ ] Asset is customer-owned, not managed-template runtime metadata.
+- [ ] Asset is project-owned, not managed-template runtime metadata.
 - [ ] Reusable `GenAiPlugin` and `GenAiFunction` names are exact members in `package.xml`.
-- [ ] Backing Apex, Flow, prompt template, CLT, object, field, and permission dependencies are included when used.
+- [ ] Backing Apex, Flow, prompt template, object, field, permission, and applicable Custom Lightning Type dependencies are included when used.
 - [ ] Converted local assets are first deployed and retrieved as standalone assets from the source sandbox.
 - [ ] Target records show `IsLocal = false`.
 - [ ] Asset appears in **Add from Asset Library** in the target org.

@@ -45,22 +45,6 @@
     <name>GenAiPromptTemplate</name>
   </types>
 
-  <!-- Custom Lightning Types used by custom action inputs/outputs, if used -->
-  <!--
-  <types>
-    <members>LIGHTNING_TYPE_API_NAME</members>
-    <name>LightningTypeBundle</name>
-  </types>
-  -->
-
-  <!-- Custom LWC editor/renderer components for Custom Lightning Types, if used -->
-  <!--
-  <types>
-    <members>CLT_RENDERER_OR_EDITOR_LWC_API_NAME</members>
-    <name>LightningComponentBundle</name>
-  </types>
-  -->
-
   <!-- Custom actions ONLY if you added non-standard ones (the template ships its own) -->
   <!--
   <types>

@@ -2,9 +2,9 @@
 
 Use after package validation, deploy, and package-specific setup.
 
-> **Required before deploy:** This page does not replace package validation. Start here only after the deployment owner confirms the package deploy succeeded.
+**Required before deploy:** This page does not replace package validation. Start here only after the deployment owner confirms the package deploy succeeded.
 
-> **Manual after deploy:** These are target-org runtime checks. They do not add metadata to `package.xml`.
+**Manual after deploy:** These are target-org runtime checks. They do not add metadata to `package.xml`.
 
 ## How to use this checklist
 
@@ -20,7 +20,7 @@ Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when the feature is out of scope
 4. If Apex was included, confirm tests ran and passed.
 5. Save the deployment job ID or a Deployment Status screenshot for the handoff record.
 
-> **Stop if:** Apex is included but the validation output shows zero tests run. Do not quick deploy or go live until the deployment owner reviews the validation output.
+**Stop if:** Apex is included but the validation output shows zero tests run. Do not quick deploy or go live until the deployment owner reviews the validation output.
 
 ## Service Agent
 
@@ -34,9 +34,9 @@ For customer-facing Service Agents:
 6. Publish and activate the intended version.
 7. Smoke test the active agent on the intended channel.
 
-> **Do not package:** Do not move the source sandbox agent user. Create or select the target org agent user during target setup.
+**Do not package:** Do not move the source sandbox agent user. Create or select the target org agent user during target setup.
 
-> **Stop if:** Preview succeeds only for an admin or returns missing-data errors for the agent user. Fix target access before go-live.
+**Stop if:** Preview succeeds only for an admin or returns missing-data errors for the agent user. Fix target access before go-live.
 
 ## Employee Agent
 
@@ -48,7 +48,7 @@ For employee-facing agents:
 4. Test from Lightning as a non-admin employee.
 5. Confirm the employee can start the agent and complete the main happy path.
 
-> **Stop if:** The only successful smoke test was run by an admin. Test as an assigned non-admin employee before go-live.
+**Stop if:** The only successful smoke test was run by an admin. Test as an assigned non-admin employee before go-live.
 
 ## Data 360 / Data Cloud
 
@@ -62,9 +62,9 @@ For Data 360 or Data Cloud:
 6. Open Data Explorer or the relevant Data Cloud object page and confirm target data is visible.
 7. Run the agent preview again after the data is refreshed.
 
-> **Data 360 prerequisite:** A successful `package.xml` deploy does not deploy Data Kit components, refresh data, or reauthorize connectors.
+**Data 360 prerequisite:** A successful `package.xml` deploy does not deploy Data Kit components, refresh data, or reauthorize connectors.
 
-> **Stop if:** The Data Kit is visible but components are not deployed, connectors are not authorized, or target row counts are zero for data the agent needs. Do not publish a Data 360-dependent agent yet.
+**Stop if:** The Data Kit is visible but components are not deployed, connectors are not authorized, or target row counts are zero for data the agent needs. Do not publish a Data 360-dependent agent yet.
 
 ## Lead Nurturing
 
@@ -81,9 +81,9 @@ For Agentforce Lead Nurturing dependencies:
 9. Preview generated emails in Builder with a test lead or customer-approved lead.
 10. Activate automatic sending only after the customer approves the previewed behavior.
 
-> **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state.
+**Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state.
 
-> **Stop if:** The sender mailbox, EAC connection, data library, or email preview is not approved. Keep automatic sending off.
+**Stop if:** The sender mailbox, EAC connection, data library, or email preview is not approved. Keep automatic sending off.
 
 ## Enhanced Web Chat
 
@@ -100,9 +100,9 @@ For Service Agents exposed through Enhanced Web Chat or Messaging for In-App and
 9. Confirm the session routes to the intended queue, Omni user, or active Service Agent.
 10. Confirm business hours, branding, labels, pre-chat fields, and authenticated-chat behavior if used.
 
-> **Manual after deploy:** Always publish or republish the Embedded Service Deployment after target setup changes.
+**Manual after deploy:** Always publish or republish the Embedded Service Deployment after target setup changes.
 
-> **Stop if:** There is no real customer website or Experience Builder host page to test, no new Messaging Session appears, the session stays waiting, or no user or active agent handles the conversation. Fix host embedding, publish state, CORS/domain settings, service presence, queue membership, and routing before go-live.
+**Stop if:** There is no real customer website or Experience Builder host page to test, no new Messaging Session appears, the session stays waiting, or no user or active agent handles the conversation. Fix host embedding, publish state, CORS/domain settings, service presence, queue membership, and routing before go-live.
 
 ## Handoff record
 
@@ -117,4 +117,4 @@ Save these values or screenshots with the customer handoff:
 | Lead Nurturing, if used | Approved Builder email preview and mailbox/EAC setup |
 | Enhanced Web Chat, if used | Website conversation test and Messaging Session ID |
 
-> **Customer-specific value:** Screenshots and IDs prove target-org readiness for this customer only. Do not reuse them for another org.
+**Customer-specific value:** Screenshots and IDs prove target-org readiness for this customer only. Do not reuse them for another org.

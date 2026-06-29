@@ -2,7 +2,7 @@
 
 Build `package.xml` and retrieve source files from the source sandbox.
 
-> **Required before retrieve:** The source sandbox must contain the tested configuration you want to move. If the deployment package is already prepared and validated, skip to [Deploy a Package](01-deploy-package.md).
+**Required before retrieve:** The source sandbox must contain the tested configuration you want to move. If the deployment package is already prepared and validated, skip to [Deploy a Package](01-deploy-package.md).
 
 ## Values needed
 
@@ -12,7 +12,7 @@ Build `package.xml` and retrieve source files from the source sandbox.
 | `<PACKAGE_XML_PATH>` | Manifest path, usually `manifest/package.xml` |
 | `<AGENT_API_NAME>` | Agent API name, only for agent packages |
 
-Package-specific guides list extra values, such as reusable asset names, Data Kit names, Web Chat names, or Lead Nurturing dependency names.
+Package-specific guides list extra values.
 
 ## Create or open the package folder
 
@@ -76,18 +76,19 @@ Start from the matching template in `manifests`; save the final file as `<PACKAG
 
 Before retrieving:
 
-- Replace XML-safe placeholders such as `AGENT_API_NAME` with exact API names.
+- Replace XML-safe placeholders with exact API names.
 - Remove unused template blocks.
 - Use exact members for Apex, Flows, prompt templates, reusable assets, and Web Chat metadata.
 - Use `Object.Field` format for `CustomField` members.
 - Keep Data 360 metadata in the Data Kit package, not in the agent package.
 - Keep Lead Nurturing managed agent runtime metadata out of the dependencies package.
 
-> **Stop if:** The manifest still contains placeholder names, wildcard members for a large metadata type, or metadata from a package type you are not moving.
+**Stop if:** The manifest still contains placeholder names, wildcard members for a large metadata type, or metadata from a package type you are not moving.
 
 ## Find source member names
 
 Use these checks when you need exact API names from the source sandbox.
+Run only the metadata checks that match the package-specific guide.
 
 ```bash
 sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <SOURCE_ORG_ALIAS>
@@ -109,7 +110,7 @@ Run retrieve from the package folder that contains `sfdx-project.json`.
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
-Check for `"status": 0` and `result.status` of `Succeeded`.
+Confirm the retrieve result is `Succeeded` before continuing.
 
 ## Use a two-pass retrieve when dependencies are unknown
 
@@ -119,10 +120,10 @@ Use this for Service and Employee Agent source packages when backing dependencie
 2. Open `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`.
 3. Search for `apex://` and add each invocable Apex class and test class to `package.xml`.
 4. Search for `flow://` and add each Flow to `package.xml`.
-5. Add referenced prompt templates, Custom Lightning Types, LWC renderers, objects, fields, permission sets, and credentials.
+5. Add referenced prompt templates, objects, fields, permission sets, credentials, and Custom Lightning Types only when the Service or Employee Agent source uses them.
 6. Run retrieve again with the completed manifest.
 
-> **Do not package:** Do not edit committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit metadata to make retrieval work. Make behavior changes in the source sandbox or create customer-owned reusable assets.
+**Do not package:** Do not edit committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit metadata to make retrieval work. Make behavior changes in the source sandbox or create project-owned reusable assets.
 
 ## Review the retrieved package
 

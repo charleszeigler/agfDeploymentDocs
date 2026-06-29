@@ -2,64 +2,37 @@
 
 Move an existing Agentforce implementation from sandbox to production with Salesforce CLI and `package.xml`.
 
-> **Required before deploy:** Confirm the package type first. Service and Employee Agents use Agent Script metadata. Lead Nurturing packages dependencies only. Data 360 assets use a separate Data Kit package.
+**Required before deploy:** Confirm the package type first. Service and Employee Agents use Agent Script metadata. Lead Nurturing packages dependencies only. Data 360 assets use a separate Data Kit package.
 
-## Which docs should I use?
-
-Customer receives a prepared package:
-
-- [Before You Start](00-before-you-start.md)
-- [Deploy a Package](01-deploy-package.md)
-- Relevant package-specific setup guide
-- [Publish and Activate](02-publish-and-activate.md), when an agent must be published
-- [Final Go-Live Validation](30-final-go-live-validation.md)
-
-Internal team prepares the package:
-
-- [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md)
-- Relevant package-specific guide
-- Matching manifest template
-- [Deploy a Package](01-deploy-package.md) for validation
-
-Customer or internal team runs end to end:
-
-- Start here and follow the full sequence below.
-
-Do not send retrieve/package-prep steps to a deploy-only customer unless they must pull metadata from the source sandbox.
-
-## Deploy an agent end to end
-
-Use this sequence. Skip package types that do not apply.
+## Deployment Steps
 
 | Step | Do this | Guide |
 |---|---|---|
-| 1 | Log in and confirm command basics | [Before You Start](00-before-you-start.md) |
-| 2 | Choose the package type and required values | This page |
-| 3 | Build the package-specific `package.xml` | Package-specific guide |
-| 4 | Retrieve source files from the source sandbox | [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md) |
+| 1 | Confirm target org and prerequisites | [Before You Start](00-before-you-start.md) |
+| 2 | Select the package or agent type guide | This page |
+| 3 | Build the package-specific `package.xml` | Selected guide |
+| 4 | Retrieve source files, if needed | [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md) |
 | 5 | Validate, then deploy to the target org | [Deploy a Package](01-deploy-package.md) |
-| 6 | Complete package-specific target setup | Package-specific guide |
-| 7 | Publish, activate, and smoke test agents when the package includes an agent | [Publish and Activate](02-publish-and-activate.md) |
+| 6 | Complete target setup | Selected guide |
+| 7 | Publish, activate, and smoke test agent changes | [Publish and Activate](02-publish-and-activate.md) |
 | 8 | Run final go-live checks | [Final Go-Live Validation](30-final-go-live-validation.md) |
 
-## Choose the right guide
-
-Open only matching guides. Do not gather Data Kit, Web Chat, Lead Nurturing, or user-access values unless that guide applies.
+## Select Guides
 
 | Need | Guide |
 |---|---|
-| Log in and learn how to run command boxes | [Before You Start](00-before-you-start.md) |
-| Build `package.xml` and retrieve source files | [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md) |
-| Validate and deploy a `package.xml` package | [Deploy a Package](01-deploy-package.md) |
-| Publish, activate, and smoke test agents | [Publish and Activate](02-publish-and-activate.md) |
-| Resolve common deployment failures | [Troubleshooting](03-troubleshooting.md) |
-| Deploy a customer-facing Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) |
-| Deploy an employee-facing Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
-| Move Lead Nurture Agent custom dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
-| Move reusable subagents and actions | [Move Reusable Agent Assets](13-reusable-agent-assets.md) |
-| Move Data 360 / Data Cloud assets | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
-| Move Enhanced Web Chat configuration | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |
-| Confirm target-org runtime readiness | [Final Go-Live Validation](30-final-go-live-validation.md) |
+| Any deployment | [Before You Start](00-before-you-start.md) |
+| Retrieve source files | [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md) |
+| Validate or deploy a package | [Deploy a Package](01-deploy-package.md) |
+| Publish or activate agent changes | [Publish and Activate](02-publish-and-activate.md) |
+| Fix failures | [Troubleshooting](03-troubleshooting.md) |
+| Service Agent | [Service Agent](10-service-agent.md) |
+| Employee Agent | [Employee Agent](11-employee-agent.md) |
+| Lead Nurture Agent dependencies | [Lead Nurture Agent](12-lead-nurture-agent.md) |
+| Reusable subagents or actions | [Reusable Agent Assets](13-reusable-agent-assets.md) |
+| Data 360 / Data Cloud | [Data Cloud Data Kit](20-data-cloud-data-kit.md) |
+| Enhanced Web Chat | [Enhanced Web Chat](21-enhanced-web-chat.md) |
+| Go-live validation | [Final Go-Live Validation](30-final-go-live-validation.md) |
 
 ## Confirm the agent metadata model
 
@@ -75,11 +48,7 @@ Match the source package before deploy. Agentforce metadata differs across legac
 
 ## Placeholder rule
 
-Replace placeholders before running commands. Do not type angle brackets.
-
-Example: if the target alias is `customerProduction`, use `--target-org customerProduction`, not `--target-org <customerProduction>`.
-
-Manifest XML uses XML-safe placeholders such as `AGENT_API_NAME`; raw `<AGENT_API_NAME>` inside `<members>` would break XML.
+Replace command placeholders with real values. Manifest XML uses XML-safe placeholders; raw angle-bracket placeholders inside `<members>` break XML.
 
 ## What package.xml does not carry
 

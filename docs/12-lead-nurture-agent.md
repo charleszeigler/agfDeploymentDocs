@@ -2,8 +2,9 @@
 
 Move customer-owned dependencies for the Agentforce Lead Nurture Agent.
 
-> **Required before deploy:** This guide is dependencies-only for the managed Lead Nurturing template. Configure and activate the managed agent in the target org after deploying dependencies.
-> **Stop if:** The plan is to move the managed Lead Nurturing agent itself, or managed Lead Nurturing agent changes, by change set, Metadata API, or Salesforce CLI. Salesforce documents that this path is not supported. Create and configure the managed agent directly in the target org.
+**Required before deploy:** This guide is dependencies-only for the managed Lead Nurturing template. Configure and activate the managed agent in the target org after deploying dependencies.
+
+**Stop if:** The plan is to move the managed Lead Nurturing agent itself, or managed Lead Nurturing agent changes, by change set, Metadata API, or Salesforce CLI. Salesforce documents that this path is not supported. Create and configure the managed agent directly in the target org.
 
 Treat the managed Lead Nurturing sales engagement template as covered by this limitation unless Salesforce Support confirms otherwise for the customer's exact org and release.
 
@@ -15,13 +16,13 @@ Treat the managed Lead Nurturing sales engagement template as covered by this li
 | Custom `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` source | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
 | Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
 
-> **Do not package:** Do not list `Bot`, `BotVersion`, `GenAiPlannerBundle`, `GenAiPlugin`, or `GenAiFunction` for the managed Lead Nurturing template. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurturing agent.
+**Do not package:** Do not list managed Lead Nurturing runtime metadata. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurturing agent.
 
 ## What can be deployed
 
 | Can move with metadata | Must be configured in the target org |
 |---|---|
-| Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, CLTs, LWC renderers, and separate customer-owned email templates | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
+| Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
 Reusable customer assets can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
@@ -47,9 +48,8 @@ Common dependencies:
 | Custom nurture tracking objects | `CustomObject` |
 | Customer-owned prompt template overrides | `GenAiPromptTemplate` |
 | Custom invocable actions and tests | `ApexClass`, `Flow` |
-| Structured custom action schemas | `LightningTypeBundle` |
-| Custom CLT editor or renderer components | `LightningComponentBundle` |
 | Customer-owned email templates or customer-owned copies, if separate from managed setup | `EmailTemplate` |
+| Callout configuration for custom enrichment or outbound actions | `NamedCredential`, `ExternalCredential` |
 | Data access and setup permissions | `PermissionSet` |
 | Data 360 dependencies | Separate Data Kit package |
 | Customer-owned reusable subagents or actions | Separate reusable assets package |
@@ -60,21 +60,21 @@ Package rules:
 - Do not assume generic Lead, email, or nurture-related flows are Lead Nurturing runtime.
 - Package only confirmed customer-owned email templates or customer-owned copies.
 - Treat Salesforce-provided templates, including `Email Templates from Salesforce`, as managed setup artifacts.
-- Review prompt templates for `{!$Input:...}`, `{!$Flow:...}`, `templateDataProviders`, `outputSchema`, and `SOBJECT://...`.
-- Include required fields, features, provider flows/actions, and `LightningTypeBundle` schemas, or update the prompt before handoff.
+- Review prompt templates for `{!$Input:...}`, `{!$Flow:...}`, `templateDataProviders`, and `SOBJECT://...`.
+- Include required fields, features, provider flows/actions, permissions, and callout configuration, or update the prompt before handoff.
 
-> **Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
+**Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
 
 Next:
 
 1. Retrieve customer-owned dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md).
 2. Deploy the dependency package with [Deploy a Package](01-deploy-package.md).
 
-> **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only customer-owned metadata such as fields, prompt overrides, custom actions, and separate email templates.
+**Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only customer-owned metadata.
 
 ## Optional reusable assets
 
-Use only for customer-owned reusable subagents or actions.
+Use only for project-owned reusable subagents or actions.
 
 - Does not move or update the managed Lead Nurture Agent itself.
 - Uses the `GenAiPlugin` and `GenAiFunction` path for legacy Agent Builder and committed Builder assets.
@@ -87,11 +87,11 @@ Use only for customer-owned reusable subagents or actions.
 5. Add the reusable customer asset.
 6. Preview generated email behavior and action behavior before activation.
 
-> **Manual after deploy:** Adding a reusable asset to the managed target agent is a Builder step. The package only makes the reusable asset available.
+**Manual after deploy:** Adding a reusable asset to the managed target agent is a Builder step. The package only makes the reusable asset available.
 
 ## Complete target setup
 
-> **Manual after deploy:** Lead Nurturing email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
+**Manual after deploy:** Lead Nurturing email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
 
 In the target org:
 
@@ -147,7 +147,7 @@ Capture before handoff:
 | Data library or knowledge source | `__________` |
 | Data 360 dependency, if any | `__________` |
 
-> **Customer-specific value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only customer-owned metadata dependencies.
+**Customer-specific value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only customer-owned metadata dependencies.
 
 ## Validate
 
@@ -162,7 +162,7 @@ Capture before handoff:
 ## Checklist
 
 - [ ] Dependency package contains no managed-template runtime metadata.
-- [ ] Custom fields, objects, prompt templates, actions, CLTs, LWC components, and permission sets are included when used.
+- [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and permission sets are included when used.
 - [ ] Reusable customer assets are packaged separately when used.
 - [ ] Data 360 package prepared separately when used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target manual steps, not `package.xml` members.

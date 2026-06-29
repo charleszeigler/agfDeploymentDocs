@@ -2,7 +2,7 @@
 
 Move a customer-facing Agentforce Service Agent from sandbox to production.
 
-> **Required before deploy:** A Service Agent runs as a dedicated Einstein Agent User. The target-org agent username is a per-org value and must be set before publish.
+**Required before deploy:** A Service Agent runs as a dedicated Einstein Agent User. The target-org agent username is a per-org value and must be set before publish.
 
 ## When this applies
 
@@ -35,13 +35,13 @@ Include referenced dependencies:
 | Invocable Apex actions and tests | `ApexClass` |
 | Flow actions | `Flow` |
 | Prompt templates | `GenAiPromptTemplate` |
-| Structured action schemas | `LightningTypeBundle` |
-| Custom CLT editor or renderer components | `LightningComponentBundle` |
+| Structured custom action schemas, if the agent uses Custom Lightning Types | `LightningTypeBundle` |
+| Custom Lightning Type editor or renderer components, if used by those schemas | `LightningComponentBundle` |
 | Objects and fields | `CustomObject`, `CustomField` |
 | Agent user access | `PermissionSet` |
 | Callout definitions | `NamedCredential`, `ExternalCredential` |
 
-> **Do not package:** Do not include the `User` record for the agent user. Create or select the agent user in the target org.
+**Do not package:** Do not include the `User` record for the agent user. Create or select the agent user in the target org.
 
 Identify action targets in the source bundle:
 
@@ -80,8 +80,9 @@ Copy `result.username`.
 - It assigns Salesforce base Agentforce permissions.
 - It does not assign customer-specific data access.
 
-> **Customer-specific value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
-> **Do not package:** Do not move the source sandbox agent user. User records, user licenses, and the final target username are target-org setup.
+**Customer-specific value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
+
+**Do not package:** Do not move the source sandbox agent user. User records, user licenses, and the final target username are target-org setup.
 
 ## Set `default_agent_user`
 
@@ -98,8 +99,9 @@ Validate the local bundle against the target org:
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-> **Required before deploy:** This edit applies to editable draft `AiAuthoringBundle` source. If the package uses committed agent version metadata such as `BotVersion`, do not edit the retrieved generated metadata. Create a new target version or set the agent user in Builder.
-> **Stop if:** The package still contains a source-sandbox agent username. Replace it before deploy.
+**Required before deploy:** This edit applies to editable draft `AiAuthoringBundle` source. If the package uses committed agent version metadata, do not edit the retrieved generated metadata. Create a new target version or set the agent user in Builder.
+
+**Stop if:** The package still contains a source-sandbox agent username. Replace it before deploy.
 
 ## Deploy the package
 
@@ -115,7 +117,7 @@ sf org assign permset --json --name Service_Agent_Access --on-behalf-of <AGENT_U
 
 The custom permission set must cover the agent's Apex, Flows, prompt templates, objects, fields, and callouts.
 
-> **Manual after deploy:** Record sharing is not solved by metadata alone. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
+**Manual after deploy:** Record sharing is not solved by metadata alone. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
 
 ## Preview, publish, activate
 
@@ -128,7 +130,7 @@ If this Service Agent answers on a website, complete [Migrate Enhanced Web Chat]
 ## Checklist
 
 - [ ] `<AGENT_API_NAME>` replaced everywhere.
-- [ ] Every `apex://`, `flow://`, prompt template, CLT, LWC renderer, object, field, and permission dependency is included.
+- [ ] Every `apex://`, `flow://`, prompt template, object, field, permission, and applicable Custom Lightning Type dependency is included.
 - [ ] Test classes are included for production deploys.
 - [ ] Target agent user is active, licensed, and assigned base Agentforce permissions.
 - [ ] `default_agent_user` uses the target-org username.

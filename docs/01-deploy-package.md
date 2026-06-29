@@ -2,7 +2,7 @@
 
 Validate and deploy a `package.xml` package to a sandbox or production org.
 
-> **Required before deploy:** Complete [Before You Start](00-before-you-start.md), confirm the target org, and confirm the package has no unreplaced placeholders.
+**Required before deploy:** Complete [Before You Start](00-before-you-start.md), confirm the target org, and confirm the package has no unreplaced placeholders.
 
 ## Values needed
 
@@ -33,9 +33,9 @@ deploy-package/
     └── permissionsets/
 ```
 
-`package.xml` lists typed components, such as agent source, Apex, Flows, prompt templates, Custom Lightning Types, LWC editor/renderer components, objects, fields, permission sets, Named Credentials, and External Credentials.
+`package.xml` lists only the typed components for the package being moved.
 
-> **Do not package:** Do not merge Data 360 metadata into the agent package. Use [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md). Do not add Lead Nurturing managed-template runtime metadata to the dependencies package.
+**Do not package:** Do not merge Data 360 metadata into the agent package. Use [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md). Do not add Lead Nurturing managed-template runtime metadata to the dependencies package.
 
 ## What to hand off
 
@@ -49,12 +49,12 @@ Before handoff, confirm:
 - No source-org usernames, domains, credential secrets, or connector auth values remain in the package.
 - The deployment owner starts with [Agentforce Deployment Guides](index.md).
 - Package-specific manual steps are linked or named in the handoff notes.
-- Any package-specific worksheet values are complete for the guides in scope, such as agent users, Data Kit names, Lead Nurturing email setup, or Web Chat domains.
+- Any package-specific worksheet values are complete for the guides in scope.
 - Any prior validation output or job IDs are included with the handoff notes.
 
 ## Validate and deploy to production
 
-> **Production path:** Production deploys with Apex run tests. Include matching test classes.
+**Production path:** Production deploys with Apex run tests. Include matching test classes.
 
 Validate first:
 
@@ -68,7 +68,7 @@ If validation succeeds, copy `result.id` and quick deploy:
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
 
-> **Stop if:** You do not have the job ID from a successful `sf project deploy validate` command. Do not quick deploy a sandbox dry-run job ID.
+**Stop if:** You do not have the job ID from a successful `sf project deploy validate` command. Do not quick deploy a sandbox dry-run job ID.
 
 Alternative: quick deploy the most recent successful validation:
 
@@ -76,21 +76,16 @@ Alternative: quick deploy the most recent successful validation:
 sf project deploy quick --json --use-most-recent --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
 
-> **Stop if:** The validation output includes Apex but reports zero tests run. Send the JSON output to the deployment owner before deploying.
+**Stop if:** The validation output includes Apex but reports zero tests run. Send the JSON output to the deployment owner before deploying.
 
-After each validation or deploy command, check:
-
-- Top-level `"status": 0`
-- `result.status` is `Succeeded`
-
-Use `result.id` as:
+A package is ready to continue only after the deploy result is `Succeeded`. Use `result.id` as:
 
 - `<JOB_ID_FROM_VALIDATE>` for production validation.
 - `<JOB_ID>` for sandbox dry runs and deployed packages.
 
 ## Validate and deploy to a sandbox
 
-> **Sandbox path:** Use a sandbox dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
+**Sandbox path:** Use a sandbox dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
 
 ```bash
 sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
@@ -118,7 +113,7 @@ sf project deploy report --json --use-most-recent --target-org <TARGET_ORG_ALIAS
 
 ## Continue after deploy
 
-> **Manual after deploy:** A successful package deploy is not the finish line. Complete the package-specific post-deploy guide below before go-live.
+**Manual after deploy:** A successful package deploy is not the finish line. Complete the package-specific post-deploy guide below before go-live.
 
 | Package type | Next step |
 |---|---|

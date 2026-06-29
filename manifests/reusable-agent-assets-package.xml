@@ -2,7 +2,7 @@
 <!--
   REUSABLE AGENT ASSETS MANIFEST  (TEMPLATE - not deploy-ready)
   ============================================================================
-  Use this for customer-owned reusable subagents/actions that should appear in
+  Use this for project-owned reusable subagents/actions that should appear in
   Agentforce Builder's Asset Library. This is the GenAiPlugin / GenAiFunction
   path for legacy Agent Builder and committed Builder assets, not the primary
   Agent Script .agent source path. Replace every placeholder and remove any
@@ -11,7 +11,7 @@
   In Markdown docs these values appear as <REUSABLE_SUBAGENT_API_NAME> and
   <REUSABLE_ACTION_API_NAME>; in XML use XML-safe placeholders without brackets.
 
-  For managed Lead Nurture Agent projects, this package can move customer-owned
+  For managed Lead Nurture Agent projects, this package can move project-owned
   reusable assets only. It does not move the managed agent template, generated
   runtime state, mailbox connections, Builder activation state, or users.
 -->
