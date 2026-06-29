@@ -1,12 +1,12 @@
 # Agentforce Deployment Guides
 
-Use these guides to move an existing Agentforce implementation from sandbox to production with Salesforce CLI and `package.xml`.
+Move an existing Agentforce implementation from sandbox to production with Salesforce CLI and `package.xml`.
 
 > **Required before deploy:** Confirm the package type first. Service and Employee Agents use Agent Script metadata. Lead Nurturing packages dependencies only. Data 360 assets use a separate Data Kit package.
 
 ## Deploy an agent end to end
 
-Use this sequence for a normal sandbox-to-production handoff. Skip package types that do not apply.
+Use this sequence. Skip package types that do not apply.
 
 | Step | Do this | Guide |
 |---|---|---|
@@ -21,7 +21,7 @@ Use this sequence for a normal sandbox-to-production handoff. Skip package types
 
 ## Choose the right guide
 
-Open only the guides that match the package. Each guide lists the values it needs; do not gather Data Kit, Web Chat, Lead Nurturing, or user-access values unless that guide applies.
+Open only matching guides. Do not gather Data Kit, Web Chat, Lead Nurturing, or user-access values unless that guide applies.
 
 | Need | Guide |
 |---|---|
@@ -40,7 +40,7 @@ Open only the guides that match the package. Each guide lists the values it need
 
 ## Confirm the agent metadata model
 
-Agentforce metadata changed across legacy Agent Builder, committed Agentforce Builder versions, and Agent Script. Match the source package before you deploy.
+Match the source package before deploy. Agentforce metadata differs across legacy Agent Builder, committed Builder versions, and Agent Script.
 
 | Source shape | Package path | Target-org finish |
 |---|---|---|
@@ -52,13 +52,15 @@ Agentforce metadata changed across legacy Agent Builder, committed Agentforce Bu
 
 ## Placeholder rule
 
-Replace placeholders before running commands. Do not type the angle brackets. For example, if the target alias is `customerProduction`, use `--target-org customerProduction`, not `--target-org <customerProduction>`.
+Replace placeholders before running commands. Do not type angle brackets.
+
+Example: if the target alias is `customerProduction`, use `--target-org customerProduction`, not `--target-org <customerProduction>`.
 
 Manifest XML uses XML-safe placeholders such as `AGENT_API_NAME`; raw `<AGENT_API_NAME>` inside `<members>` would break XML.
 
 ## What package.xml does not carry
 
-`package.xml` moves metadata definitions. It does not move runtime state, secrets, or per-org users.
+`package.xml` moves metadata definitions, not runtime state, secrets, or per-org users.
 
 | Item | Where to finish it |
 |---|---|

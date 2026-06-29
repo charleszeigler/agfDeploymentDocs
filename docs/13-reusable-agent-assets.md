@@ -1,12 +1,17 @@
 # Move Reusable Agent Assets
 
-Move customer-owned reusable Agentforce subagents and actions from a sandbox to another org.
+Move customer-owned reusable Agentforce subagents and actions from sandbox to another org.
 
 > **Required before deploy:** Use this guide only for customer-owned reusable assets. For a full Service or Employee Agent, use the agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for reusable customer assets that you add to it.
 
 ## Metadata model
 
-`GenAiPlugin` and `GenAiFunction` are the reusable asset metadata used by legacy Agent Builder and committed Builder assets. For draft Agent Script source, move the `.agent` bundle with the Service or Employee Agent guide unless you are deliberately packaging reusable Asset Library assets.
+Reusable asset metadata:
+
+- `GenAiPlugin`: reusable subagent/topic
+- `GenAiFunction`: reusable action
+
+Use this path for legacy Agent Builder and committed Builder assets. For draft Agent Script source, use the Service or Employee Agent guide unless you are deliberately packaging Asset Library assets.
 
 ## When this applies
 
@@ -32,7 +37,7 @@ Move customer-owned reusable Agentforce subagents and actions from a sandbox to 
 
 ## Prepare the package
 
-Copy `manifests/reusable-agent-assets-package.xml` to `manifest/package.xml`, then replace XML-safe placeholders with real API names.
+Copy `manifests/reusable-agent-assets-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
 
 Common dependencies:
 
@@ -50,7 +55,7 @@ Common dependencies:
 
 ## Path 1: retrieve reusable assets
 
-Use this path when the source sandbox already shows the subagent or action as a reusable asset.
+Use when the source sandbox already shows the subagent or action as a reusable asset.
 
 Confirm the asset names:
 
@@ -65,11 +70,11 @@ Retrieve the package:
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
-This is the same retrieve command covered in [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). After retrieve, deploy with [Deploy a Package](01-deploy-package.md).
+After retrieve, deploy with [Deploy a Package](01-deploy-package.md).
 
 ## Path 2: make local assets reusable
 
-Use this path when the source agent has local-only topics or actions that do not appear in the Asset Library.
+Use when the source agent has local-only topics or actions that do not appear in the Asset Library.
 
 1. Retrieve the committed custom agent version into a sandbox working package.
 2. Find the local topic under `genAiPlannerBundles/.../localPlugins/`.
@@ -95,7 +100,7 @@ sf org list metadata --json --metadata-type GenAiPlugin --target-org <TARGET_ORG
 sf org list metadata --json --metadata-type GenAiFunction --target-org <TARGET_ORG_ALIAS>
 ```
 
-Confirm the deployed records are standalone assets:
+Confirm deployed records are standalone assets:
 
 ```bash
 sf data query --use-tooling-api --json --target-org <TARGET_ORG_ALIAS> --query "SELECT DeveloperName, IsLocal, ParentId, PlannerId FROM GenAiPluginDefinition WHERE DeveloperName = '<REUSABLE_SUBAGENT_API_NAME>'"
@@ -118,9 +123,13 @@ In Agentforce Builder, open a draft agent and select **Add Resource** > **Add fr
 
 ## Lead Nurture Agent use
 
-For the managed Lead Nurture Agent, create and configure the managed agent in the target org first. Then deploy customer-owned reusable assets with this guide and add them from the Asset Library in the target org.
+For the managed Lead Nurture Agent:
 
-This can reduce rebuild work for custom topics or actions, but it does not make the managed Lead Nurture Agent itself deployable. The same reusable asset package pattern also applies to other Agentforce projects that use Asset Library assets.
+1. Create and configure the managed agent in the target org.
+2. Deploy customer-owned reusable assets with this guide.
+3. Add them from the target org Asset Library.
+
+This can reduce rebuild work for custom topics or actions. It does not make the managed Lead Nurture Agent itself deployable. The same pattern applies to other Asset Library projects.
 
 ## Checklist
 

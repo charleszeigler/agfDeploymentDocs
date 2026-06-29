@@ -1,6 +1,6 @@
 # Publish and Activate
 
-Use this after a successful metadata deploy.
+Use after a successful metadata deploy.
 
 > **Required before deploy:** Publishing is not a substitute for setup. Complete the target-org manual steps in the package-specific guide before publishing or activating.
 
@@ -15,7 +15,7 @@ Use this after a successful metadata deploy.
 
 ## Service and Employee Agents
 
-`sf project deploy` moves editable `AiAuthoringBundle` source. Publish creates a runnable version; activate makes it available.
+`sf project deploy` moves editable `AiAuthoringBundle` source. Publish creates a runnable version. Activate makes it available.
 
 Validate the deployed bundle:
 
@@ -29,7 +29,7 @@ Start live preview before publishing:
 sf agent preview start --json --authoring-bundle <AGENT_API_NAME> --use-live-actions --target-org <TARGET_ORG_ALIAS>
 ```
 
-Use live preview for deployment readiness. Simulated preview can use mock data or relaxed checks, so it does not prove target-org permissions, records, flows, prompts, callouts, or Data 360 access.
+Use live preview for deployment readiness. Simulated preview can use mock data or relaxed checks; it does not prove target-org permissions, records, flows, prompts, callouts, or Data 360 access.
 
 Send a representative message with the returned `result.sessionId`:
 

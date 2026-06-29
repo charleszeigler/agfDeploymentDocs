@@ -1,6 +1,6 @@
 # Deploy and Activate a Service Agent
 
-Deploy a customer-facing Agentforce Service Agent from sandbox to production.
+Move a customer-facing Agentforce Service Agent from sandbox to production.
 
 > **Required before deploy:** A Service Agent runs as a dedicated Einstein Agent User. The target-org agent username is a per-org value and must be set before publish.
 
@@ -25,7 +25,7 @@ Deploy a customer-facing Agentforce Service Agent from sandbox to production.
 
 ## Prepare the package
 
-Copy `manifests/service-agent-package.xml` to `manifest/package.xml`, then replace XML-safe placeholders with real API names.
+Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
 
 Include referenced dependencies:
 
@@ -50,7 +50,12 @@ Identify action targets in the source bundle:
 3. Search in the file for `flow://`.
 4. Add every referenced Apex class and Flow to the package manifest.
 
-If the source files are not already in the package folder, use the two-pass retrieve flow in [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md): retrieve the `AiAuthoringBundle`, inspect the `.agent` file for dependencies, update `package.xml`, then retrieve again.
+If source files are not already in the package folder, use [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md):
+
+1. Retrieve the `AiAuthoringBundle`.
+2. Inspect the `.agent` file for dependencies.
+3. Update `package.xml`.
+4. Retrieve again.
 
 ## Validate in the source sandbox
 
@@ -69,7 +74,11 @@ Create a dedicated target-org agent user, unless one already exists:
 sf org create agent-user --json --target-org <TARGET_ORG_ALIAS>
 ```
 
-Copy the exact `result.username`. The command creates an Einstein Agent User and assigns Salesforce base Agentforce permissions. It does not assign customer-specific data access.
+Copy `result.username`.
+
+- The command creates an Einstein Agent User.
+- It assigns Salesforce base Agentforce permissions.
+- It does not assign customer-specific data access.
 
 > **Customer-specific value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
 > **Do not package:** Do not move the source sandbox agent user. User records, user licenses, and the final target username are target-org setup.
@@ -94,7 +103,7 @@ sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-o
 
 ## Deploy the package
 
-If the source files have not been retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md). Stop if validation or deploy fails.
+If source files are not retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md).
 
 ## Assign custom access to the agent user
 
@@ -104,7 +113,7 @@ Assign the custom access permission set shipped with the package:
 sf org assign permset --json --name Service_Agent_Access --on-behalf-of <AGENT_USER_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-The custom permission set must cover the Apex, Flows, prompt templates, objects, fields, and callouts the agent uses.
+The custom permission set must cover the agent's Apex, Flows, prompt templates, objects, fields, and callouts.
 
 > **Manual after deploy:** Record sharing is not solved by metadata alone. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
 

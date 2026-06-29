@@ -1,11 +1,11 @@
 # Deploy Lead Nurture Agent Dependencies
 
-Move customer-specific dependencies for the Agentforce Lead Nurture Agent.
+Move customer-owned dependencies for the Agentforce Lead Nurture Agent.
 
 > **Required before deploy:** This guide is dependencies-only for the managed Lead Nurturing template. Configure and activate the managed agent in the target org after deploying dependencies.
 > **Stop if:** The plan is to move the managed Lead Nurturing agent itself, or managed Lead Nurturing agent changes, by change set, Metadata API, or Salesforce CLI. Salesforce documents that this path is not supported. Create and configure the managed agent directly in the target org.
 
-Salesforce previously used a sales-development name for this managed agent. Treat the managed Lead Nurturing sales engagement template as covered by this deployment limitation unless Salesforce Support confirms otherwise for the customer's exact org and release.
+Treat the managed Lead Nurturing sales engagement template as covered by this limitation unless Salesforce Support confirms otherwise for the customer's exact org and release.
 
 ## Confirm the agent type
 
@@ -23,7 +23,7 @@ Salesforce previously used a sales-development name for this managed agent. Trea
 |---|---|
 | Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, CLTs, LWC renderers, and separate customer-owned email templates | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
-Customer-owned reusable subagents and actions can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). This can make target setup easier because the asset can be added from the Asset Library instead of recreated by hand.
+Reusable customer assets can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
 ## Values needed
 
@@ -33,11 +33,11 @@ Customer-owned reusable subagents and actions can move separately with [Move Reu
 | `<PACKAGE_XML_PATH>` | Lead Nurture dependency package manifest |
 | `<SOURCE_ORG_ALIAS>` | Only when retrieving dependency metadata from the source sandbox |
 
-The email sender, EAC status, cadence, data library, meeting source, prompt overrides, and opt-out process are captured in the worksheet below, not in the general setup guide.
+Capture email sender, EAC status, cadence, data library, meeting source, prompt overrides, and opt-out process in the worksheet below.
 
 ## Prepare the dependency package
 
-Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`, then replace XML-safe placeholders with real API names.
+Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
 
 Common dependencies:
 
@@ -54,23 +54,31 @@ Common dependencies:
 | Data 360 dependencies | Separate Data Kit package |
 | Customer-owned reusable subagents or actions | Separate reusable assets package |
 
-Generic Lead, email, or nurture-related flows are not automatically Lead Nurturing runtime. Include only confirmed customer-owned flows, prompts, Apex actions, and email templates.
+Package rules:
 
-Salesforce-provided Lead Nurturing email templates, including templates in folders such as `Email Templates from Salesforce`, are managed setup artifacts. Package only confirmed customer-owned templates or copies.
-
-Prompt templates can hide target dependencies. Review each included prompt for `{!$Input:...}` fields, `{!$Flow:...}` providers, `templateDataProviders`, `outputSchema`, and `SOBJECT://...` inputs. Include required fields, features, provider flows/actions, and `LightningTypeBundle` schemas, or update the prompt before handoff.
+- Include only confirmed customer-owned flows, prompts, Apex actions, and email templates.
+- Do not assume generic Lead, email, or nurture-related flows are Lead Nurturing runtime.
+- Package only confirmed customer-owned email templates or customer-owned copies.
+- Treat Salesforce-provided templates, including `Email Templates from Salesforce`, as managed setup artifacts.
+- Review prompt templates for `{!$Input:...}`, `{!$Flow:...}`, `templateDataProviders`, `outputSchema`, and `SOBJECT://...`.
+- Include required fields, features, provider flows/actions, and `LightningTypeBundle` schemas, or update the prompt before handoff.
 
 > **Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
 
-Retrieve the customer-owned dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy the dependency package with [Deploy a Package](01-deploy-package.md).
+Next:
+
+1. Retrieve customer-owned dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md).
+2. Deploy the dependency package with [Deploy a Package](01-deploy-package.md).
 
 > **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only customer-owned metadata such as fields, prompt overrides, custom actions, and separate email templates.
 
 ## Optional reusable assets
 
-Use this only for customer-owned reusable subagents or actions. It does not move or update the managed Lead Nurture Agent itself.
+Use only for customer-owned reusable subagents or actions.
 
-Reusable assets are not Lead Nurture-specific. They use the `GenAiPlugin` and `GenAiFunction` metadata path for legacy Agent Builder and committed Builder assets, and can also help other Agentforce projects that use Asset Library assets.
+- Does not move or update the managed Lead Nurture Agent itself.
+- Uses the `GenAiPlugin` and `GenAiFunction` path for legacy Agent Builder and committed Builder assets.
+- Also applies to other Agentforce projects that use Asset Library assets.
 
 1. Prepare the managed Lead Nurture Agent in the target org.
 2. Deploy the reusable assets with [Move Reusable Agent Assets](13-reusable-agent-assets.md).
@@ -85,7 +93,7 @@ Reusable assets are not Lead Nurture-specific. They use the `GenAiPlugin` and `G
 
 > **Manual after deploy:** Lead Nurturing email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
 
-In the target org, complete the current Salesforce setup flow:
+In the target org:
 
 1. Turn on Lead Nurturing and supporting features.
 2. Assign manager and sales-user permissions.
@@ -96,11 +104,21 @@ In the target org, complete the current Salesforce setup flow:
 7. Configure the Lead Nurturing data library.
 8. Configure behavior, cadence, language, tone, assignment, meeting scheduling, opt-out handling, and activation in Builder.
 
-Sales users who need to see, edit, reschedule, or cancel agent emails must connect their own email accounts to Einstein Activity Capture in the target org.
+Sales users must connect their own email accounts to EAC if they need to see, edit, reschedule, or cancel agent emails.
 
 ## Validate email setup
 
-Lead Nurturing email is target-org runtime setup. The dependency package can include customer-owned email templates, prompt overrides, fields, actions, and permissions; it does not connect mailboxes or create Builder activation state.
+Lead Nurturing email is target-org runtime setup.
+
+Package can include:
+
+- Customer-owned email templates
+- Prompt overrides
+- Fields
+- Actions
+- Permissions
+
+Package does not connect mailboxes or create Builder activation state.
 
 1. Use a test lead or a customer-approved lead record.
 2. Confirm the Lead Nurturing agent user has an active email account connection.
@@ -112,7 +130,7 @@ Lead Nurturing email is target-org runtime setup. The dependency package can inc
 
 ## Fill the implementation worksheet
 
-Capture these values before handoff:
+Capture before handoff:
 
 | Setting | Source value |
 |---|---|

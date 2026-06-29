@@ -1,6 +1,6 @@
 # Deploy and Activate an Employee Agent
 
-Deploy an employee-facing Agentforce Employee Agent from sandbox to production.
+Move an employee-facing Agentforce Employee Agent from sandbox to production.
 
 > **Required before deploy:** Employee Agents run as the logged-in employee. Do not use `default_agent_user` for an Employee Agent.
 
@@ -25,7 +25,7 @@ Deploy an employee-facing Agentforce Employee Agent from sandbox to production.
 
 ## Prepare the package
 
-Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package, then replace XML-safe placeholders with real API names.
+Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names.
 
 Include referenced dependencies:
 
@@ -64,7 +64,12 @@ Identify action targets in the source bundle:
 3. Search in the file for `flow://`.
 4. Add every referenced Apex class and Flow to the source package manifest.
 
-If the source files are not already in the package folder, use the two-pass retrieve flow in [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md): retrieve the `AiAuthoringBundle`, inspect the `.agent` file for dependencies, update `package.xml`, then retrieve again.
+If source files are not already in the package folder, use [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md):
+
+1. Retrieve the `AiAuthoringBundle`.
+2. Inspect the `.agent` file for dependencies.
+3. Update `package.xml`.
+4. Retrieve again.
 
 ## Validate in the source sandbox
 
@@ -77,7 +82,7 @@ Fix validation errors before handoff.
 
 ## Deploy the source package
 
-If the source files have not been retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md). Stop if validation or deploy fails.
+If source files are not retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md).
 
 > **Stop if:** Deploy fails with `In field: botDefinition - no Bot named <AGENT_API_NAME> found`. The package included `agentAccesses` too early. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
@@ -89,7 +94,7 @@ Run [Publish and Activate](02-publish-and-activate.md).
 
 Assign the shipped permission set or permission set group to agent users.
 
-The permission set that grants Employee Agent access must include `agentAccesses` for the agent API name:
+The Employee Agent access permission set must include `agentAccesses`:
 
 ```xml
 <agentAccesses>
@@ -98,7 +103,7 @@ The permission set that grants Employee Agent access must include `agentAccesses
 </agentAccesses>
 ```
 
-For a clean target org, copy `manifests/employee-agent-access-package.xml` to `manifest/employee-agent-access-package.xml`, then deploy it after publish and activation:
+For a clean target org, deploy `manifests/employee-agent-access-package.xml` after publish and activation:
 
 ```bash
 sf project deploy start --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
@@ -110,14 +115,14 @@ sf org assign permset --json --name Employee_Agent_Access --on-behalf-of <EMPLOY
 
 > **Manual after deploy:** Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or a customer-approved assignment process.
 
-For the Lightning Agentforce panel, the employee can also need Salesforce-provided Agentforce user access in the target org. Confirm this in Setup for the customer SKU. In orgs using the default Agentforce panel, this often means:
+For the Lightning Agentforce panel, employees can also need Salesforce-provided Agentforce user access. Confirm names in Setup for the customer SKU. Common defaults:
 
 ```bash
 sf org assign permsetlicense --json --name EinsteinGPTCopilotPsl --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 sf org assign permset --json --name CopilotSalesforceUser --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-In Setup, assign the equivalent Agentforce permission set license and permission set on the employee user record, then assign the package permission set or group.
+In Setup: assign the equivalent Agentforce permission set license and permission set, then assign the package permission set or group.
 
 > **Customer-specific value:** Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
 

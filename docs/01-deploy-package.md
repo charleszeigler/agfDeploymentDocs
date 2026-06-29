@@ -1,6 +1,6 @@
 # Deploy a Package
 
-Validate and deploy a `package.xml` package into a sandbox or production org.
+Validate and deploy a `package.xml` package to a sandbox or production org.
 
 > **Required before deploy:** Complete [Before You Start](00-before-you-start.md), confirm the target org, and confirm the package has no unreplaced placeholders.
 
@@ -33,13 +33,13 @@ deploy-package/
     └── permissionsets/
 ```
 
-`package.xml` lists typed components. It can include agent source, Apex, Flows, prompt templates, Custom Lightning Types, LWC editor/renderer components, objects, fields, permission sets, Named Credentials, and External Credentials.
+`package.xml` lists typed components, such as agent source, Apex, Flows, prompt templates, Custom Lightning Types, LWC editor/renderer components, objects, fields, permission sets, Named Credentials, and External Credentials.
 
 > **Do not package:** Do not merge Data 360 metadata into the agent package. Use [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md). Do not add Lead Nurturing managed-template runtime metadata to the dependencies package.
 
 ## What to hand off
 
-Hand off the whole `deploy-package` folder, not only `package.xml`. Salesforce CLI deploys files under `force-app/main/default`.
+Hand off the whole `deploy-package` folder. Salesforce CLI deploys files under `force-app/main/default`; `package.xml` alone is not enough.
 
 Before handoff, confirm:
 
@@ -62,7 +62,7 @@ Validate first:
 sf project deploy validate --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
 ```
 
-If validation succeeds, copy `result.id` and quick deploy it:
+If validation succeeds, copy `result.id` and quick deploy:
 
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
@@ -70,7 +70,7 @@ sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TAR
 
 > **Stop if:** You do not have the job ID from a successful `sf project deploy validate` command. Do not quick deploy a sandbox dry-run job ID.
 
-You can also quick deploy the most recent successful validation:
+Alternative: quick deploy the most recent successful validation:
 
 ```bash
 sf project deploy quick --json --use-most-recent --target-org <TARGET_ORG_ALIAS> --wait 30
@@ -83,7 +83,10 @@ After each validation or deploy command, check:
 - Top-level `"status": 0`
 - `result.status` is `Succeeded`
 
-Use `result.id` as `<JOB_ID_FROM_VALIDATE>` for production validation, or `<JOB_ID>` for sandbox dry runs and deployed packages.
+Use `result.id` as:
+
+- `<JOB_ID_FROM_VALIDATE>` for production validation.
+- `<JOB_ID>` for sandbox dry runs and deployed packages.
 
 ## Validate and deploy to a sandbox
 
@@ -93,7 +96,7 @@ Use `result.id` as `<JOB_ID_FROM_VALIDATE>` for production validation, or `<JOB_
 sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
-If the dry run succeeds, deploy:
+If the dry run succeeds:
 
 ```bash
 sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
@@ -101,13 +104,13 @@ sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <TARGE
 
 ## Check deploy status
 
-Use the job ID from `result.id`:
+Use `result.id`:
 
 ```bash
 sf project deploy report --json --job-id <JOB_ID> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
 
-If you no longer have the job ID, check the most recent deploy:
+If you no longer have the job ID:
 
 ```bash
 sf project deploy report --json --use-most-recent --target-org <TARGET_ORG_ALIAS> --wait 30

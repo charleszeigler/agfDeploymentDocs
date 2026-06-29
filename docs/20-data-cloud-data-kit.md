@@ -1,12 +1,22 @@
 # Deploy a Data Cloud Data Kit
 
-Use this when an Agentforce deployment depends on Data 360 / Data Cloud metadata.
+Use when an Agentforce deployment depends on Data 360 / Data Cloud metadata.
 
 > **Data 360 prerequisite:** Data 360 metadata must be added to a Data Kit first. Keep the Data Kit package separate from normal Salesforce Platform metadata.
 
 ## What moves
 
-Data Kit metadata moves definitions such as streams, mappings, calculated insights, segments, search indexes, data graphs, and related Data 360 components. It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
+Data Kit metadata moves definitions:
+
+- streams
+- mappings
+- calculated insights
+- segments
+- search indexes
+- data graphs
+- related Data 360 components
+
+It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
 
 ## What can be completed
 
@@ -48,33 +58,36 @@ sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <SOURCE_O
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
-This is the same retrieve step covered in [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md), but the Data Kit manifest must come from the source Data Kit.
+This is the retrieve step from [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md), but the manifest must come from the source Data Kit.
 
 ## Remove key qualifier files
 
-Salesforce calls out key qualifier removal as an important Data Kit deployment step.
+Key qualifier removal is a Data Kit package cleanup step.
 
 > **Stop if:** You have not backed up or committed the project. Removing the wrong XML file can break the Data Kit package.
 > **Do not package:** Do not include confirmed key qualifier metadata in the handoff package. This is local package cleanup only; do not delete target-org fields or objects from Setup.
 
-Preview the files first:
+Preview first:
 
 1. Open the retrieved project folder in your editor or file browser.
 2. Search inside `force-app/main/default/objects` for `<usageTag>KeyQualifier</usageTag>`.
 3. Search the same folder for files whose names start with `KQ_`.
 4. Write down the matching file paths.
 
-Review the list with the packaging owner. Remove only confirmed key qualifier files from the local package folder. If you are not comfortable deleting files, send the reviewed list to the deployment owner.
+Review the list with the packaging owner. Remove only confirmed key qualifier files from the local package folder. If unsure, send the reviewed list to the deployment owner.
 
 > **Manual after deploy:** Complete this cleanup in the project before production handoff. Do not ask a production admin to remove files unless the file list has already been reviewed.
 
 ## Deploy the Data Kit package
 
-Deploy the generated Data Kit metadata with [Deploy a Package](01-deploy-package.md). Use the production validation and quick-deploy path for production, or the sandbox dry-run path for sandbox testing.
+Deploy generated Data Kit metadata with [Deploy a Package](01-deploy-package.md).
+
+- Production: use validation and quick deploy.
+- Sandbox: use dry run, then deploy.
 
 ## Deploy Data Kit components in the target org
 
-Metadata deploy installs the Data Kit metadata. Target Data 360 runtime setup is still required.
+Metadata deploy installs Data Kit metadata. Target Data 360 runtime setup is still required.
 
 > **Manual after deploy:** This target-org runtime step is required even when the metadata deploy succeeds. A successful `package.xml` deploy does not run streams, refresh data, reauthorize connectors, or make the Data Kit components active.
 
@@ -86,7 +99,7 @@ Metadata deploy installs the Data Kit metadata. Target Data 360 runtime setup is
 6. Confirm the target data exists before agent publish.
 7. Assign required Data 360 access. For API deployment, Salesforce calls out the Data 360 Architect permission set.
 
-Verify the target runtime from Setup first:
+Verify target runtime from Setup first:
 
 1. Open Data Cloud Setup -> Data Spaces and confirm the target data space is active.
 2. Open Developer Tools -> Data Kits and confirm the deployed Data Kit is present.
@@ -101,9 +114,15 @@ sf api request rest "/services/data/v67.0/ssot/data-spaces" --target-org <TARGET
 sf api request rest "/services/data/v67.0/ssot/data-kits/<DATA_KIT_DEVELOPER_NAME>" --target-org <TARGET_ORG_ALIAS> --stream-to-file data-kit-detail-check.json
 ```
 
-Open the files and confirm data space status is `Active`, the Data Kit developer name is correct, and expected components are listed. These checks prove visibility, not data freshness.
+Open the files and confirm:
 
-Technical teams can verify row counts with Data Cloud SQL after confirming table names:
+- data space status is `Active`
+- Data Kit developer name is correct
+- expected components are listed
+
+These checks prove visibility, not data freshness.
+
+After confirming table names, technical teams can verify row counts:
 
 ```bash
 sf data360 query sql --json --sql "SELECT COUNT(*) AS record_count FROM <DATA_CLOUD_TABLE_NAME>" --target-org <TARGET_ORG_ALIAS>
@@ -111,17 +130,22 @@ sf data360 query sql --json --sql "SELECT COUNT(*) AS record_count FROM <DATA_CL
 
 > **Stop if:** The Data Kit is visible but component deployment, connector reauthorization, or data refresh has not completed. Do not publish a Data 360-dependent agent yet.
 
-Technical teams can use an API path after metadata install, but the payload is component-specific.
+API deployment is available after metadata install, but the payload is component-specific.
 
 > **Manual after deploy:** API deployment changes the target Data 360 runtime. Run it only after the package deploy is approved, the target data space is confirmed, and the component payload has been reviewed.
 > **Stop if:** You do not have the generated or Salesforce-reviewed component payload. Do not run a generic POST that contains only the Data Kit developer name.
 
-Salesforce documents two technical deployment surfaces:
+Technical deployment surfaces:
 
 - Connect REST API: `POST /services/data/v67.0/ssot/data-kits/<DATA_KIT_DEVELOPER_NAME>`
 - REST invocable flow: `/services/data/v67.0/actions/custom/flow/sfdatakit__DeployDataKitComponents`
 
-The flow path requires `dataKitNameInput`, optional `dataKitDataSpaceInput`, and `dataKitComponentsInput` with the component payload list. The Connect REST path uses component-type-specific payload configuration. If the REST flow action or payload is not ready, use the UI path. Use API deployment only after sandbox validation.
+API notes:
+
+- Flow path requires `dataKitNameInput`, optional `dataKitDataSpaceInput`, and `dataKitComponentsInput`.
+- Connect REST path uses component-type-specific payload configuration.
+- If the payload is not ready, use the UI path.
+- Use API deployment only after sandbox validation.
 
 > **Stop if:** Data Cloud SQL row counts are zero for tables the agent needs. The Data Kit metadata can be correct while the target runtime is still not ready.
 

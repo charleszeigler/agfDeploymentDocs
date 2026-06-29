@@ -1,6 +1,6 @@
 # Final Go-Live Validation
 
-Use this after package validation, deploy, and package-specific setup.
+Use after package validation, deploy, and package-specific setup.
 
 > **Required before deploy:** This page does not replace package validation. Start here only after the deployment owner confirms the package deploy succeeded.
 
@@ -8,9 +8,9 @@ Use this after package validation, deploy, and package-specific setup.
 
 ## How to use this checklist
 
-If you do not use Salesforce CLI, complete these checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
+No CLI required. Complete checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
 
-Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when that feature is not part of the deployment.
+Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when the feature is out of scope.
 
 ## Confirm the package deployed
 
