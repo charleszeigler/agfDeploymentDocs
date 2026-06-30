@@ -1,8 +1,8 @@
-# Move Reusable Agent Assets
+# Reusable Agent Assets
 
 Move project-owned reusable Agentforce subagents and actions from sandbox to another org.
 
-**Required before deploy:** Use this guide only for reusable assets that the implementation team controls. For a full Service or Employee Agent, use the agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for reusable assets that you add to it.
+**Required before deploy:** Use this guide only for reusable assets the project controls. For a full Service or Employee Agent, use the agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for reusable assets that you add to it.
 
 ## Metadata model
 
@@ -15,16 +15,13 @@ Use this path for legacy Agent Builder and committed Builder assets. For draft A
 
 ## When this applies
 
-Use this guide for:
-
-- Reusable subagents already visible in Agentforce Builder.
-- Reusable actions already visible in Agentforce Builder.
-- Local-only topics or actions inside a committed custom agent version, after making a reusable copy.
-
-Do not use this guide for:
-
-- Managed Lead Nurture Agent templates or generated runtime.
-- Draft Agent Script source in `.agent` files. Use the Service or Employee Agent guide.
+| Source asset | Use this guide? |
+|---|---|
+| Reusable subagent already visible in Agentforce Builder | Yes |
+| Reusable action already visible in Agentforce Builder | Yes |
+| Local-only topic or action inside a committed custom agent version | Yes, after making a reusable copy |
+| Managed Lead Nurture Agent template or generated runtime | No |
+| Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
 
 ## Prepare the package
 

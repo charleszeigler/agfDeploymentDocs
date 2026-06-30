@@ -19,31 +19,37 @@ Move an existing Agentforce implementation from sandbox to production with Sales
 
 Process:
 
-- [Before You Start](00-before-you-start.md)
-- [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md)
-- [Deploy a Package](01-deploy-package.md)
-- [Publish and Activate](02-publish-and-activate.md)
-- [Troubleshooting](03-troubleshooting.md)
-- [Final Go-Live Validation](30-final-go-live-validation.md)
+| Guide | Use for |
+|---|---|
+| [Before You Start](00-before-you-start.md) | Target org and prerequisite checks |
+| [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md) | Source retrieve and manifest review |
+| [Deploy a Package](01-deploy-package.md) | Validate, deploy, and check deploy status |
+| [Publish and Activate](02-publish-and-activate.md) | Agent publish, activation, and smoke tests |
+| [Troubleshooting](03-troubleshooting.md) | Deployment, agent, Data 360, and Web Chat failures |
+| [Final Go-Live Validation](30-final-go-live-validation.md) | Final runtime checks |
 
 Package types:
 
-- [Service Agent](10-service-agent.md)
-- [Employee Agent](11-employee-agent.md)
-- [Lead Nurture Agent](12-lead-nurture-agent.md)
-- [Reusable Agent Assets](13-reusable-agent-assets.md)
-- [Data Cloud Data Kit](20-data-cloud-data-kit.md)
-- [Enhanced Web Chat](21-enhanced-web-chat.md)
+| Package | Guide |
+|---|---|
+| Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) |
+| Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
+| Lead Nurture Agent dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
+| Reusable subagents or actions | [Reusable Agent Assets](13-reusable-agent-assets.md) |
+| Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
+| Enhanced Web Chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |
 
 ## Confirm the agent metadata model
 
 Match the source package before deploy. Agentforce metadata differs across legacy Agent Builder, committed Builder versions, and Agent Script.
 
-- Draft Agent Script source in `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`: use the Service or Employee Agent guide; then set target users/access, live preview, publish, and activate.
-- Committed custom agent version: use package-specific retrieve/deploy instructions. Do not edit generated metadata; create a new target version for user or behavior changes.
-- Legacy custom agent without Agent Script: use package-specific `Bot` / `BotVersion` instructions and validate in a sandbox before production.
-- Managed Lead Nurturing or Sales Coach agent: use the Lead Nurturing dependencies guide and configure the managed agent directly in the target org.
-- Customer-owned reusable subagent or action: use Reusable Agent Assets, add from Asset Library, preview, and publish target agent changes.
+| Source shape | Use |
+|---|---|
+| Draft Agent Script source in `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` | Service or Employee Agent guide; then set target users/access, live preview, publish, and activate |
+| Committed custom agent version | Package-specific retrieve/deploy instructions; create a new target version for user or behavior changes |
+| Legacy custom agent without Agent Script | Package-specific `Bot` / `BotVersion` instructions; validate in a sandbox before production |
+| Managed Lead Nurturing or Sales Coach agent | Lead Nurturing dependencies guide; configure the managed agent directly in the target org |
+| Customer-owned reusable subagent or action | Reusable Agent Assets; add from Asset Library, preview, and publish target agent changes |
 
 ## Placeholder rule
 
@@ -53,24 +59,26 @@ Replace command placeholders with real values. Manifest XML uses XML-safe placeh
 
 `package.xml` moves metadata definitions, not runtime state, secrets, or per-org users.
 
-Finish these in the target org:
-
-- Service Agent user setup before publish.
-- Employee Agent access assignment.
-- Committed agent user changes through a new target-org version or Builder setup.
-- Lead Nurturing email and EAC connections.
-- Asset Library selection in a target agent draft.
-- Credential secrets and OAuth tokens.
-- Data 360 runtime deploy and refresh.
-- Enhanced Web Chat publish, CORS, and snippet/domain setup.
+| Item | Finish in target org |
+|---|---|
+| Service Agent user | Setup before publish |
+| Employee Agent access | Permission assignment |
+| Committed agent user changes | New target-org version or Builder setup |
+| Lead Nurturing email and EAC connections | Lead Nurturing setup |
+| Asset Library selection | Target agent draft |
+| Credential secrets and OAuth tokens | Credential setup |
+| Data 360 runtime deploy and refresh | Data 360 setup |
+| Enhanced Web Chat publish, CORS, and snippet/domain setup | Embedded Service Deployment setup |
 
 ## Before go-live
 
 After deploy, use [Final Go-Live Validation](30-final-go-live-validation.md). These are target-org checks, not extra `package.xml` members.
 
-- Service Agent: agent user exists, has required access, live preview passes, agent is published and active.
-- Employee Agent: access package is deployed after activation; a non-admin employee can use the agent from Lightning.
-- Lead Nurturing: managed setup is enabled, agent email/EAC is connected, and Builder preview shows the expected email behavior.
-- Reusable Agent Assets: target agent draft includes the asset, live-action preview passes, and target agent changes are published.
-- Data 360 / Data Cloud: Data Kit components are deployed, connectors are reauthorized, data processes are refreshed, and target data is visible.
-- Enhanced Web Chat: target deployment is published, the website or Experience Builder page loads the target snippet/component, and an online Omni user or active agent handles a test conversation.
+| Includes | Confirm |
+|---|---|
+| Service Agent | Agent user exists, has required access, live preview passes, agent is published and active |
+| Employee Agent | Access package is deployed after activation; a non-admin employee can use the agent from Lightning |
+| Lead Nurturing | Managed setup is enabled, agent email/EAC is connected, and Builder preview shows expected email behavior |
+| Reusable Agent Assets | Target agent draft includes the asset, live-action preview passes, and target agent changes are published |
+| Data 360 / Data Cloud | Data Kit components are deployed, connectors are reauthorized, data processes are refreshed, and target data is visible |
+| Enhanced Web Chat | Target deployment is published, the website or Experience Builder page loads the target snippet/component, and an online Omni user or active agent handles a test conversation |

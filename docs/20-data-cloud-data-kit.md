@@ -20,21 +20,13 @@ It does not move records, ingested data, connector secrets, OAuth tokens, comple
 
 ## What can be completed
 
-This guide covers:
-
-- Create the source Data Kit.
-- Retrieve the generated manifest.
-- Deploy the metadata package.
-- Deploy components by UI or reviewed API payload.
-- Verify target rows.
-
-Confirm before go-live:
-
-- Target data space choice.
-- Connector credentials and OAuth consent.
-- Source-system data availability.
-- Component payload approval.
-- Refresh timing and row-count acceptance.
+| This guide covers | Confirm before go-live |
+|---|---|
+| Create the source Data Kit | Target data space choice |
+| Retrieve the generated manifest | Connector credentials and OAuth consent |
+| Deploy the metadata package | Source-system data availability |
+| Deploy components by UI or reviewed API payload | Component payload approval |
+| Verify target rows | Refresh timing and row-count acceptance |
 
 ## Prepare the Data Kit package in the source sandbox
 

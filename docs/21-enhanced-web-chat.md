@@ -18,21 +18,13 @@ Web Chat migration is high risk:
 
 ## What can be completed
 
-This guide covers:
-
-- Deploy validated metadata.
-- Publish the target Embedded Service Deployment.
-- Confirm the messaging channel.
-- Set Omni availability.
-- Use the built-in test page.
-
-Confirm before go-live:
-
-- Real customer website or Experience Builder host page.
-- Target-org snippet or component selection.
-- Allowed domains.
-- Authentication settings.
-- Smoke test that creates a `MessagingSession`.
+| This guide covers | Confirm before go-live |
+|---|---|
+| Deploy validated metadata | Real customer website or Experience Builder host page |
+| Publish the target Embedded Service Deployment | Target-org snippet or component selection |
+| Confirm the messaging channel | Allowed domains |
+| Set Omni availability | Authentication settings |
+| Use the built-in test page | Smoke test that creates a `MessagingSession` |
 
 Temporary test host: useful for snippet testing, not final go-live evidence. Final evidence must come from the real website or Experience Builder page.
 
@@ -40,18 +32,20 @@ Temporary test host: useful for snippet testing, not final go-live evidence. Fin
 
 Fill from the source sandbox before handoff.
 
-- Embedded Service Deployment API name.
-- Messaging channel API name.
-- Website domain.
-- CORS origins.
-- Experience Builder site domain, if used.
-- Omni routing flow.
-- Queue and routing configuration.
-- Agent API name and active version.
-- Auth/User Verification setting, if used.
-- Snippet location or site page.
-- Generated site iframe allowed origins, if exposed.
-- Branding, pre-chat, labels, business hours.
+| Value | Source |
+|---|---|
+| Embedded Service Deployment API name | |
+| Messaging channel API name | |
+| Website domain | |
+| CORS origins | |
+| Experience Builder site domain, if used | |
+| Omni routing flow | |
+| Queue and routing configuration | |
+| Agent API name and active version | |
+| Auth/User Verification setting, if used | |
+| Snippet location or site page | |
+| Generated site iframe allowed origins, if exposed | |
+| Branding, pre-chat, labels, business hours | |
 
 **Target-org value:** Domains, CORS entries, snippets, generated site URLs, generated site frame settings, auth settings, and publish state are target-org values.
 

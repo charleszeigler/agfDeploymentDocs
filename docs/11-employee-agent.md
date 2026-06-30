@@ -6,10 +6,12 @@ Move an employee-facing Agentforce Employee Agent from sandbox to production.
 
 ## When this applies
 
-- Source metadata: `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`
-- Agent type: `AgentforceEmployeeAgent`
-- Running user: logged-in user.
-- Publish path: deploy source, live preview, publish, activate.
+| Field | Value |
+|---|---|
+| Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
+| Agent type | `AgentforceEmployeeAgent` |
+| Running user | Logged-in user |
+| Publish path | Deploy source, live preview, publish, activate |
 
 ## Prepare the package
 
@@ -39,10 +41,12 @@ Include referenced dependencies:
 
 Use this order when the target org does not already have the Employee Agent:
 
-1. Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used.
-2. Publish and activate the agent to create the target `BotDefinition` and active version.
-3. Deploy the access package with the permission set or group that contains `agentAccesses`.
-4. Assign users and smoke test as a non-admin employee.
+| Order | Action |
+|---|---|
+| 1 | Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used |
+| 2 | Publish and activate the agent to create the target `BotDefinition` and active version |
+| 3 | Deploy the access package with the permission set or group that contains `agentAccesses` |
+| 4 | Assign users and smoke test as a non-admin employee |
 
 Identify action targets in the source bundle:
 

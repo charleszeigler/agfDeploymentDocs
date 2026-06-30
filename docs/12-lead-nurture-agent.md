@@ -10,23 +10,22 @@ Treat the managed Lead Nurturing sales engagement template as covered by this li
 
 ## Confirm the agent type
 
-- Managed Lead Nurturing template from Salesforce setup: use this guide.
-- Custom `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` source: use [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type.
-- Custom compiled agent version metadata: use package-specific compiled-agent instructions after source-org retrieve.
+| Source has | Use |
+|---|---|
+| Managed Lead Nurturing template from Salesforce setup | This guide |
+| Custom `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` source | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
+| Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
 
 **Do not package:** Do not list managed Lead Nurturing runtime metadata. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurturing agent.
 
 ## What can be deployed
 
-Can move with metadata:
+| Scope | Items |
+|---|---|
+| Moves with metadata | Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates |
+| Target-org setup | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
-- Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates.
-
-Configure in the target org:
-
-- Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state.
-
-Reusable customer assets can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
+Reusable customer assets can move separately with [Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
 ## Prepare the dependency package
 
@@ -73,7 +72,7 @@ Use only for project-owned reusable subagents or actions.
 - Also applies to other Agentforce projects that use Asset Library assets.
 
 1. Prepare the managed Lead Nurture Agent in the target org.
-2. Deploy the reusable assets with [Move Reusable Agent Assets](13-reusable-agent-assets.md).
+2. Deploy the reusable assets with [Reusable Agent Assets](13-reusable-agent-assets.md).
 3. Open the target agent draft in Agentforce Builder.
 4. Select **Add Resource** > **Add from Asset Library**.
 5. Add the reusable customer asset.
@@ -124,18 +123,20 @@ Package does not connect mailboxes or create Builder activation state.
 
 Capture before handoff:
 
-- Company or product context.
-- Tone and persona.
-- Email send caps and cadence.
-- Agent sender mailbox.
-- Agent user EAC status.
-- Sales-user EAC requirement.
-- Meeting booking source.
-- Lead assignment rules.
-- Opt-out process.
-- Customer prompt template overrides.
-- Data library or knowledge source.
-- Data 360 dependency, if any.
+| Setting | Value |
+|---|---|
+| Company or product context | |
+| Tone and persona | |
+| Email send caps and cadence | |
+| Agent sender mailbox | |
+| Agent user EAC status | |
+| Sales-user EAC requirement | |
+| Meeting booking source | |
+| Lead assignment rules | |
+| Opt-out process | |
+| Customer prompt template overrides | |
+| Data library or knowledge source | |
+| Data 360 dependency, if any | |
 
 **Target-org value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only customer-owned metadata dependencies.
 

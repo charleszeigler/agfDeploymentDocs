@@ -6,10 +6,12 @@ Move a customer-facing Agentforce Service Agent from sandbox to production.
 
 ## When this applies
 
-- Source metadata: `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`
-- Agent type: `AgentforceServiceAgent`
-- Running user: `default_agent_user` is required.
-- Publish path: deploy source, live preview, publish, activate.
+| Field | Value |
+|---|---|
+| Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
+| Agent type | `AgentforceServiceAgent` |
+| Running user | `default_agent_user` is required |
+| Publish path | Deploy source, live preview, publish, activate |
 
 ## Prepare the package
 
