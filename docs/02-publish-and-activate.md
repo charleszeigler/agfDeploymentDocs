@@ -84,4 +84,4 @@ Do not publish a Data 360-dependent agent until the Data Kit is deployed and tar
 
 If the agent is exposed through Enhanced Web Chat, finish the Embedded Service Deployment setup after the agent is active.
 
-**Manual after deploy:** Publish or republish the Web Chat deployment, update CORS/domain settings, verify the snippet or Embedded Messaging component, and test from the customer website or Experience Builder site.
+**Manual after deploy:** Publish or republish the Web Chat deployment, update CORS/domain settings, verify the snippet or Embedded Messaging component, and test from the target website or Experience Builder site.

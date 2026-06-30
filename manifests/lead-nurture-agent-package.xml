@@ -17,7 +17,7 @@
       Employee Agent using docs/10-service-agent.md or docs/11-employee-agent.md instead.
   ============================================================================
   Replace every placeholder and Object.Field__c with real API names, and remove
-  any block you don't use before handing this to a customer.
+  any block you don't use before handoff.
 
   Data 360 / Data Cloud dependencies are separate. Use a Data Kit manifest from
   docs/20-data-cloud-data-kit.md; do not mix Data 360 metadata into this dependencies package.
@@ -58,7 +58,7 @@
   </types>
   -->
 
-  <!-- Customer-owned outreach email template, if separate from managed setup.
+  <!-- Project-owned outreach email template, if separate from managed setup.
        Do not package the Lead Nurturing agent user's mailbox, EAC connection,
        generated emails, cadence runtime state, or Builder activation state. -->
   <!--

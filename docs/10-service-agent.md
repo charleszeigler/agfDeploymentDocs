@@ -1,6 +1,6 @@
 # Deploy and Activate a Service Agent
 
-Move a customer-facing Agentforce Service Agent from sandbox to production.
+Move an Agentforce Service Agent from sandbox to production.
 
 **Required before deploy:** A Service Agent runs as a dedicated Einstein Agent User. The target-org agent username is a per-org value and must be set before publish.
 
@@ -80,7 +80,7 @@ In the target package copy of the `.agent` file, set the username in `config`:
 
 ```text
 config:
-    default_agent_user: "agent.user.example@customer.com"
+    default_agent_user: "agent.user@example.com"
 ```
 
 Validate the local bundle against the target org:

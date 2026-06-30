@@ -111,6 +111,6 @@ sf project deploy report --json --use-most-recent --target-org <TARGET_ORG_ALIAS
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
-| Legacy Reusable Agent Assets | [Legacy Reusable Agent Assets](13-reusable-agent-assets.md) |
+| Legacy Agent Actions | [Legacy Agent Actions](13-legacy-agent-actions.md) |
 | Data Kit | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
 | Enhanced Web Chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |

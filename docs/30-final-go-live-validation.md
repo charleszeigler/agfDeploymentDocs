@@ -8,7 +8,7 @@ Use after package validation, deploy, and package-specific setup.
 
 ## How to use this checklist
 
-Complete checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
+Complete checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the target website or Experience Builder site.
 
 Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when the feature is out of scope.
 
@@ -24,13 +24,13 @@ Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when the feature is out of scope
 
 ## Service Agent
 
-For customer-facing Service Agents:
+For Service Agents:
 
 1. Confirm the target org has the correct Agentforce features enabled.
 2. Confirm the target Service Agent user exists.
 3. Confirm the Service Agent user has the required permission sets, object access, field access, record access, and credential access.
 4. In Agentforce Builder, confirm the deployed agent opens without validation errors.
-5. Run a live-action preview with a test record or a customer-approved record.
+5. Run a live-action preview with a test record or an approved record.
 6. Publish and activate the intended version.
 7. Smoke test the active agent on the intended channel.
 
@@ -70,7 +70,7 @@ For Data 360 or Data Cloud:
 
 For Agentforce Lead Nurturing dependencies:
 
-1. Confirm the dependency package contains only customer-owned dependencies.
+1. Confirm the dependency package contains only project-owned dependencies.
 2. Enable and complete the current Lead Nurturing setup flow in the target org.
 3. Create or select the target Lead Nurturing agent user.
 4. Connect the agent user's email account.
@@ -78,8 +78,8 @@ For Agentforce Lead Nurturing dependencies:
 6. Confirm required sales users connected their email accounts when they need to manage agent emails.
 7. Confirm the connected email matches the Lead Nurturing agent user's Email field and is not connected to another user.
 8. Confirm the data library, cadence, sender, assignment, meeting-booking source, and opt-out process.
-9. Preview generated emails in Builder with a test lead or customer-approved lead.
-10. Activate automatic sending only after the customer approves the previewed behavior.
+9. Preview generated emails in Builder with a test lead or approved lead.
+10. Activate automatic sending only after the previewed behavior is approved.
 
 **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state.
 
@@ -92,7 +92,7 @@ For Service Agents exposed through Enhanced Web Chat or Messaging for In-App and
 1. Confirm the Service Agent is active.
 2. Confirm the target Embedded Service Deployment is published.
 3. Confirm the target messaging channel is active.
-4. Confirm the customer website or Experience Builder site uses the target-org snippet or Embedded Messaging component.
+4. Confirm the target website or Experience Builder site uses the target-org snippet or Embedded Messaging component.
 5. Confirm CORS, website domain, generated site iframe settings, and authentication settings match the target org.
 6. In the service console, confirm an Omni user is online with a Messaging-available status, unless the design routes directly to an active agent.
 7. Start a conversation from the actual website or Experience Builder site.
@@ -102,7 +102,7 @@ For Service Agents exposed through Enhanced Web Chat or Messaging for In-App and
 
 **Manual after deploy:** Always publish or republish the Embedded Service Deployment after target setup changes.
 
-**Stop if:** There is no real customer website or Experience Builder host page to test, no new Messaging Session appears, the session stays waiting, or no user or active agent handles the conversation. Fix host embedding, publish state, CORS/domain settings, service presence, queue membership, and routing before go-live.
+**Stop if:** There is no real target website or Experience Builder host page to test, no new Messaging Session appears, the session stays waiting, or no user or active agent handles the conversation. Fix host embedding, publish state, CORS/domain settings, service presence, queue membership, and routing before go-live.
 
 ## Handoff record
 

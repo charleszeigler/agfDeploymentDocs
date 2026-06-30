@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  REUSABLE AGENT ASSETS MANIFEST  (TEMPLATE - not deploy-ready)
+  LEGACY AGENT ACTIONS MANIFEST  (TEMPLATE - not deploy-ready)
   ============================================================================
-  Use this for project-owned reusable subagents/actions that should appear in
-  Agentforce Builder's Asset Library. This is the GenAiPlugin / GenAiFunction
-  path for legacy Agent Builder and committed Builder assets, not the primary
-  Agent Script .agent source path. Replace every placeholder and remove any
-  block you do not use before handing this to a customer.
+  Use this for project-owned legacy actions that should appear in Agentforce
+  Builder's Asset Library. This is the GenAiFunction path for legacy Agent
+  Builder and committed Builder actions, not the primary Agent Script .agent
+  source path. Include GenAiPlugin only when the action requires a topic/plugin
+  wrapper. Replace every placeholder and remove any block you do not use before
+  handoff.
 
-  In Markdown docs these values appear as <REUSABLE_SUBAGENT_API_NAME> and
-  <REUSABLE_ACTION_API_NAME>; in XML use XML-safe placeholders without brackets.
+  In Markdown docs these values appear as <LEGACY_PLUGIN_API_NAME> and
+  <LEGACY_ACTION_API_NAME>; in XML use XML-safe placeholders without brackets.
 
   For managed Lead Nurture Agent projects, this package can move project-owned
-  reusable assets only. It does not move the managed agent template, generated
+  legacy actions only. It does not move the managed agent template, generated
   runtime state, mailbox connections, Builder activation state, or users.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 
-  <!-- Reusable subagent / topic -->
+  <!-- Optional topic / plugin wrapper for the action -->
   <types>
-    <members>REUSABLE_SUBAGENT_API_NAME</members>
+    <members>LEGACY_PLUGIN_API_NAME</members>
     <name>GenAiPlugin</name>
   </types>
 
-  <!-- Reusable action -->
+  <!-- Legacy action -->
   <types>
-    <members>REUSABLE_ACTION_API_NAME</members>
+    <members>LEGACY_ACTION_API_NAME</members>
     <name>GenAiFunction</name>
   </types>
 

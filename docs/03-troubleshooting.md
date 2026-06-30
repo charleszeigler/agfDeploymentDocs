@@ -47,7 +47,7 @@ Use this when deployment, publish, activation, or channel setup fails.
 
 | Symptom | What to do |
 |---|---|
-| Customer expects change sets to move Enhanced Web Chat | Stop. Salesforce change sets list Embedded Service Deployment only for standard Chat, not Enhanced Chat. |
+| Deployment plan expects change sets to move Enhanced Web Chat | Stop. Salesforce change sets list Embedded Service Deployment only for standard Chat, not Enhanced Chat. |
 | `Label data too large:(max length:80)` during Web Chat metadata deploy | Stop and use the manual target-org rebuild path. Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported. |
 | Chat button does not load | Check the target org deployment is published, the website domain is in CORS, the snippet or Embedded Messaging component points at the target deployment, and the page referrer policy is compatible. |
 | Experience Builder chat does not appear | Confirm the Embedded Messaging component is on the site, the correct deployment, service URL, and site endpoint are selected, and the site domain is allowed in CORS. |

@@ -20,7 +20,7 @@ Web Chat migration is high risk:
 
 | This guide covers | Confirm before go-live |
 |---|---|
-| Deploy validated metadata | Real customer website or Experience Builder host page |
+| Deploy validated metadata | Real target website or Experience Builder host page |
 | Publish the target Embedded Service Deployment | Target-org snippet or component selection |
 | Confirm the messaging channel | Allowed domains |
 | Set Omni availability | Authentication settings |
@@ -138,7 +138,7 @@ For an external website:
 
 **Stop if:** The page uses a referrer policy that prevents Enhanced Web Chat from loading. Adjust the website policy before troubleshooting Salesforce metadata.
 
-**Stop if:** The deployment has no customer website URL, no Experience Builder page, and no approved temporary test host. There is no surface that can create a `MessagingSession`, so runtime validation cannot finish.
+**Stop if:** The deployment has no target website URL, no Experience Builder page, and no approved temporary test host. There is no surface that can create a `MessagingSession`, so runtime validation cannot finish.
 
 ## Experience Builder setup
 
@@ -150,9 +150,9 @@ For Experience Builder:
 - If preview testing fails, also add the live-preview domain.
 - Do not reuse or modify the generated Enhanced Web Chat isolation site.
 
-**Stop if:** The only URL available for testing is the generated `ESW...` site. Test the actual customer website or Experience Builder site that hosts the snippet or Embedded Messaging component.
+**Stop if:** The only URL available for testing is the generated `ESW...` site. Test the actual target website or Experience Builder site that hosts the snippet or Embedded Messaging component.
 
-**Stop if:** The generated `ESW...` site returns HTTP 200 but shows a blank page or browser `postMessage` origin errors when opened directly. That site is the isolation shell, not the customer-facing chat test surface.
+**Stop if:** The generated `ESW...` site returns HTTP 200 but shows a blank page or browser `postMessage` origin errors when opened directly. That site is the isolation shell, not the target chat test surface.
 
 ## Validate
 

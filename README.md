@@ -21,7 +21,7 @@ Start with `docs/index.md`. Use only the guides that match the package.
 | Package deploy | `01-deploy-package` |
 | Agent publish | `02-publish-and-activate` when the deployment creates or changes an agent version |
 | Agent type | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
-| Dependencies | `13-reusable-agent-assets`, `20-data-cloud-data-kit`, or `21-enhanced-web-chat` when needed |
+| Dependencies | `13-legacy-agent-actions`, `20-data-cloud-data-kit`, or `21-enhanced-web-chat` when needed |
 | Go-live | `30-final-go-live-validation` |
 
 ## Package templates
@@ -34,7 +34,7 @@ Use [manifests](manifests) as starting points. Replace placeholders and remove u
 | [manifests/employee-agent-package.xml](manifests/employee-agent-package.xml) | Employee Agent source and dependencies |
 | [manifests/employee-agent-access-package.xml](manifests/employee-agent-access-package.xml) | Employee Agent access permission set after publish |
 | [manifests/lead-nurture-agent-package.xml](manifests/lead-nurture-agent-package.xml) | Lead Nurture Agent dependencies only |
-| [manifests/reusable-agent-assets-package.xml](manifests/reusable-agent-assets-package.xml) | Customer-owned reusable Agentforce subagents and actions |
+| [manifests/legacy-agent-actions-package.xml](manifests/legacy-agent-actions-package.xml) | Legacy Agent Actions |
 | [manifests/data-cloud-data-kit-package.xml](manifests/data-cloud-data-kit-package.xml) | Example Data Kit manifest shape; prefer the source Data Kit generated manifest |
 
 ## Coverage
@@ -44,7 +44,7 @@ Covered:
 - Package preparation and retrieve flow
 - Service and Employee Agent packages
 - Agent Script versus legacy metadata selection
-- Reusable Agentforce subagents and actions
+- Legacy Agent Actions
 - Publish, activate, and smoke test
 - Employee `agentAccesses`
 - Apex, tests, Flows, prompt templates, objects, fields, permission sets, credentials, and Custom Lightning Types only where the package uses them

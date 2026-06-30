@@ -3,7 +3,7 @@
   SERVICE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
   ============================================================================
   Replace every placeholder and Object__c.Field__c with real API names, and
-  remove any block you don't use before handing this to a customer.
+  remove any block you don't use before handoff.
 
   Primary path: this manifest moves the .agent SOURCE (AiAuthoringBundle) plus
   the agent's DEPENDENCIES. After deploying it, publish the authoring bundle,

@@ -3,7 +3,7 @@
   EMPLOYEE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
   ============================================================================
   Replace every placeholder and Object__c.Field__c with real API names, and
-  remove any block you don't use before handing this to a customer.
+  remove any block you don't use before handoff.
 
   Primary path: moves the .agent SOURCE (AiAuthoringBundle) + dependencies.
   After deploying, publish the authoring bundle, then activate it in JSON mode

@@ -1,12 +1,12 @@
 # Deploy Lead Nurture Agent Dependencies
 
-Move customer-owned dependencies for the Agentforce Lead Nurture Agent.
+Move project-owned dependencies for the Agentforce Lead Nurture Agent.
 
 **Required before deploy:** This guide is dependencies-only for the managed Lead Nurturing template. Configure and activate the managed agent in the target org after deploying dependencies.
 
 **Stop if:** The plan is to move the managed Lead Nurturing agent itself, or managed Lead Nurturing agent changes, by change set, Metadata API, or Salesforce CLI. Salesforce documents that this path is not supported. Create and configure the managed agent directly in the target org.
 
-Treat the managed Lead Nurturing sales engagement template as covered by this limitation unless Salesforce Support confirms otherwise for the customer's exact org and release.
+Treat the managed Lead Nurturing sales engagement template as covered by this limitation unless Salesforce Support confirms otherwise for the target org and release.
 
 ## Confirm the agent type
 
@@ -22,10 +22,10 @@ Treat the managed Lead Nurturing sales engagement template as covered by this li
 
 | Scope | Items |
 |---|---|
-| Moves with metadata | Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates |
+| Moves with metadata | Project-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate project-owned email templates |
 | Target-org setup | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
-Legacy reusable customer assets can move separately with [Legacy Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
+Legacy project actions can move separately with [Legacy Agent Actions](13-legacy-agent-actions.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
 ## Prepare the dependency package
 
@@ -37,19 +37,19 @@ Common dependencies:
 |---|---|
 | Custom Lead, Contact, or Account fields | `CustomField` |
 | Custom nurture tracking objects | `CustomObject` |
-| Customer-owned prompt template overrides | `GenAiPromptTemplate` |
+| Project-owned prompt template overrides | `GenAiPromptTemplate` |
 | Custom invocable actions and tests | `ApexClass`, `Flow` |
-| Customer-owned email templates or customer-owned copies, if separate from managed setup | `EmailTemplate` |
+| Project-owned email templates or project-owned copies, if separate from managed setup | `EmailTemplate` |
 | Callout configuration for custom enrichment or outbound actions | `NamedCredential`, `ExternalCredential` |
 | Data access and setup permissions | `PermissionSet` |
 | Data 360 dependencies | Separate Data Kit package |
-| Customer-owned legacy reusable subagents or actions | Separate legacy reusable assets package |
+| Project-owned legacy agent actions | Separate legacy agent actions package |
 
 Package rules:
 
-- Include only confirmed customer-owned flows, prompts, Apex actions, and email templates.
+- Include only confirmed project-owned flows, prompts, Apex actions, and email templates.
 - Do not assume generic Lead, email, or nurture-related flows are Lead Nurturing runtime.
-- Package only confirmed customer-owned email templates or customer-owned copies.
+- Package only confirmed project-owned email templates or project-owned copies.
 - Treat Salesforce-provided templates, including `Email Templates from Salesforce`, as managed setup artifacts.
 - Review prompt templates for `{!$Input:...}`, `{!$Flow:...}`, `templateDataProviders`, and `SOBJECT://...`.
 - Include required fields, features, provider flows/actions, permissions, and callout configuration, or update the prompt before handoff.
@@ -58,27 +58,27 @@ Package rules:
 
 Next:
 
-1. Retrieve customer-owned dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md).
+1. Retrieve project-owned dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md).
 2. Deploy the dependency package with [Deploy a Package](01-deploy-package.md).
 
-**Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only customer-owned metadata.
+**Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only project-owned metadata.
 
-## Optional legacy reusable assets
+## Optional legacy agent actions
 
-Use only for project-owned legacy reusable subagents or actions.
+Use only for project-owned legacy agent actions.
 
 - Does not move or update the managed Lead Nurture Agent itself.
 - Uses the `GenAiPlugin` and `GenAiFunction` path for legacy Agent Builder and committed Builder assets.
 - Also applies to other Agentforce projects that use Asset Library assets.
 
 1. Prepare the managed Lead Nurture Agent in the target org.
-2. Deploy the legacy reusable assets with [Legacy Reusable Agent Assets](13-reusable-agent-assets.md).
+2. Deploy the legacy agent actions with [Legacy Agent Actions](13-legacy-agent-actions.md).
 3. Open the target agent draft in Agentforce Builder.
 4. Select **Add Resource** > **Add from Asset Library**.
-5. Add the reusable customer asset.
+5. Add the legacy project action.
 6. Preview generated email behavior and action behavior before activation.
 
-**Manual after deploy:** Adding a reusable asset to the managed target agent is a Builder step. The package only makes the reusable asset available.
+**Manual after deploy:** Adding a legacy action to the managed target agent is a Builder step. The package only makes the action available.
 
 ## Complete target setup
 
@@ -103,7 +103,7 @@ Lead Nurturing email is target-org runtime setup.
 
 Package can include:
 
-- Customer-owned email templates
+- Project-owned email templates
 - Prompt overrides
 - Fields
 - Actions
@@ -111,13 +111,13 @@ Package can include:
 
 Package does not connect mailboxes or create Builder activation state.
 
-1. Use a test lead or a customer-approved lead record.
+1. Use a test lead or an approved lead record.
 2. Confirm the Lead Nurturing agent user has an active email account connection.
 3. Confirm Einstein Activity Capture is active for the agent user and any sales users who manage agent emails.
 4. Confirm sender address, cadence, send caps, meeting-booking source, opt-out handling, and assignment rules.
 5. If Send as Seller is on, confirm record owners have Inbox and Einstein Activity Capture access.
 6. Preview the managed agent in Builder and confirm the generated email uses the expected prompt templates and source values.
-7. Do not enable automatic sending until the customer approves the previewed email behavior.
+7. Do not enable automatic sending until the previewed email behavior is approved.
 
 ## Fill the implementation worksheet
 
@@ -134,11 +134,11 @@ Capture before handoff:
 | Meeting booking source | |
 | Lead assignment rules | |
 | Opt-out process | |
-| Customer prompt template overrides | |
+| Project prompt template overrides | |
 | Data library or knowledge source | |
 | Data 360 dependency, if any | |
 
-**Target-org value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only customer-owned metadata dependencies.
+**Target-org value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only project-owned metadata dependencies.
 
 ## Validate
 
@@ -146,7 +146,7 @@ Capture before handoff:
 - Confirm Lead Nurturing is enabled in the target org.
 - Confirm the agent user email and EAC connection are active.
 - Confirm required sales users connected email to EAC.
-- Preview the managed agent in Builder with a test lead or customer-approved lead.
+- Preview the managed agent in Builder with a test lead or approved lead.
 - Confirm generated emails use the expected prompt templates and source values.
 - Confirm opt-out, assignment, and meeting-booking behavior.
 
@@ -154,7 +154,7 @@ Capture before handoff:
 
 - [ ] Dependency package contains no managed-template runtime metadata.
 - [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and permission sets are included when used.
-- [ ] Reusable customer assets are packaged separately when used.
+- [ ] Legacy project actions are packaged separately when used.
 - [ ] Data 360 package prepared separately when used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target manual steps, not `package.xml` members.
 - [ ] Worksheet completed from the source org.

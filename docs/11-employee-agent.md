@@ -104,9 +104,9 @@ sf project deploy start --json --manifest manifest/employee-agent-access-package
 sf org assign permset --json --name Employee_Agent_Access --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-**Manual after deploy:** Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or a customer-approved assignment process.
+**Manual after deploy:** Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or an approved assignment process.
 
-For the Lightning Agentforce panel, employees can also need Salesforce-provided Agentforce user access. Confirm names in Setup for the customer SKU. Common defaults:
+For the Lightning Agentforce panel, employees can also need Salesforce-provided Agentforce user access. Confirm names in Setup for the target-org SKU. Common defaults:
 
 ```bash
 sf org assign permsetlicense --json --name EinsteinGPTCopilotPsl --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
