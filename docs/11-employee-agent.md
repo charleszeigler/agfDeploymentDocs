@@ -13,16 +13,6 @@ Move an employee-facing Agentforce Employee Agent from sandbox to production.
 | Running user | Logged-in user |
 | Publish path | Deploy source, live preview, publish, activate |
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<SOURCE_ORG_ALIAS>` | Source sandbox for validation or retrieve |
-| `<TARGET_ORG_ALIAS>` | Target org for validation, deploy, access, and publish |
-| `<PACKAGE_XML_PATH>` | Final source package manifest |
-| `<AGENT_API_NAME>` | Employee Agent API name |
-| `<EMPLOYEE_USERNAME>` | Target-org employee user for assignment and smoke test |
-
 ## Prepare the package
 
 Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names.
@@ -85,7 +75,7 @@ Fix validation errors before handoff.
 
 If source files are not retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md).
 
-**Stop if:** Deploy fails with `In field: botDefinition - no Bot named <AGENT_API_NAME> found`. The package included `agentAccesses` too early. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
+**Stop if:** Deploy fails with `In field: botDefinition - no Bot named ... found`. The package included `agentAccesses` too early. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
 ## Publish and activate
 
@@ -135,7 +125,7 @@ Because Employee Agents run as the logged-in user, each employee needs the objec
 
 ## Checklist
 
-- [ ] `<AGENT_API_NAME>` replaced everywhere.
+- [ ] Agent API name replaced everywhere.
 - [ ] `default_agent_user` omitted from the Employee Agent source.
 - [ ] Every `apex://`, `flow://`, prompt template, object, field, permission, and applicable Custom Lightning Type dependency is included.
 - [ ] Test classes are included for production deploys.

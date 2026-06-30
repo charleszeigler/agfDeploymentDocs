@@ -24,16 +24,6 @@ It does not move records, ingested data, connector secrets, OAuth tokens, comple
 |---|---|
 | Create the source Data Kit, retrieve the generated manifest, deploy the metadata package, deploy components by UI or reviewed API payload, and verify target rows | Target data space choice, connector credentials, OAuth consent, source-system data availability, component payload approval, refresh timing, and row-count acceptance |
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<SOURCE_ORG_ALIAS>` | Source sandbox where the Data Kit is created |
-| `<TARGET_ORG_ALIAS>` | Target org for metadata deploy and runtime setup |
-| `<PACKAGE_XML_PATH>` | Data Kit generated package manifest |
-| `<DATA_KIT_DEVELOPER_NAME>` | Data Kit developer name |
-| `<DATA_CLOUD_TABLE_NAME>` | Optional row-count check after table names are confirmed |
-
 ## Prepare the Data Kit package in the source sandbox
 
 1. Confirm Data 360 is enabled and provisioned in both orgs.

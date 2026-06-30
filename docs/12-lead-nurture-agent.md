@@ -26,16 +26,6 @@ Treat the managed Lead Nurturing sales engagement template as covered by this li
 
 Reusable customer assets can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<TARGET_ORG_ALIAS>` | Target org for dependency deploy and setup validation |
-| `<PACKAGE_XML_PATH>` | Lead Nurture dependency package manifest |
-| `<SOURCE_ORG_ALIAS>` | Only when retrieving dependency metadata from the source sandbox |
-
-Capture email sender, EAC status, cadence, data library, meeting source, prompt overrides, and opt-out process in the worksheet below.
-
 ## Prepare the dependency package
 
 Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.

@@ -4,17 +4,6 @@ Prepare for sandbox-to-production deployment with Salesforce CLI and `package.xm
 
 **Required before deploy:** Confirm the target org is ready before running deploy commands. Missing Agentforce, Data 360, Messaging, or permission prerequisites should be fixed first.
 
-## Required values
-
-Every path needs:
-
-| Value | Use |
-|---|---|
-| `<TARGET_ORG_ALIAS>` | The production org or sandbox you deploy into |
-| `<PACKAGE_XML_PATH>` | Package manifest path, usually `manifest/package.xml` |
-
-Package-specific guides list the extra values they need.
-
 ## Package preflight
 
 Before deploy, confirm:
@@ -22,7 +11,7 @@ Before deploy, confirm:
 - Salesforce CLI is installed and available as `sf`.
 - The package root contains `sfdx-project.json`.
 - `sfdx-project.json` uses `sourceApiVersion` `64.0` or later; older API versions can miss or fail Agentforce metadata.
-- `<PACKAGE_XML_PATH>` points to the final manifest.
+- The final package manifest is ready.
 - The package has no unreplaced placeholders, source-org usernames, website domains, credential secrets, OAuth tokens, connector auth, or runtime state.
 
 Confirm the CLI version:

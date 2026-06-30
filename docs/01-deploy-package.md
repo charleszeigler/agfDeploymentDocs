@@ -4,15 +4,6 @@ Validate and deploy a `package.xml` package to a sandbox or production org.
 
 **Required before deploy:** Complete [Before You Start](00-before-you-start.md), confirm the target org, and confirm the package has no unreplaced placeholders.
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<TARGET_ORG_ALIAS>` | Org you deploy into |
-| `<PACKAGE_XML_PATH>` | Final package manifest |
-| `<JOB_ID_FROM_VALIDATE>` | Successful production validation job ID |
-| `<JOB_ID>` | Sandbox dry-run, deploy, or report job ID |
-
 ## What the package contains
 
 A deployment package is a Salesforce DX project:

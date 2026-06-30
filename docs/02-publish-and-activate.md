@@ -4,15 +4,6 @@ Use after a successful metadata deploy.
 
 **Required before deploy:** Publishing is not a substitute for setup. Complete the target-org manual steps in the package-specific guide before publishing or activating.
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<TARGET_ORG_ALIAS>` | Org where the agent was deployed |
-| `<AGENT_API_NAME>` | Service or Employee Agent API name |
-| `<SESSION_ID>` | Session ID returned by preview start |
-| `<VERSION_NUMBER>` | Optional explicit version to activate |
-
 ## Service and Employee Agents
 
 `sf project deploy` moves editable `AiAuthoringBundle` source. Publish creates a runnable version. Activate makes it available.

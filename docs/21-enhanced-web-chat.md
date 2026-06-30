@@ -24,16 +24,6 @@ Web Chat migration is high risk:
 
 Temporary test host: useful for snippet testing, not final go-live evidence. Final evidence must come from the real website or Experience Builder page.
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<SOURCE_ORG_ALIAS>` | Source sandbox for metadata review or retrieve |
-| `<TARGET_ORG_ALIAS>` | Target org for dry run, setup, and validation |
-| `<PACKAGE_XML_PATH>` | Web Chat candidate package manifest |
-| `<MESSAGING_CHANNEL_API_NAME>` | Target messaging channel check |
-| `<MESSAGING_SESSION_ID>` | Only after a website smoke test creates a session |
-
 ## Capture source values
 
 Fill from the source sandbox before handoff.
@@ -188,7 +178,7 @@ Expected CLI evidence:
 
 - Messaging channel query shows active `EmbeddedMessaging` / `Enhanced`.
 - Presence query shows a current Messaging-available user.
-- Session query shows a new session for `<MESSAGING_CHANNEL_API_NAME>` after website testing.
+- Session query shows a new session for the target messaging channel after website testing.
 - If waiting, routing shows the intended queue.
 - `AgentWork` appears after Omni acceptance.
 

@@ -4,16 +4,6 @@ Build `package.xml` and retrieve source files from the source sandbox.
 
 **Required before retrieve:** The source sandbox must contain the tested configuration you want to move. If the deployment package is already prepared and validated, skip to [Deploy a Package](01-deploy-package.md).
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<SOURCE_ORG_ALIAS>` | Source sandbox that contains the tested metadata |
-| `<PACKAGE_XML_PATH>` | Manifest path, usually `manifest/package.xml` |
-| `<AGENT_API_NAME>` | Agent API name, only for agent packages |
-
-Package-specific guides list extra values.
-
 ## Create or open the package folder
 
 Use one folder per deployment package:
@@ -41,7 +31,7 @@ Use this minimal `sfdx-project.json`:
 }
 ```
 
-Save the package-specific manifest as `manifest/package.xml`, or use the customer's path as `<PACKAGE_XML_PATH>`.
+Save the package-specific manifest as `manifest/package.xml`, or use the path you will pass to `--manifest`.
 
 ## Log in to the source sandbox
 
@@ -72,7 +62,7 @@ Open only the guide for the package you are moving.
 
 ## Build `package.xml`
 
-Start from the matching template in `manifests`; save the final file as `<PACKAGE_XML_PATH>`.
+Start from the matching template in `manifests`; save the final manifest before retrieve.
 
 Before retrieving:
 

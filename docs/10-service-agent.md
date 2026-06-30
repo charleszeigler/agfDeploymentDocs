@@ -13,16 +13,6 @@ Move a customer-facing Agentforce Service Agent from sandbox to production.
 | Running user | `default_agent_user` is required |
 | Publish path | Deploy source, live preview, publish, activate |
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<SOURCE_ORG_ALIAS>` | Source sandbox for validation or retrieve |
-| `<TARGET_ORG_ALIAS>` | Target org for validation, deploy, user setup, and publish |
-| `<PACKAGE_XML_PATH>` | Final package manifest |
-| `<AGENT_API_NAME>` | Service Agent API name |
-| `<AGENT_USER_USERNAME>` | Target-org Einstein Agent User username |
-
 ## Prepare the package
 
 Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
@@ -129,7 +119,7 @@ If this Service Agent answers on a website, complete [Migrate Enhanced Web Chat]
 
 ## Checklist
 
-- [ ] `<AGENT_API_NAME>` replaced everywhere.
+- [ ] Agent API name replaced everywhere.
 - [ ] Every `apex://`, `flow://`, prompt template, object, field, permission, and applicable Custom Lightning Type dependency is included.
 - [ ] Test classes are included for production deploys.
 - [ ] Target agent user is active, licensed, and assigned base Agentforce permissions.

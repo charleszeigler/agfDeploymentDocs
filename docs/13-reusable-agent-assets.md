@@ -23,18 +23,6 @@ Use this path for legacy Agent Builder and committed Builder assets. For draft A
 | Managed Lead Nurture Agent template or generated runtime | No |
 | Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
 
-## Values needed
-
-| Value | Use |
-|---|---|
-| `<SOURCE_ORG_ALIAS>` | Source sandbox |
-| `<TARGET_ORG_ALIAS>` | Target org |
-| `<PACKAGE_XML_PATH>` | Manifest for retrieve, validate, and deploy |
-| `<REUSABLE_SUBAGENT_API_NAME>` | Standalone `GenAiPlugin` member |
-| `<REUSABLE_ACTION_API_NAME>` | Standalone `GenAiFunction` member |
-| `<BACKING_APEX_CLASS_API_NAME>` | Apex action target, if used |
-| `<BACKING_FLOW_API_NAME>` | Flow action target, if used |
-
 ## Prepare the package
 
 Copy `manifests/reusable-agent-assets-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
