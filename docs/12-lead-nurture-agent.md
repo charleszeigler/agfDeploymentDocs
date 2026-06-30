@@ -25,7 +25,7 @@ Treat the managed Lead Nurturing sales engagement template as covered by this li
 | Moves with metadata | Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates |
 | Target-org setup | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
-Reusable customer assets can move separately with [Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
+Legacy reusable customer assets can move separately with [Legacy Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
 ## Prepare the dependency package
 
@@ -43,7 +43,7 @@ Common dependencies:
 | Callout configuration for custom enrichment or outbound actions | `NamedCredential`, `ExternalCredential` |
 | Data access and setup permissions | `PermissionSet` |
 | Data 360 dependencies | Separate Data Kit package |
-| Customer-owned reusable subagents or actions | Separate reusable assets package |
+| Customer-owned legacy reusable subagents or actions | Separate legacy reusable assets package |
 
 Package rules:
 
@@ -63,16 +63,16 @@ Next:
 
 **Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only customer-owned metadata.
 
-## Optional reusable assets
+## Optional legacy reusable assets
 
-Use only for project-owned reusable subagents or actions.
+Use only for project-owned legacy reusable subagents or actions.
 
 - Does not move or update the managed Lead Nurture Agent itself.
 - Uses the `GenAiPlugin` and `GenAiFunction` path for legacy Agent Builder and committed Builder assets.
 - Also applies to other Agentforce projects that use Asset Library assets.
 
 1. Prepare the managed Lead Nurture Agent in the target org.
-2. Deploy the reusable assets with [Reusable Agent Assets](13-reusable-agent-assets.md).
+2. Deploy the legacy reusable assets with [Legacy Reusable Agent Assets](13-reusable-agent-assets.md).
 3. Open the target agent draft in Agentforce Builder.
 4. Select **Add Resource** > **Add from Asset Library**.
 5. Add the reusable customer asset.

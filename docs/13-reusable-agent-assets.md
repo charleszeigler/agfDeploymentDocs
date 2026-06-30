@@ -1,8 +1,8 @@
-# Reusable Agent Assets
+# Legacy Reusable Agent Assets
 
-Move project-owned reusable Agentforce subagents and actions from sandbox to another org.
+Move project-owned legacy reusable Agentforce subagents and actions from sandbox to another org.
 
-**Required before deploy:** Use this guide only for reusable assets the project controls. For a full Service or Employee Agent, use the agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for reusable assets that you add to it.
+**Required before deploy:** Use this guide only for legacy Agent Builder or committed Builder reusable assets the project controls. For draft Agent Script source, use the Service or Employee Agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for legacy reusable assets that you add to it.
 
 ## Metadata model
 
@@ -11,14 +11,14 @@ Reusable asset metadata:
 - `GenAiPlugin`: reusable subagent/topic
 - `GenAiFunction`: reusable action
 
-Use this path for legacy Agent Builder and committed Builder assets. For draft Agent Script source, use the Service or Employee Agent guide unless you are deliberately packaging Asset Library assets.
+Use this path for legacy Agent Builder and committed Builder assets. For draft Agent Script source, use the Service or Employee Agent guide.
 
 ## When this applies
 
 | Source asset | Use this guide? |
 |---|---|
-| Reusable subagent already visible in Agentforce Builder | Yes |
-| Reusable action already visible in Agentforce Builder | Yes |
+| Legacy reusable subagent already visible in Agentforce Builder | Yes |
+| Legacy reusable action already visible in Agentforce Builder | Yes |
 | Local-only topic or action inside a committed custom agent version | Yes, after making a reusable copy |
 | Managed Lead Nurture Agent template or generated runtime | No |
 | Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
@@ -31,8 +31,8 @@ Common dependencies:
 
 | Dependency | Metadata type |
 |---|---|
-| Reusable subagent or topic | `GenAiPlugin` |
-| Reusable action | `GenAiFunction` |
+| Legacy reusable subagent or topic | `GenAiPlugin` |
+| Legacy reusable action | `GenAiFunction` |
 | Invocable Apex action and tests | `ApexClass` |
 | Flow action | `Flow` |
 | Prompt template action | `GenAiPromptTemplate` |
@@ -41,9 +41,9 @@ Common dependencies:
 | Objects and fields used by the action | `CustomObject`, `CustomField` |
 | Runtime data access | `PermissionSet` |
 
-## Path 1: retrieve reusable assets
+## Path 1: retrieve legacy reusable assets
 
-Use when the source sandbox already shows the subagent or action as a reusable asset.
+Use when the source sandbox already shows the subagent or action as a legacy reusable asset.
 
 Confirm the asset names:
 
@@ -78,7 +78,7 @@ Use when the source agent has local-only topics or actions that do not appear in
 
 **Stop if:** The local asset belongs to the managed Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
 
-**Do not package:** Do not edit generated planner, plugin, or action metadata for direct deployment. Use it only as the source for a new deployable reusable asset.
+**Do not package:** Do not edit generated planner, plugin, or action metadata for direct deployment. Use it only as the source for a new deployable legacy reusable asset.
 
 ## Verify the target org
 
@@ -105,26 +105,26 @@ Expected result:
 | `PlannerId` | blank |
 | `PluginId` for standalone action | blank |
 
-In Agentforce Builder, open a draft agent and select **Add Resource** > **Add from Asset Library**. The reusable subagent should appear there.
+In Agentforce Builder, open a draft agent and select **Add Resource** > **Add from Asset Library**. The legacy reusable subagent should appear there.
 
-**Manual after deploy:** Add the reusable asset to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
+**Manual after deploy:** Add the legacy reusable asset to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
 
-**Target-org value:** After a reusable asset is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone asset later does not prove the already-added agent copy is updated.
+**Target-org value:** After a legacy reusable asset is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone asset later does not prove the already-added agent copy is updated.
 
 ## Lead Nurture Agent use
 
 For the managed Lead Nurture Agent:
 
 1. Create and configure the managed agent in the target org.
-2. Deploy reusable assets with this guide.
+2. Deploy legacy reusable assets with this guide.
 3. Add them from the target org Asset Library.
 
-This can reduce rebuild work for custom topics or actions. It does not make the managed Lead Nurture Agent itself deployable. The same pattern applies to other Asset Library projects.
+This can reduce rebuild work for custom topics or actions. It does not make the managed Lead Nurture Agent itself deployable. The same pattern applies to other legacy Asset Library projects.
 
 ## Checklist
 
 - [ ] Asset is project-owned, not managed-template runtime metadata.
-- [ ] Reusable `GenAiPlugin` and `GenAiFunction` names are exact members in `package.xml`.
+- [ ] Legacy reusable `GenAiPlugin` and `GenAiFunction` names are exact members in `package.xml`.
 - [ ] Backing Apex, Flow, prompt template, object, field, permission, and applicable Custom Lightning Type dependencies are included when used.
 - [ ] Converted local assets are first deployed and retrieved as standalone assets from the source sandbox.
 - [ ] Target records show `IsLocal = false`.

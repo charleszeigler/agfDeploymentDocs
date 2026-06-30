@@ -35,7 +35,7 @@ Package types:
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
 | Lead Nurture Agent dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
-| Reusable subagents or actions | [Reusable Agent Assets](13-reusable-agent-assets.md) |
+| Legacy reusable subagents or actions | [Legacy Reusable Agent Assets](13-reusable-agent-assets.md) |
 | Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
 | Enhanced Web Chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |
 
@@ -49,7 +49,7 @@ Match the source package before deploy. Agentforce metadata differs across legac
 | Committed custom agent version | Package-specific retrieve/deploy instructions; create a new target version for user or behavior changes |
 | Legacy custom agent without Agent Script | Package-specific `Bot` / `BotVersion` instructions; validate in a sandbox before production |
 | Managed Lead Nurturing or Sales Coach agent | Lead Nurturing dependencies guide; configure the managed agent directly in the target org |
-| Customer-owned reusable subagent or action | Reusable Agent Assets; add from Asset Library, preview, and publish target agent changes |
+| Customer-owned legacy reusable subagent or action | Legacy Reusable Agent Assets; add from Asset Library, preview, and publish target agent changes |
 
 ## Placeholder rule
 
@@ -79,6 +79,6 @@ After deploy, use [Final Go-Live Validation](30-final-go-live-validation.md). Th
 | Service Agent | Agent user exists, has required access, live preview passes, agent is published and active |
 | Employee Agent | Access package is deployed after activation; a non-admin employee can use the agent from Lightning |
 | Lead Nurturing | Managed setup is enabled, agent email/EAC is connected, and Builder preview shows expected email behavior |
-| Reusable Agent Assets | Target agent draft includes the asset, live-action preview passes, and target agent changes are published |
+| Legacy Reusable Agent Assets | Target agent draft includes the asset, live-action preview passes, and target agent changes are published |
 | Data 360 / Data Cloud | Data Kit components are deployed, connectors are reauthorized, data processes are refreshed, and target data is visible |
 | Enhanced Web Chat | Target deployment is published, the website or Experience Builder page loads the target snippet/component, and an online Omni user or active agent handles a test conversation |
