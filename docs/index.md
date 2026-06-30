@@ -6,16 +6,14 @@ Move an existing Agentforce implementation from sandbox to production with Sales
 
 ## Deployment Steps
 
-| Step | Do this | Guide |
-|---|---|---|
-| 1 | Confirm target org and prerequisites | [Before You Start](00-before-you-start.md) |
-| 2 | Select the package or agent type guide | This page |
-| 3 | Build the package-specific `package.xml` | Selected guide |
-| 4 | Retrieve source files, if needed | [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md) |
-| 5 | Validate, then deploy to the target org | [Deploy a Package](01-deploy-package.md) |
-| 6 | Complete target setup | Selected guide |
-| 7 | Publish, activate, and smoke test agent changes | [Publish and Activate](02-publish-and-activate.md) |
-| 8 | Run final go-live checks | [Final Go-Live Validation](30-final-go-live-validation.md) |
+1. [Before You Start](00-before-you-start.md): confirm the target org and prerequisites.
+2. Select the package or agent type guide below.
+3. Build the package-specific `package.xml` in the selected guide.
+4. [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md), if source files need to be pulled from a sandbox.
+5. [Deploy a Package](01-deploy-package.md): validate, then deploy to the target org.
+6. Complete target setup in the selected guide.
+7. [Publish and Activate](02-publish-and-activate.md): publish, activate, and smoke test agent changes.
+8. [Final Go-Live Validation](30-final-go-live-validation.md): run final go-live checks.
 
 ## Select Guides
 
