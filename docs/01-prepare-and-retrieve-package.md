@@ -51,14 +51,12 @@ Stop if the username or org details do not match the source sandbox.
 
 Open only the guide for the package you are moving.
 
-| Package | Build the manifest from |
-|---|---|
-| Service Agent source | [Deploy and Activate a Service Agent](10-service-agent.md) |
-| Employee Agent source | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
-| Lead Nurturing dependencies only | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
-| Reusable subagents or actions | [Move Reusable Agent Assets](13-reusable-agent-assets.md) |
-| Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
-| Enhanced Web Chat candidate metadata | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |
+- Service Agent source: [Deploy and Activate a Service Agent](10-service-agent.md)
+- Employee Agent source: [Deploy and Activate an Employee Agent](11-employee-agent.md)
+- Lead Nurturing dependencies only: [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md)
+- Reusable subagents or actions: [Move Reusable Agent Assets](13-reusable-agent-assets.md)
+- Data 360 / Data Cloud: [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md)
+- Enhanced Web Chat candidate metadata: [Migrate Enhanced Web Chat](21-enhanced-web-chat.md)
 
 ## Build `package.xml`
 

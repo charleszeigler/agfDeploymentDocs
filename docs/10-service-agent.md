@@ -6,12 +6,10 @@ Move a customer-facing Agentforce Service Agent from sandbox to production.
 
 ## When this applies
 
-| Check | Expected |
-|---|---|
-| Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
-| Agent type | `AgentforceServiceAgent` |
-| Running user | `default_agent_user` is required |
-| Publish path | Deploy source, live preview, publish, activate |
+- Source metadata: `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`
+- Agent type: `AgentforceServiceAgent`
+- Running user: `default_agent_user` is required.
+- Publish path: deploy source, live preview, publish, activate.
 
 ## Prepare the package
 
@@ -68,9 +66,9 @@ Copy `result.username`.
 
 - The command creates an Einstein Agent User.
 - It assigns Salesforce base Agentforce permissions.
-- It does not assign customer-specific data access.
+- It does not assign project-specific data access.
 
-**Customer-specific value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
+**Target-org value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
 
 **Do not package:** Do not move the source sandbox agent user. User records, user licenses, and the final target username are target-org setup.
 

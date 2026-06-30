@@ -15,13 +15,16 @@ Use this path for legacy Agent Builder and committed Builder assets. For draft A
 
 ## When this applies
 
-| Source asset | Use this guide? |
-|---|---|
-| Reusable subagent already visible in Agentforce Builder | Yes |
-| Reusable action already visible in Agentforce Builder | Yes |
-| Local-only topic or action inside a committed custom agent version | Yes, after making a reusable copy |
-| Managed Lead Nurture Agent template or generated runtime | No |
-| Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
+Use this guide for:
+
+- Reusable subagents already visible in Agentforce Builder.
+- Reusable actions already visible in Agentforce Builder.
+- Local-only topics or actions inside a committed custom agent version, after making a reusable copy.
+
+Do not use this guide for:
+
+- Managed Lead Nurture Agent templates or generated runtime.
+- Draft Agent Script source in `.agent` files. Use the Service or Employee Agent guide.
 
 ## Prepare the package
 
@@ -109,7 +112,7 @@ In Agentforce Builder, open a draft agent and select **Add Resource** > **Add fr
 
 **Manual after deploy:** Add the reusable asset to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
 
-**Customer-specific value:** After a reusable asset is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone asset later does not prove the already-added agent copy is updated.
+**Target-org value:** After a reusable asset is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone asset later does not prove the already-added agent copy is updated.
 
 ## Lead Nurture Agent use
 

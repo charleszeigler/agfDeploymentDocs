@@ -8,7 +8,7 @@ Use after package validation, deploy, and package-specific setup.
 
 ## How to use this checklist
 
-No CLI required. Complete checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
+Complete checks from Setup, Agentforce Builder, Data Cloud Setup, the service console, and the customer website or Experience Builder site.
 
 Record `Pass`, `Fail`, or `N/A`. Use `N/A` only when the feature is out of scope.
 
@@ -106,15 +106,13 @@ For Service Agents exposed through Enhanced Web Chat or Messaging for In-App and
 
 ## Handoff record
 
-Save these values or screenshots with the customer handoff:
+Save these values or screenshots with the deployment handoff:
 
-| Item | Evidence |
-|---|---|
-| Final package deployment | Deployment job ID or Deployment Status screenshot |
-| Service Agent, if used | Active version and successful smoke test |
-| Employee Agent, if used | Non-admin employee smoke test |
-| Data 360 / Data Cloud, if used | Data Kit component deployment and refreshed target data |
-| Lead Nurturing, if used | Approved Builder email preview and mailbox/EAC setup |
-| Enhanced Web Chat, if used | Website conversation test and Messaging Session ID |
+- Final package deployment: deployment job ID or Deployment Status screenshot.
+- Service Agent, if used: active version and successful smoke test.
+- Employee Agent, if used: non-admin employee smoke test.
+- Data 360 / Data Cloud, if used: Data Kit component deployment and refreshed target data.
+- Lead Nurturing, if used: approved Builder email preview and mailbox/EAC setup.
+- Enhanced Web Chat, if used: website conversation test and Messaging Session ID.
 
-**Customer-specific value:** Screenshots and IDs prove target-org readiness for this customer only. Do not reuse them for another org.
+**Target-org evidence:** Screenshots and IDs prove readiness for one target org only. Do not reuse them for another org.

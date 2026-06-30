@@ -6,12 +6,10 @@ Move an employee-facing Agentforce Employee Agent from sandbox to production.
 
 ## When this applies
 
-| Check | Expected |
-|---|---|
-| Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
-| Agent type | `AgentforceEmployeeAgent` |
-| Running user | Logged-in user |
-| Publish path | Deploy source, live preview, publish, activate |
+- Source metadata: `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`
+- Agent type: `AgentforceEmployeeAgent`
+- Running user: logged-in user.
+- Publish path: deploy source, live preview, publish, activate.
 
 ## Prepare the package
 
@@ -41,12 +39,10 @@ Include referenced dependencies:
 
 Use this order when the target org does not already have the Employee Agent:
 
-| Step | Package or action | Includes |
-|---|---|---|
-| 1 | Source package | `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used |
-| 2 | Publish and activate | Creates the target `BotDefinition` and active version |
-| 3 | Access package | Permission set or group with `agentAccesses` |
-| 4 | Assignment and smoke test | Assign users and test as a non-admin employee |
+1. Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used.
+2. Publish and activate the agent to create the target `BotDefinition` and active version.
+3. Deploy the access package with the permission set or group that contains `agentAccesses`.
+4. Assign users and smoke test as a non-admin employee.
 
 Identify action targets in the source bundle:
 
@@ -115,7 +111,7 @@ sf org assign permset --json --name CopilotSalesforceUser --on-behalf-of <EMPLOY
 
 In Setup: assign the equivalent Agentforce permission set license and permission set, then assign the package permission set or group.
 
-**Customer-specific value:** Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
+**Target-org value:** Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
 
 Because Employee Agents run as the logged-in user, each employee needs the object, field, record, Apex, Flow, prompt template, and callout access required by the action path.
 

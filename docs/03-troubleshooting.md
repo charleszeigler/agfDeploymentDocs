@@ -29,7 +29,7 @@ Use this when deployment, publish, activation, or channel setup fails.
 
 | Symptom | What to do |
 |---|---|
-| Runtime metadata deploy fails for Lead Nurturing | Expected for this guide set. Deploy dependencies only, then configure the managed template in Builder. |
+| Runtime metadata deploy fails for Lead Nurturing | Expected here. Deploy dependencies only, then configure the managed template in Builder. |
 | Prompt template deploy fails with an invalid merge field, provider, or schema | Review the prompt for `{!$Input:...}` fields, `{!$Flow:...}` data providers, `templateDataProviders`, `outputSchema`, and `SOBJECT://...` inputs. Add the missing target field or feature, include the provider flow or applicable schema metadata, or remove/update the prompt. |
 | Emails do not send | Confirm the Lead Nurturing agent user email account and Einstein Activity Capture connection are active in the target org. |
 | Sales users cannot see or manage agent emails | Confirm each sales user connected email to Einstein Activity Capture in the target org. |

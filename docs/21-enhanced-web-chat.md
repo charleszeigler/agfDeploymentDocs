@@ -18,9 +18,21 @@ Web Chat migration is high risk:
 
 ## What can be completed
 
-| Deployment owner can do | Customer-specific input still required |
-|---|---|
-| Deploy validated metadata, publish the target Embedded Service Deployment, confirm the messaging channel, set Omni availability, and use the built-in test page | Real customer website or Experience Builder host page, target-org snippet or component selection, allowed domains, authentication settings, and a smoke test that creates a `MessagingSession` |
+This guide covers:
+
+- Deploy validated metadata.
+- Publish the target Embedded Service Deployment.
+- Confirm the messaging channel.
+- Set Omni availability.
+- Use the built-in test page.
+
+Confirm before go-live:
+
+- Real customer website or Experience Builder host page.
+- Target-org snippet or component selection.
+- Allowed domains.
+- Authentication settings.
+- Smoke test that creates a `MessagingSession`.
 
 Temporary test host: useful for snippet testing, not final go-live evidence. Final evidence must come from the real website or Experience Builder page.
 
@@ -28,22 +40,20 @@ Temporary test host: useful for snippet testing, not final go-live evidence. Fin
 
 Fill from the source sandbox before handoff.
 
-| Value | Source value |
-|---|---|
-| Embedded Service Deployment API name | `__________` |
-| Messaging channel API name | `__________` |
-| Website domain | `__________` |
-| CORS origins | `__________` |
-| Experience Builder site domain, if used | `__________` |
-| Omni routing flow | `__________` |
-| Queue and routing configuration | `__________` |
-| Agent API name and active version | `__________` |
-| Auth/User Verification setting, if used | `__________` |
-| Snippet location or site page | `__________` |
-| Generated site iframe allowed origins, if exposed | `__________` |
-| Branding, pre-chat, labels, business hours | `__________` |
+- Embedded Service Deployment API name.
+- Messaging channel API name.
+- Website domain.
+- CORS origins.
+- Experience Builder site domain, if used.
+- Omni routing flow.
+- Queue and routing configuration.
+- Agent API name and active version.
+- Auth/User Verification setting, if used.
+- Snippet location or site page.
+- Generated site iframe allowed origins, if exposed.
+- Branding, pre-chat, labels, business hours.
 
-**Customer-specific value:** Domains, CORS entries, snippets, generated site URLs, generated site frame settings, auth settings, and publish state are target-org values.
+**Target-org value:** Domains, CORS entries, snippets, generated site URLs, generated site frame settings, auth settings, and publish state are target-org values.
 
 ## Package candidate metadata
 

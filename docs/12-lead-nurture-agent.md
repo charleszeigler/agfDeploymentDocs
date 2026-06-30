@@ -10,19 +10,21 @@ Treat the managed Lead Nurturing sales engagement template as covered by this li
 
 ## Confirm the agent type
 
-| If the source has | Use |
-|---|---|
-| Managed Lead Nurturing template from Salesforce setup | This guide |
-| Custom `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` source | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
-| Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
+- Managed Lead Nurturing template from Salesforce setup: use this guide.
+- Custom `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` source: use [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type.
+- Custom compiled agent version metadata: use package-specific compiled-agent instructions after source-org retrieve.
 
 **Do not package:** Do not list managed Lead Nurturing runtime metadata. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurturing agent.
 
 ## What can be deployed
 
-| Can move with metadata | Must be configured in the target org |
-|---|---|
-| Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates | Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
+Can move with metadata:
+
+- Customer-owned fields, objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate customer-owned email templates.
+
+Configure in the target org:
+
+- Managed Lead Nurturing agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state.
 
 Reusable customer assets can move separately with [Move Reusable Agent Assets](13-reusable-agent-assets.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
@@ -122,22 +124,20 @@ Package does not connect mailboxes or create Builder activation state.
 
 Capture before handoff:
 
-| Setting | Source value |
-|---|---|
-| Company or product context | `__________` |
-| Tone and persona | `__________` |
-| Email send caps and cadence | `__________` |
-| Agent sender mailbox | `__________` |
-| Agent user EAC status | `__________` |
-| Sales-user EAC requirement | `__________` |
-| Meeting booking source | `__________` |
-| Lead assignment rules | `__________` |
-| Opt-out process | `__________` |
-| Customer prompt template overrides | `__________` |
-| Data library or knowledge source | `__________` |
-| Data 360 dependency, if any | `__________` |
+- Company or product context.
+- Tone and persona.
+- Email send caps and cadence.
+- Agent sender mailbox.
+- Agent user EAC status.
+- Sales-user EAC requirement.
+- Meeting booking source.
+- Lead assignment rules.
+- Opt-out process.
+- Customer prompt template overrides.
+- Data library or knowledge source.
+- Data 360 dependency, if any.
 
-**Customer-specific value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only customer-owned metadata dependencies.
+**Target-org value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only customer-owned metadata dependencies.
 
 ## Validate
 
