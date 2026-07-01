@@ -20,6 +20,20 @@ Confirm the CLI version:
 sf --version
 ```
 
+Confirm the needed command group is available:
+
+```bash
+sf agent --help
+```
+
+For Data 360 / Data Cloud packages, also confirm the Data 360 commands are available:
+
+```bash
+sf data360 --help
+```
+
+**Stop if:** A required command group is unavailable and the machine cannot install or load Salesforce CLI plugins. Use a workstation or CI image that has the required Salesforce CLI commands before continuing.
+
 ## Log in to the target org
 
 **Production path:** Use the production login URL only when deploying to production.
@@ -48,10 +62,19 @@ For Service or Employee Agent packages:
 
 ```bash
 sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <TARGET_ORG_ALIAS>
+```
+
+**Stop if:** The command returns `INVALID_TYPE` or `Not available for deploy for this organization`. Enable and provision Agentforce for the target org before continuing.
+
+Run authoring-bundle validation only after the package is on disk:
+
+```bash
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-**Stop if:** The command returns `INVALID_TYPE`, `Not available for deploy for this organization`, or `AgentApiNotFound`. Enable and provision Agentforce for the target org before continuing.
+If this page is being used before retrieve, skip authoring-bundle validation here and run it from the Service or Employee Agent guide after source files exist in the package folder.
+
+**Stop if:** Authoring-bundle validation returns `NotFound`, `AgentApiNotFound`, or compilation errors. Confirm Agentforce API access and fix the local Agent Script before deploy.
 
 If prompt templates are included:
 
@@ -61,7 +84,7 @@ sf org list metadata --json --metadata-type GenAiPromptTemplate --target-org <TA
 
 ## Check Data 360 readiness
 
-**Data 360 prerequisite:** If the agent uses Data 360 / Data Cloud, complete the Data Kit guide before publishing the agent.
+**Data 360 prerequisite:** If the agent uses Data 360 / Data Cloud, complete the [Data Kit guide](20-data-cloud-data-kit.md) before publishing the agent.
 
 ```bash
 sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <TARGET_ORG_ALIAS> --stream-to-file data-kits-check.json

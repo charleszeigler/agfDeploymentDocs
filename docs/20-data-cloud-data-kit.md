@@ -117,11 +117,7 @@ Open the files and confirm:
 
 These checks prove visibility, not data freshness.
 
-After confirming table names, technical teams can verify row counts:
-
-```bash
-sf data360 query sql --json --sql "SELECT COUNT(*) AS record_count FROM <DATA_CLOUD_TABLE_NAME>" --target-org <TARGET_ORG_ALIAS>
-```
+After confirming table names, technical teams can optionally verify row counts with Data Explorer or a Data 360 SQL command that has already been validated in the local CLI environment.
 
 **Stop if:** The Data Kit is visible but component deployment, connector reauthorization, or data refresh has not completed. Do not publish a Data 360-dependent agent yet.
 
@@ -143,7 +139,7 @@ API notes:
 - If the payload is not ready, use the UI path.
 - Use API deployment only after sandbox validation.
 
-**Stop if:** Data Cloud SQL row counts are zero for tables the agent needs. The Data Kit metadata can be correct while the target runtime is still not ready.
+**Stop if:** Row-count checks are part of acceptance and counts are zero for tables the agent needs. The Data Kit metadata can be correct while the target runtime is still not ready.
 
 ## Deployment order
 

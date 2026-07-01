@@ -94,7 +94,7 @@ The Employee Agent access permission set must include `agentAccesses`:
 </agentAccesses>
 ```
 
-For a clean target org, deploy `manifests/employee-agent-access-package.xml` after publish and activation:
+For a clean target org, copy `manifests/employee-agent-access-package.xml` to `manifest/employee-agent-access-package.xml`, then deploy it after publish and activation:
 
 ```bash
 sf project deploy start --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30

@@ -76,7 +76,7 @@ Copy `result.username`.
 
 ## Set `default_agent_user`
 
-In the target package copy of the `.agent` file, set the username in `config`:
+In the target package copy of the `.agent` file, set the target-org username in `config`. Use `result.username` from `sf org create agent-user`, not the User record ID.
 
 ```text
 config:

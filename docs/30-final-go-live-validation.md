@@ -2,7 +2,7 @@
 
 Use after package validation, deploy, and package-specific setup.
 
-**Required before deploy:** This page does not replace package validation. Start here only after the deployment owner confirms the package deploy succeeded.
+**Required before go-live:** This page does not replace package validation. Start here only after the deployment owner confirms the package deploy succeeded.
 
 **Manual after deploy:** These are target-org runtime checks. They do not add metadata to `package.xml`.
 

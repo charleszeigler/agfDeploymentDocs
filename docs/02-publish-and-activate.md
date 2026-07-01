@@ -2,7 +2,7 @@
 
 Use after a successful metadata deploy.
 
-**Required before deploy:** Publishing is not a substitute for setup. Complete the target-org manual steps in the package-specific guide before publishing or activating.
+**Required before publish:** Publishing is not a substitute for setup. Complete the target-org manual steps in the package-specific guide before publishing or activating.
 
 ## Service and Employee Agents
 
@@ -46,6 +46,8 @@ Activate:
 sf agent activate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
+With `--json` and no `--version`, the CLI activates the latest published version automatically.
+
 For audited rollouts, activate an explicit version:
 
 ```bash
@@ -68,6 +70,16 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 
 **Manual after deploy:** For clean-target Employee Agent deployments, deploy or update the permission set that contains `agentAccesses` only after publish and activation create the target `BotDefinition`.
 
+## Roll Back an Agent Version
+
+If the new active version misbehaves in production, reactivate the prior known-good version:
+
+```bash
+sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NUMBER> --target-org <TARGET_ORG_ALIAS>
+```
+
+Capture the active version, prior version, preview or runtime session IDs, failing utterances, and deployment job ID for support. Deactivate the agent only when no version should be available to users.
+
 ## Related post-deploy paths
 
 Complete the guide that matches the package before go-live.
@@ -77,3 +89,5 @@ Complete the guide that matches the package before go-live.
 | Lead Nurturing dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Target Lead Nurturing setup, email/EAC, data library, Builder preview, and activation |
 | Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) | Data Kit component deploy, connector reauthorization, and target data refresh before agent live preview |
 | Enhanced Web Chat or Messaging | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Target deployment publish, domain setup, snippet or component setup, and website or Experience Builder conversation test |
+
+In all cases, finish with [Final Go-Live Validation](30-final-go-live-validation.md).
