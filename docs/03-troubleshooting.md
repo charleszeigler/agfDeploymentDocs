@@ -25,13 +25,13 @@ Use this when deployment, publish, activation, or channel setup fails.
 | Published Employee Agent preview fails with `Invalid user ID provided on start session` | Confirm the agent is active, the employee has Salesforce Agentforce user access, the package permission set includes `agentAccesses`, and the permission set is assigned. Then test from the Lightning Agentforce panel as the assigned user. |
 | Prompt template deploys but preview fails on a provider | Confirm the prompt template provider exists and is active in the target org. Some provider setup is Builder-managed. |
 
-## Lead Nurturing
+## Lead Nurture Agent
 
 | Symptom | What to do |
 |---|---|
-| Runtime metadata deploy fails for Lead Nurturing | Expected here. Deploy dependencies only, then configure the managed template in Builder. |
+| Runtime metadata deploy fails for Lead Nurture Agent | Expected here. Deploy dependencies only, then configure Lead Nurture Agent in Builder. |
 | Prompt template deploy fails with an invalid merge field, provider, or schema | Review the prompt for `{!$Input:...}` fields, `{!$Flow:...}` data providers, `templateDataProviders`, `outputSchema`, and `SOBJECT://...` inputs. Add the missing target field or feature, include the provider flow or applicable schema metadata, or remove/update the prompt. |
-| Emails do not send | Confirm the Lead Nurturing agent user email account and Einstein Activity Capture connection are active in the target org. |
+| Emails do not send | Confirm the Lead Nurture Agent user email account and Einstein Activity Capture connection are active in the target org. |
 | Sales users cannot see or manage agent emails | Confirm each sales user connected email to Einstein Activity Capture in the target org. |
 
 ## Data 360

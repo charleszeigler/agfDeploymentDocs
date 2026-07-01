@@ -86,7 +86,7 @@ Complete the guide that matches the package before go-live.
 
 | If the deployment includes | Continue with | Finish before go-live |
 |---|---|---|
-| Lead Nurturing dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Target Lead Nurturing setup, email/EAC, data library, Builder preview, and activation |
+| Lead Nurture Agent dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Target Lead Nurture Agent setup, email/EAC, data library, Builder preview, and activation |
 | Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) | Data Kit component deploy, connector reauthorization, and target data refresh before agent live preview |
 | Enhanced Web Chat or Messaging | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Target deployment publish, domain setup, snippet or component setup, and website or Experience Builder conversation test |
 

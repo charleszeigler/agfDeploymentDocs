@@ -66,22 +66,22 @@ For Data 360 or Data Cloud:
 
 **Stop if:** The Data Kit is visible but components are not deployed, connectors are not authorized, or target row counts are zero for data the agent needs. Do not publish a Data 360-dependent agent yet.
 
-## Lead Nurturing
+## Lead Nurture Agent
 
-For Agentforce Lead Nurturing dependencies:
+For Lead Nurture Agent dependencies:
 
-1. Confirm the dependency package contains only project-owned dependencies.
-2. Enable and complete the current Lead Nurturing setup flow in the target org.
-3. Create or select the target Lead Nurturing agent user.
+1. Confirm the dependency package contains only custom dependencies.
+2. Enable and complete the current Lead Nurture Agent setup flow in the target org.
+3. Create or select the target Lead Nurture Agent user.
 4. Connect the agent user's email account.
 5. Confirm Einstein Activity Capture is active for the agent user.
 6. Confirm required sales users connected their email accounts when they need to manage agent emails.
-7. Confirm the connected email matches the Lead Nurturing agent user's Email field and is not connected to another user.
+7. Confirm the connected email matches the Lead Nurture Agent user's Email field and is not connected to another user.
 8. Confirm the data library, cadence, sender, assignment, meeting-booking source, and opt-out process.
 9. Preview generated emails in Builder with a test lead or approved lead.
 10. Activate automatic sending only after the previewed behavior is approved.
 
-**Do not package:** Do not package Salesforce-provided Lead Nurturing templates, generated emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state.
+**Do not package:** Do not package Salesforce-provided Lead Nurture Agent templates, generated emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state.
 
 **Stop if:** The sender mailbox, EAC connection, data library, or email preview is not approved. Keep automatic sending off.
 
@@ -112,7 +112,7 @@ Save these values or screenshots with the deployment handoff:
 - Service Agent, if used: active version and successful smoke test.
 - Employee Agent, if used: non-admin employee smoke test.
 - Data 360 / Data Cloud, if used: Data Kit component deployment and refreshed target data.
-- Lead Nurturing, if used: approved Builder email preview and mailbox/EAC setup.
+- Lead Nurture Agent, if used: approved Builder email preview and mailbox/EAC setup.
 - Enhanced Web Chat, if used: website conversation test and Messaging Session ID.
 
 **Target-org evidence:** Screenshots and IDs prove readiness for one target org only. Do not reuse them for another org.

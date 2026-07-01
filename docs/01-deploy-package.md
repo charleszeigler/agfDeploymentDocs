@@ -26,7 +26,7 @@ deploy-package/
 
 `package.xml` lists only the typed components for the package being moved.
 
-**Do not package:** Do not merge Data 360 metadata into the agent package. Use [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md). Do not add Lead Nurturing managed-template runtime metadata to the dependencies package.
+**Do not package:** Do not merge Data 360 metadata into the agent package. Use [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md). Do not add Lead Nurture Agent runtime metadata to the dependencies package.
 
 ## What to hand off
 

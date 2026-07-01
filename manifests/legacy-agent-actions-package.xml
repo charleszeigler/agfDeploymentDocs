@@ -2,7 +2,7 @@
 <!--
   LEGACY AGENT ACTIONS MANIFEST  (TEMPLATE - not deploy-ready)
   ============================================================================
-  Use this for project-owned legacy actions that should appear in Agentforce
+  Use this for custom legacy actions that should appear in Agentforce
   Builder's Asset Library. This is the GenAiFunction path for legacy Agent
   Builder and committed Builder actions, not the primary Agent Script .agent
   source path. Include GenAiPlugin only when the action requires a topic/plugin
@@ -12,8 +12,8 @@
   In Markdown docs these values appear as <LEGACY_PLUGIN_API_NAME> and
   <LEGACY_ACTION_API_NAME>; in XML use XML-safe placeholders without brackets.
 
-  For managed Lead Nurture Agent projects, this package can move project-owned
-  legacy actions only. It does not move the managed agent template, generated
+  For Lead Nurture Agent projects, this package can move custom
+  legacy actions only. It does not move the Lead Nurture Agent template, generated
   runtime state, mailbox connections, Builder activation state, or users.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">

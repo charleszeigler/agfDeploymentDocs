@@ -1,8 +1,8 @@
 # Legacy Agent Actions
 
-Move project-owned legacy Agentforce actions from sandbox to another org.
+Move custom legacy Agentforce actions from sandbox to another org.
 
-**Required before deploy:** Use this guide only for legacy Agent Builder or committed Builder actions the project controls. For draft Agent Script source, use the Service or Employee Agent guide. For the managed Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
+**Required before deploy:** Use this guide only for legacy Agent Builder or committed Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
 
 ## Metadata model
 
@@ -20,7 +20,7 @@ Use this path for legacy Agent Builder and committed Builder actions. For draft 
 | Legacy action already visible in Agentforce Builder | Yes |
 | Local-only action inside a committed custom agent version | Yes, after making a deployable copy |
 | Topic or plugin wrapper required by that action | Yes, as support metadata |
-| Managed Lead Nurture Agent template or generated runtime | No |
+| Lead Nurture Agent template or generated runtime | No |
 | Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
 
 ## Prepare the package
@@ -76,7 +76,7 @@ Use when the source agent has a local-only action that does not appear in the As
 10. Retrieve the standalone action by name.
 11. Deploy the retrieved package to the target org.
 
-**Stop if:** The local action belongs to the managed Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
+**Stop if:** The local action belongs to the Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
 
 **Do not package:** Do not edit generated planner, plugin, or action metadata for direct deployment. Use it only as the source for a new deployable legacy action.
 
@@ -113,17 +113,17 @@ In Agentforce Builder, open a draft agent and select **Add Resource** > **Add fr
 
 ## Lead Nurture Agent use
 
-For the managed Lead Nurture Agent:
+For Lead Nurture Agent:
 
-1. Create and configure the managed agent in the target org.
+1. Create and configure Lead Nurture Agent in the target org.
 2. Deploy legacy actions with this guide.
 3. Add them from the target org Asset Library.
 
-This can reduce rebuild work for custom actions. It does not make the managed Lead Nurture Agent itself deployable. The same pattern applies to other legacy action projects.
+This can reduce rebuild work for custom actions. It does not make Lead Nurture Agent itself deployable. The same pattern applies to other legacy action projects.
 
 ## Checklist
 
-- [ ] Action is project-owned, not managed-template runtime metadata.
+- [ ] Action is custom, not Salesforce-managed runtime metadata.
 - [ ] Legacy `GenAiFunction` and required `GenAiPlugin` names are exact members in `package.xml`.
 - [ ] Backing Apex, Flow, prompt template, object, field, permission, and applicable Custom Lightning Type dependencies are included when used.
 - [ ] Converted local actions are first deployed and retrieved as standalone assets from the source sandbox.

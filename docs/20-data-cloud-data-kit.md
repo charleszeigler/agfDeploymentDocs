@@ -40,7 +40,7 @@ sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <SOURCE_O
 
 **Stop if:** The response contains `FUNCTIONALITY_NOT_ENABLED`, `CdpDataKit`, or an `errorCode`. Do not copy a manifest from another org.
 
-4. In the source sandbox, open Data Cloud Setup and create a project-owned DevOps Data Kit for this deployment.
+4. In the source sandbox, open Data Cloud Setup and create a DevOps Data Kit for this deployment.
 5. Add the Data 360 components the agent needs. Review dependencies, policies, and tags.
 6. Download the generated manifest and save it as `manifest/package.xml`.
 

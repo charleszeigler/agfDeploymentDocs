@@ -2,7 +2,7 @@
 
 Move an existing Agentforce implementation from sandbox to production with Salesforce CLI.
 
-Start by choosing the package type. Service and Employee Agent paths assume Agent Script. Lead Nurturing is the managed-agent exception: package only project-owned dependencies and finish setup in the target org.
+Start by choosing the package type. Service and Employee Agent paths assume Agent Script. Lead Nurture Agent is the exception: package only custom dependencies and finish setup in the target org.
 
 ## Choose your path
 
@@ -10,7 +10,7 @@ Start by choosing the package type. Service and Employee Agent paths assume Agen
 |---|---|---|
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Confirm or create the target agent user before publish |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) | Deploy the agent first, then deploy user access after publish and activation |
-| Lead Nurturing | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Package only dependencies; configure the managed agent in the target org |
+| Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Package only custom dependencies; configure the agent in the target org |
 | Legacy Agent Actions | [Legacy Agent Actions](13-legacy-agent-actions.md) | Deploy standalone `GenAiFunction` / `GenAiPlugin` metadata, then add actions from Asset Library |
 | Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) | Use the source Data Kit generated manifest; keep the Data Kit package separate |
 | Enhanced Web Chat / Messaging | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Validate the metadata path in a sandbox or rebuild and publish in the target org |
@@ -27,4 +27,4 @@ Start by choosing the package type. Service and Employee Agent paths assume Agen
 
 ## If something fails
 
-Use [Troubleshooting](03-troubleshooting.md). Stop on failed validation, missing target access, inactive Data 360 runtime, unapproved Lead Nurturing email setup, or Web Chat tests that do not create a target `MessagingSession`.
+Use [Troubleshooting](03-troubleshooting.md). Stop on failed validation, missing target access, inactive Data 360 runtime, unapproved Lead Nurture Agent email setup, or Web Chat tests that do not create a target `MessagingSession`.

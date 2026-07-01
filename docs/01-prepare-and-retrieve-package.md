@@ -55,7 +55,7 @@ Open only the guide for the package you are moving.
 |---|---|
 | Service Agent source | [Deploy and Activate a Service Agent](10-service-agent.md) |
 | Employee Agent source | [Deploy and Activate an Employee Agent](11-employee-agent.md) |
-| Lead Nurturing dependencies only | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
+| Lead Nurture Agent dependencies only | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) |
 | Legacy agent actions | [Legacy Agent Actions](13-legacy-agent-actions.md) |
 | Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) |
 | Enhanced Web Chat candidate metadata | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) |
@@ -71,7 +71,7 @@ Before retrieving:
 - Use exact members for Apex, Flows, prompt templates, legacy agent actions, and Web Chat metadata.
 - Use `Object.Field` format for `CustomField` members.
 - Keep Data 360 metadata in the Data Kit package, not in the agent package.
-- Keep Lead Nurturing managed agent runtime metadata out of the dependencies package.
+- Keep Lead Nurture Agent runtime metadata out of the dependencies package.
 
 **Stop if:** The manifest still contains placeholder names, wildcard members for a large metadata type, or metadata from a package type you are not moving.
 
@@ -113,7 +113,7 @@ Use this for Service and Employee Agent source packages when backing dependencie
 5. Add referenced prompt templates, objects, fields, permission sets, credentials, and Custom Lightning Types only when the Service or Employee Agent source uses them.
 6. Run retrieve again with the completed manifest.
 
-**Do not package:** Do not edit committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit metadata to make retrieval work. Make behavior changes in the source sandbox or create project-owned legacy agent actions.
+**Do not package:** Do not edit committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit metadata to make retrieval work. Make behavior changes in the source sandbox or create standalone legacy actions your team controls.
 
 ## Review the retrieved package
 

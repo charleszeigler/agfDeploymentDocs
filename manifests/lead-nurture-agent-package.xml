@@ -2,14 +2,14 @@
 <!--
   LEAD NURTURE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
   ============================================================================
-  FOR THE MANAGED LEAD NURTURE AGENT — DEPENDENCIES ONLY.
+  FOR LEAD NURTURE AGENT - DEPENDENCIES ONLY.
       Do NOT add Bot / BotVersion / GenAiPlannerBundle / GenAiPlugin / GenAiFunction here.
-      The AGENT is rebuilt from the "Lead Nurturing" template in the target org's
+      The AGENT is rebuilt from the "Lead Nurture Agent" template in the target org's
       setup flow and Agentforce Builder. See docs/12-lead-nurture-agent.md.
       Salesforce documents metadata deployment/retrieval as unsupported for the
-      packaged Lead Nurturing agent, even when behavior varies by org.
+      packaged Lead Nurture Agent, even when behavior varies by org.
 
-      This is a managed-template packaging rule, not because BotVersion is legacy.
+      This is a Salesforce-provided template packaging rule, not because BotVersion is legacy.
       BotVersion is current metadata for Agentforce Agent versions.
 
       NOTE: a CUSTOM Agent Script sales outreach agent (one with its own .agent
@@ -58,8 +58,8 @@
   </types>
   -->
 
-  <!-- Project-owned outreach email template, if separate from managed setup.
-       Do not package the Lead Nurturing agent user's mailbox, EAC connection,
+  <!-- Custom outreach email template, if separate from Salesforce setup.
+       Do not package the Lead Nurture Agent user's mailbox, EAC connection,
        generated emails, cadence runtime state, or Builder activation state. -->
   <!--
   <types>
@@ -91,7 +91,7 @@
 
   <!--
     NOT INCLUDED (by design):
-      Bot, BotVersion, GenAiPlannerBundle  - managed template runtime, not part of this package
+      Bot, BotVersion, GenAiPlannerBundle  - Lead Nurture Agent runtime, not part of this package
       Prebuilt subagents / actions / prompt templates - come from the template
   -->
 
