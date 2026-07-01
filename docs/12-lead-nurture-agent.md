@@ -140,16 +140,6 @@ Capture before handoff:
 
 **Target-org value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only project-owned metadata dependencies.
 
-## Validate
-
-- Confirm the dependency deploy succeeded.
-- Confirm Lead Nurturing is enabled in the target org.
-- Confirm the agent user email and EAC connection are active.
-- Confirm required sales users connected email to EAC.
-- Preview the managed agent in Builder with a test lead or approved lead.
-- Confirm generated emails use the expected prompt templates and source values.
-- Confirm opt-out, assignment, and meeting-booking behavior.
-
 ## Checklist
 
 - [ ] Dependency package contains no managed-template runtime metadata.
@@ -158,7 +148,13 @@ Capture before handoff:
 - [ ] Data 360 package prepared separately when used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target manual steps, not `package.xml` members.
 - [ ] Worksheet completed from the source org.
-- [ ] Builder preview and email validation completed in the target org.
+- [ ] Dependency deploy succeeded.
+- [ ] Lead Nurturing is enabled in the target org.
+- [ ] Agent user email and EAC connection are active.
+- [ ] Required sales users connected email to EAC.
+- [ ] Builder preview completed with a test lead or approved lead.
+- [ ] Generated emails use the expected prompt templates and source values.
+- [ ] Opt-out, assignment, and meeting-booking behavior confirmed.
 
 ## Sources
 

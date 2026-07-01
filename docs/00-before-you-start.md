@@ -1,6 +1,6 @@
 # Before You Start
 
-Prepare for sandbox-to-production deployment with Salesforce CLI and `package.xml`.
+Prepare for sandbox-to-production deployment with Salesforce CLI.
 
 **Required before deploy:** Confirm the target org is ready before running deploy commands. Missing Agentforce, Data 360, Messaging, or permission prerequisites should be fixed first.
 

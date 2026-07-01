@@ -68,20 +68,12 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 
 **Manual after deploy:** For clean-target Employee Agent deployments, deploy or update the permission set that contains `agentAccesses` only after publish and activation create the target `BotDefinition`.
 
-## Lead Nurturing
+## Related post-deploy paths
 
-Lead Nurturing managed-template agents are configured and activated in Agentforce Builder. The dependency package does not ship managed runtime.
+Complete the guide that matches the package before go-live.
 
-**Manual after deploy:** Complete Lead Nurturing setup, connect the agent email account, confirm Einstein Activity Capture, configure the data library, then activate in Builder.
-
-## Data 360
-
-Do not publish a Data 360-dependent agent until the Data Kit is deployed and target data is refreshed.
-
-**Data 360 prerequisite:** The target org must deploy Data Kit components, reauthorize inactive connectors, and run the required streams, mappings, identity, calculated insight, search, or data graph processes before agent live preview.
-
-## Enhanced Web Chat
-
-If the agent is exposed through Enhanced Web Chat, finish the Embedded Service Deployment setup after the agent is active.
-
-**Manual after deploy:** Publish or republish the Web Chat deployment, update CORS/domain settings, verify the snippet or Embedded Messaging component, and test from the target website or Experience Builder site.
+| If the deployment includes | Continue with | Finish before go-live |
+|---|---|---|
+| Lead Nurturing dependencies | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Target Lead Nurturing setup, email/EAC, data library, Builder preview, and activation |
+| Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) | Data Kit component deploy, connector reauthorization, and target data refresh before agent live preview |
+| Enhanced Web Chat or Messaging | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Target deployment publish, domain setup, snippet or component setup, and website or Experience Builder conversation test |
