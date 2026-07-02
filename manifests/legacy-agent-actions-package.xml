@@ -4,7 +4,7 @@
   ============================================================================
   Use this for custom legacy actions that should appear in Agentforce
   Builder's Asset Library. This is the GenAiFunction path for legacy Agent
-  Builder and committed Builder actions, not the primary Agent Script .agent
+  Builder and saved Builder actions, not the primary Agent Script .agent
   source path. Include GenAiPlugin only when the action requires a topic/plugin
   wrapper. Replace every placeholder and remove any block you do not use before
   handoff.

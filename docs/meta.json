@@ -18,11 +18,20 @@
       "title": "Deploy a Package",
       "slug": "deployment-workflow"
     },
-    "20-data-cloud-data-kit",
-    "21-enhanced-web-chat",
     {
-      "title": "Legacy Agent Actions",
-      "slug": "13-legacy-agent-actions"
+      "title": "Supporting Guides",
+      "slug": "",
+      "pages": [
+        {
+          "title": "Data 360 Data Kit",
+          "slug": "20-data-360-data-kit"
+        },
+        "21-enhanced-web-chat",
+        {
+          "title": "Legacy Agent Actions",
+          "slug": "13-legacy-agent-actions"
+        }
+      ]
     },
     "03-troubleshooting"
   ]

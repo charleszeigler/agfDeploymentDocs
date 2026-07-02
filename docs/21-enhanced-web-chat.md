@@ -41,7 +41,7 @@ Fill from the source sandbox before handoff.
 | Experience Builder site domain, if used | |
 | Omni routing flow | |
 | Queue and routing configuration | |
-| Agent API name and active version | |
+| Agent API name | |
 | Auth/User Verification setting, if used | |
 | Snippet location or site page | |
 | Generated site iframe allowed origins, if exposed | |

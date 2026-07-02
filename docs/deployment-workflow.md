@@ -2,7 +2,7 @@
 
 Use this page for the common Salesforce CLI steps after choosing a package guide.
 
-This page does not decide what belongs in `package.xml`. The Service Agent, Employee Agent, Lead Nurture Agent, Data Cloud Data Kit, Enhanced Web Chat, and Legacy Agent Actions guides define the package contents and target-org setup.
+This page does not decide what belongs in `package.xml`. The Service Agent, Employee Agent, Lead Nurture Agent, Data 360 Data Kit, Enhanced Web Chat, and Legacy Agent Actions guides define the package contents and target-org setup.
 
 ## Use This Page For
 
@@ -49,7 +49,7 @@ Before retrieving or deploying:
 - Remove unused template blocks.
 - Keep only one package type in the folder.
 - Keep Data 360 metadata out of agent packages.
-- Keep Lead Nurture Agent runtime metadata out of dependency packages.
+- Keep Lead Nurture Agent itself out of dependency packages.
 - Remove source-org usernames, website domains, generated snippets, credential secrets, OAuth tokens, connector auth, and runtime state.
 
 ## 2. Retrieve source files when needed
@@ -108,7 +108,7 @@ sf --version
 sf agent --help
 ```
 
-For Data 360 / Data Cloud packages:
+For Data 360 packages:
 
 ```bash
 sf data360 --help
@@ -140,7 +140,7 @@ sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <TARG
 
 **Stop if:** The command returns `INVALID_TYPE` or `Not available for deploy for this organization`. Enable and provision Agentforce for the target org before continuing.
 
-If the agent uses Data 360 / Data Cloud, complete [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) before publishing the agent.
+If the agent uses Data 360, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before publishing the agent.
 
 ```bash
 sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <TARGET_ORG_ALIAS> --stream-to-file data-kits-check.json
@@ -262,7 +262,7 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 
 **Stop if:** Live preview fails, returns no expected data, or reports missing agent-user permissions. Fix target-org access before publishing.
 
-For clean-target Employee Agent deployments, deploy or update the permission set that contains `agentAccesses` only after publish and activation create the target `BotDefinition`.
+For clean-target Employee Agent deployments, deploy or update the permission set that contains `agentAccesses` only after the agent is published and active.
 
 To roll back a bad version, reactivate the prior known-good version:
 
@@ -270,7 +270,7 @@ To roll back a bad version, reactivate the prior known-good version:
 sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NUMBER> --target-org <TARGET_ORG_ALIAS>
 ```
 
-Capture the active version, prior version, preview or runtime session IDs, failing utterances, and deployment job ID for support. Deactivate the agent only when no version should be available to users.
+Capture the current and prior agent version numbers, session IDs, failing utterances, and deployment job ID for support. Deactivate the agent only when no version should be available to users.
 
 ## 6. Finish target setup and capture proof
 
@@ -280,7 +280,7 @@ Save these values or screenshots with the deployment handoff:
 - Apex test result summary when Apex was included.
 - Active Service or Employee Agent version when an agent was published.
 - Non-admin Employee Agent smoke test when employee access is in scope.
-- Data Kit component deployment and refreshed target data when Data 360 / Data Cloud is in scope.
+- Data Kit component deployment and refreshed target data when Data 360 is in scope.
 - Approved Lead Nurture Agent email preview and mailbox/EAC setup when Lead Nurture Agent is in scope.
 - Website conversation test and `MessagingSession` ID when Enhanced Web Chat is in scope.
 

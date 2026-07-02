@@ -21,7 +21,7 @@ Use this when deployment, publish, activation, or channel setup fails.
 | `Unknown metadata type 'Agent'` | Do not put `Agent` in `package.xml`. Use explicit metadata types. |
 | Live preview fails on `default_agent_user` | Fix the Service Agent user in the target org. Publishing will not fix it. |
 | Live preview reaches the action but returns blank data | Check object, field, and record access for the running user. Service Agents run as the dedicated agent user. Employee Agents run as the logged-in employee. |
-| Employee permission set deploy fails with `In field: botDefinition - no Bot named ... found` | The permission set includes `agentAccesses` before the target BotDefinition exists. Deploy the Employee Agent source first, publish and activate it, then deploy the access permission set. |
+| Employee access permission set deploy fails before publish | The permission set includes `agentAccesses` too early. Deploy the Employee Agent source first, publish and activate it, then deploy the access permission set. |
 | Published Employee Agent preview fails with `Invalid user ID provided on start session` | Confirm the agent is active, the employee has Salesforce Agentforce user access, the package permission set includes `agentAccesses`, and the permission set is assigned. Then test from the Lightning Agentforce panel as the assigned user. |
 | Prompt template deploys but preview fails on a provider | Confirm the prompt template provider exists and is active in the target org. Some provider setup is Builder-managed. |
 

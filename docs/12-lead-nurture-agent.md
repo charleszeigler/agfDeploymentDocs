@@ -16,7 +16,7 @@ Treat the Lead Nurture Agent sales engagement template as covered by this limita
 | Agent Script in `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
 | Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
 
-Keep Lead Nurture Agent runtime metadata out of the package. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurture Agent.
+Keep Lead Nurture Agent itself out of the package. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurture Agent.
 
 ## What can be deployed
 
@@ -48,7 +48,7 @@ Common dependencies:
 Package rules:
 
 - Include only confirmed custom flows, prompts, Apex actions, and email templates.
-- Do not assume generic Lead, email, or nurture-related flows are Lead Nurture Agent runtime.
+- Do not assume generic Lead, email, or nurture-related flows belong to Lead Nurture Agent.
 - Package only confirmed custom email templates or custom copies.
 - Treat Salesforce-provided templates, including `Email Templates from Salesforce`, as Salesforce setup artifacts.
 - Leave Salesforce-provided Lead Nurture Agent templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, and Builder activation state out of the package.
@@ -67,7 +67,7 @@ Next:
 Use only for custom legacy agent actions.
 
 - Does not move or update Lead Nurture Agent itself.
-- Uses the `GenAiPlugin` and `GenAiFunction` path for legacy Agent Builder and committed Builder assets.
+- Uses the `GenAiPlugin` and `GenAiFunction` path for legacy Agent Builder and saved Builder assets.
 - Also applies to other Agentforce projects that use Asset Library assets.
 
 1. Prepare Lead Nurture Agent in the target org.
@@ -141,7 +141,7 @@ Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-libra
 
 ## Checklist
 
-- [ ] Dependency package contains no Lead Nurture Agent runtime metadata.
+- [ ] Dependency package does not include Lead Nurture Agent itself.
 - [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and permission sets are included when used.
 - [ ] Legacy project actions are packaged separately when used.
 - [ ] Data 360 package prepared separately when used.

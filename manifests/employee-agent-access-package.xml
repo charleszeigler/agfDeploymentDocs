@@ -7,7 +7,7 @@
 
   The permission set listed here must include <agentAccesses> for AGENT_API_NAME.
   In a clean target org, deploying that permission set before publish can fail
-  with: In field: botDefinition - no Bot named AGENT_API_NAME found.
+  because the target agent is not available for access assignment yet.
 
   Replace every placeholder with real API names before handoff.
 -->

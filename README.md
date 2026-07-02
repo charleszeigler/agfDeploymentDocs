@@ -18,7 +18,7 @@ Start with `docs/index.md`. Use only the guides that match the package.
 |---|---|
 | Package deploy | `deployment-workflow` for source retrieve, target preflight, package deploy, and Service or Employee Agent publish |
 | Agent type | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
-| Dependencies | `13-legacy-agent-actions`, `20-data-cloud-data-kit`, or `21-enhanced-web-chat` when needed |
+| Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
 
 ## Package templates
 
@@ -31,4 +31,4 @@ Use [manifests](manifests) as starting points. Replace placeholders and remove u
 | [manifests/employee-agent-access-package.xml](manifests/employee-agent-access-package.xml) | Employee Agent access permission set after publish |
 | [manifests/lead-nurture-agent-package.xml](manifests/lead-nurture-agent-package.xml) | Lead Nurture Agent dependencies only |
 | [manifests/legacy-agent-actions-package.xml](manifests/legacy-agent-actions-package.xml) | Legacy Agent Actions |
-| [manifests/data-cloud-data-kit-package.xml](manifests/data-cloud-data-kit-package.xml) | Example Data Kit manifest shape; prefer the source Data Kit generated manifest |
+| [manifests/data-360-data-kit-package.xml](manifests/data-360-data-kit-package.xml) | Example Data Kit manifest shape; prefer the source Data Kit generated manifest |

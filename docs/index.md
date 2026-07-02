@@ -2,25 +2,36 @@
 
 Move an existing Agentforce implementation from sandbox to production with Salesforce CLI.
 
-Start by choosing the package type. Service and Employee Agent paths assume Agent Script. Lead Nurture Agent is the exception: package only custom dependencies and finish setup in the target org.
+Start with the agent guide that matches what you are moving. Then use the shared deploy workflow for the Salesforce CLI steps. Add the supporting guides only when the deployment includes those features.
 
-## Choose your path
+## 1. Choose the agent guide
 
-| Package or feature | Use this guide | Key instruction |
+| What you are moving | Start here | Key instruction |
 |---|---|---|
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Confirm or create the target agent user before publish |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) | Deploy the agent first, then deploy user access after publish and activation |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Package only custom dependencies; configure the agent in the target org |
-| Legacy Agent Actions | [Legacy Agent Actions](13-legacy-agent-actions.md) | Deploy standalone `GenAiFunction` / `GenAiPlugin` metadata, then add actions from Asset Library |
-| Data 360 / Data Cloud | [Deploy a Data Cloud Data Kit](20-data-cloud-data-kit.md) | Use the source Data Kit generated manifest; keep the Data Kit package separate |
+
+Service Agent and Employee Agent paths assume Agent Script source. Lead Nurture Agent is the exception: package only custom dependencies and finish setup in the target org.
+
+## 2. Deploy the package
+
+After the agent guide tells you what belongs in the package, use [Deploy a Package](deployment-workflow.md) for the common Salesforce CLI flow:
+
+1. create the package folder
+2. retrieve source files when needed
+3. confirm the target org
+4. validate and deploy
+5. publish and activate Service or Employee Agents
+6. capture go-live proof
+
+## 3. Add supporting setup only when needed
+
+| Feature in scope | Use this guide | Key instruction |
+|---|---|---|
+| Data 360 | [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) | Use the source Data Kit generated manifest; keep the Data Kit package separate |
 | Enhanced Web Chat / Messaging | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Validate the metadata path in a sandbox or rebuild and publish in the target org |
-
-## Follow the sequence
-
-1. Open the guide for the package type you are moving.
-2. Build the package-specific `package.xml` from the selected path. Templates live in the repo-level `manifests/` directory; copy the selected template into the package's `manifest/` folder.
-3. Use [Deploy a Package](deployment-workflow.md) for the common CLI steps: retrieve source when needed, confirm the target org, validate, deploy, and publish Service or Employee Agents.
-4. Complete any package-specific target setup called out in the selected guide.
+| Legacy Agent Actions | [Legacy Agent Actions](13-legacy-agent-actions.md) | Deploy standalone `GenAiFunction` / `GenAiPlugin` metadata, then add actions from Asset Library |
 
 ## If something fails
 

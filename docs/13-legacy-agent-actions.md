@@ -2,7 +2,7 @@
 
 Move custom legacy Agentforce actions from sandbox to another org.
 
-**Required before deploy:** Use this guide only for legacy Agent Builder or committed Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
+**Required before deploy:** Use this guide only for legacy Agent Builder or saved Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
 
 ## Metadata model
 
@@ -11,16 +11,16 @@ Legacy action metadata:
 - `GenAiFunction`: legacy action
 - `GenAiPlugin`: legacy topic or plugin wrapper, only when the action requires it
 
-Use this path for legacy Agent Builder and committed Builder actions. For draft Agent Script source, use the Service or Employee Agent guide.
+Use this path for legacy Agent Builder and saved Builder actions. For draft Agent Script source, use the Service or Employee Agent guide.
 
 ## When this applies
 
 | Source | Use this guide? |
 |---|---|
 | Legacy action already visible in Agentforce Builder | Yes |
-| Local-only action inside a committed custom agent version | Yes, after making a deployable copy |
+| Action that does not appear in the Asset Library | Rebuild it as a standalone custom action first |
 | Topic or plugin wrapper required by that action | Yes, as support metadata |
-| Lead Nurture Agent template or generated runtime | No |
+| Lead Nurture Agent template or Salesforce-managed setup | No |
 | Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
 
 ## Prepare the package
@@ -60,25 +60,22 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 After retrieve, validate and deploy with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
 
-## Path 2: make a local action deployable
+## Path 2: rebuild a local-only action
 
 Use when the source agent has a local-only action that does not appear in the Asset Library.
 
-1. Retrieve the committed custom agent version into a sandbox working package.
-2. Find the local topic wrapper under `genAiPlannerBundles/.../localPlugins/`, if the action uses one.
-3. Find the local action under `genAiPlannerBundles/.../localActions/`.
-4. Create a new standalone `GenAiPlugin` only when the action needs a topic or plugin wrapper.
-5. Create a new standalone `GenAiFunction` with a legacy action API name.
-6. Copy the local action `input/schema.json` and `output/schema.json` into the standalone function folder.
-7. Point the standalone function to the same backing Apex, Flow, or prompt target.
-8. If a standalone plugin is used, point it to the standalone function by API name.
-9. Deploy the standalone action and support metadata to the source sandbox first.
-10. Retrieve the standalone action by name.
-11. Deploy the retrieved package to the target org.
+1. Create a new standalone `GenAiFunction` with a clear legacy action API name.
+2. Create a standalone `GenAiPlugin` only when the action needs a topic or plugin wrapper.
+3. Point the standalone action to the same backing Apex, Flow, or prompt target.
+4. Include the backing Apex, Flow, prompt, object, field, permission, and schema dependencies.
+5. Deploy the standalone action to the source sandbox first.
+6. Confirm the action appears in the source Asset Library.
+7. Retrieve the standalone action by name.
+8. Deploy the retrieved package to the target org.
 
-**Stop if:** The local action belongs to the Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
+**Stop if:** The action belongs to Lead Nurture Agent setup or another Salesforce-managed package. Rebuild only custom actions your team controls.
 
-Use generated planner, plugin, or action metadata only as the source for a new deployable legacy action.
+Do not copy generated local action files directly into the target package.
 
 ## Verify the target org
 
@@ -88,22 +85,6 @@ Confirm metadata exists:
 sf org list metadata --json --metadata-type GenAiPlugin --target-org <TARGET_ORG_ALIAS>
 sf org list metadata --json --metadata-type GenAiFunction --target-org <TARGET_ORG_ALIAS>
 ```
-
-Confirm deployed records are standalone action metadata:
-
-```bash
-sf data query --use-tooling-api --json --target-org <TARGET_ORG_ALIAS> --query "SELECT DeveloperName, IsLocal, ParentId, PlannerId FROM GenAiPluginDefinition WHERE DeveloperName = '<LEGACY_PLUGIN_API_NAME>'"
-sf data query --use-tooling-api --json --target-org <TARGET_ORG_ALIAS> --query "SELECT DeveloperName, IsLocal, ParentId, PlannerId, PluginId FROM GenAiFunctionDefinition WHERE DeveloperName = '<LEGACY_ACTION_API_NAME>'"
-```
-
-Expected result:
-
-| Field | Expected |
-|---|---|
-| `IsLocal` | `false` |
-| `ParentId` | blank |
-| `PlannerId` | blank |
-| `PluginId` for standalone action | blank |
 
 In Agentforce Builder, open a draft agent and select **Add Resource** > **Add from Asset Library**. The legacy action should appear there.
 
@@ -123,11 +104,10 @@ This can reduce rebuild work for custom actions. It does not make Lead Nurture A
 
 ## Checklist
 
-- [ ] Action is custom, not Salesforce-managed runtime metadata.
+- [ ] Action is custom, not Salesforce-managed setup.
 - [ ] Legacy `GenAiFunction` and required `GenAiPlugin` names are exact members in `package.xml`.
 - [ ] Backing Apex, Flow, prompt template, object, field, permission, and applicable Custom Lightning Type dependencies are included when used.
-- [ ] Converted local actions are first deployed and retrieved as standalone assets from the source sandbox.
-- [ ] Target records show `IsLocal = false`.
+- [ ] Rebuilt local-only actions are first deployed and retrieved as standalone assets from the source sandbox.
 - [ ] Action appears in **Add from Asset Library** in the target org.
 - [ ] Target agent preview passes before publish.
 

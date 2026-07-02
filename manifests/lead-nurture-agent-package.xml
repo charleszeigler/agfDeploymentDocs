@@ -3,15 +3,11 @@
   LEAD NURTURE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
   ============================================================================
   FOR LEAD NURTURE AGENT - DEPENDENCIES ONLY.
-      This manifest excludes Bot, BotVersion, GenAiPlannerBundle, GenAiPlugin,
-      and GenAiFunction metadata.
+      This manifest excludes the Lead Nurture Agent itself.
       The AGENT is rebuilt from the "Lead Nurture Agent" template in the target org's
       setup flow and Agentforce Builder. See docs/12-lead-nurture-agent.md.
       Salesforce documents metadata deployment/retrieval as unsupported for the
       packaged Lead Nurture Agent, even when behavior varies by org.
-
-      This is a Salesforce-provided template packaging rule, not because BotVersion is legacy.
-      BotVersion is current metadata for Agentforce Agent versions.
 
       NOTE: a CUSTOM Agent Script sales outreach agent (one with its own .agent
       source) uses the normal Agent Script path. Deploy it like a Service or
@@ -20,8 +16,8 @@
   Replace every placeholder and Object.Field__c with real API names, and remove
   any block you don't use before handoff.
 
-  Data 360 / Data Cloud dependencies are separate. Use a Data Kit manifest from
-  docs/20-data-cloud-data-kit.md; do not mix Data 360 metadata into this dependencies package.
+  Data 360 dependencies are separate. Use a Data Kit manifest from
+  docs/20-data-360-data-kit.md; do not mix Data 360 metadata into this dependencies package.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 
@@ -87,14 +83,8 @@
   </types>
   -->
 
-  <!-- Data 360 / Data Cloud metadata belongs in a separate DevOps Data Kit package.
-       See docs/20-data-cloud-data-kit.md. -->
-
-  <!--
-    Excluded by design:
-      Bot, BotVersion, GenAiPlannerBundle  - Lead Nurture Agent runtime, not part of this package
-      Prebuilt subagents / actions / prompt templates - come from the template
-  -->
+  <!-- Data 360 metadata belongs in a separate DevOps Data Kit package.
+       See docs/20-data-360-data-kit.md. -->
 
   <version>66.0</version>
 </Package>

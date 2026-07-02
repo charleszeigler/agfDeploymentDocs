@@ -9,12 +9,9 @@
   the agent's DEPENDENCIES. After deploying it, publish the authoring bundle,
   then activate it in JSON mode (see docs/10-service-agent.md).
 
-  Data 360 / Data Cloud dependencies are separate. Use a Data Kit manifest from
-  docs/20-data-cloud-data-kit.md; do not mix Data 360 metadata into this agent package.
+  Data 360 dependencies are separate. Use a Data Kit manifest from
+  docs/20-data-360-data-kit.md; do not mix Data 360 metadata into this agent package.
 
-  Optional Appendix route: to move a COMMITTED agent version via Metadata API
-  instead of `sf agent publish`, uncomment the BotVersion / GenAiPlannerBundle /
-  AiAuthoringBundle / GenAiPlugin / GenAiFunction blocks at the bottom.
   In Markdown docs this value appears as <AGENT_API_NAME>; in XML use AGENT_API_NAME.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
@@ -91,26 +88,8 @@
   </types>
   -->
 
-  <!-- Data 360 / Data Cloud metadata belongs in a separate DevOps Data Kit package.
-       See docs/20-data-cloud-data-kit.md. -->
-
-  <!-- ============================================================
-       APPENDIX (optional) — move a COMMITTED agent version via package.xml.
-       This is not a first-time seed path; Salesforce requires the full agent
-       to already exist in the target org before deploying a single BotVersion.
-       BotVersion is current Agentforce version metadata, not legacy-only.
-       Finish with activation. Include the matching versioned AiAuthoringBundle.
-       Its version suffix can diverge from BotVersion; inspect bundle-meta.xml <target>. Naming:
-       BotVersion uses a DOT (Agent.vN); GenAiPlannerBundle uses
-       an UNDERSCORE (Agent_vN). Replace plugin/function members with the
-       exact generated names from a source-org retrieve (no wildcards).
-       ============================================================
-  <types><members>AGENT_API_NAME_1</members><name>AiAuthoringBundle</name></types>
-  <types><members>AGENT_API_NAME.v1</members><name>BotVersion</name></types>
-  <types><members>AGENT_API_NAME_v1</members><name>GenAiPlannerBundle</name></types>
-  <types><members>AGENT_API_NAME_Topic</members><name>GenAiPlugin</name></types>
-  <types><members>AGENT_API_NAME_Action</members><name>GenAiFunction</name></types>
-  -->
+  <!-- Data 360 metadata belongs in a separate DevOps Data Kit package.
+       See docs/20-data-360-data-kit.md. -->
 
   <version>66.0</version>
 </Package>

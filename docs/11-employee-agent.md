@@ -44,7 +44,7 @@ Use this order when the target org does not already have the Employee Agent:
 | Order | Action |
 |---|---|
 | 1 | Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used |
-| 2 | Publish and activate the agent to create the target `BotDefinition` and active version |
+| 2 | Publish and activate the agent |
 | 3 | Deploy the access package with the permission set or group that contains `agentAccesses` |
 | 4 | Assign users and smoke test as a non-admin employee |
 
@@ -75,7 +75,7 @@ Fix validation errors before handoff.
 
 If source files are not retrieved yet, complete [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed). Then validate and deploy with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
 
-**Stop if:** Deploy fails with `In field: botDefinition - no Bot named ... found`. The package included `agentAccesses` too early. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
+**Stop if:** The access permission set deploys before the agent is published and active. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
 ## Publish and activate
 
@@ -119,7 +119,7 @@ Salesforce-provided Agentforce permission set license and permission set names c
 
 Because Employee Agents run as the logged-in user, each employee needs the object, field, record, Apex, Flow, prompt template, and callout access required by the action path.
 
-If published-agent CLI preview returns `Invalid user ID provided on start session`, verify activation with `BotVersion`, confirm the employee has Agentforce user access and the permission set with `agentAccesses`, then test from the Lightning Agentforce panel as an assigned employee.
+If published-agent CLI preview returns `Invalid user ID provided on start session`, confirm the agent is active, confirm the employee has Agentforce user access and the permission set with `agentAccesses`, then test from the Lightning Agentforce panel as an assigned employee.
 
 **Stop if:** The only successful smoke test was run by an admin. Test as a real non-admin employee with the assigned access before go-live.
 

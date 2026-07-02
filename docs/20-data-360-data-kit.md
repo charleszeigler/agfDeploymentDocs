@@ -1,6 +1,6 @@
-# Deploy a Data Cloud Data Kit
+# Deploy a Data 360 Data Kit
 
-Use when an Agentforce deployment depends on Data 360 / Data Cloud metadata.
+Use when an Agentforce deployment depends on Data 360 metadata.
 
 **Data 360 prerequisite:** Data 360 metadata must be added to a Data Kit first. Keep the Data Kit package separate from normal Salesforce Platform metadata.
 
@@ -40,7 +40,7 @@ sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <SOURCE_O
 
 **Stop if:** The response contains `FUNCTIONALITY_NOT_ENABLED`, `CdpDataKit`, or an `errorCode`. Do not copy a manifest from another org.
 
-4. In the source sandbox, open Data Cloud Setup and create a DevOps Data Kit for this deployment.
+4. In the source sandbox, open Setup -> Developer Tools -> Data Kits and create a DevOps Data Kit for this deployment.
 5. Add the Data 360 components the agent needs. Review dependencies, policies, and tags.
 6. Download the generated manifest and save it as `manifest/package.xml`.
 
@@ -86,7 +86,7 @@ Metadata deploy installs Data Kit metadata. Target Data 360 runtime setup is sti
 
 A successful `package.xml` deploy does not run streams, refresh data, reauthorize connectors, or make the Data Kit components active. Complete the target-org runtime setup before agent publish.
 
-1. Open Data Cloud Setup -> Developer Tools -> Data Kits.
+1. Open Setup -> Developer Tools -> Data Kits.
 2. Confirm the deployed Data Kit is visible.
 3. Deploy the Data Kit components to the target data space.
 4. Reauthorize inactive connectors in the target org.
@@ -96,11 +96,11 @@ A successful `package.xml` deploy does not run streams, refresh data, reauthoriz
 
 Verify target runtime from Setup first:
 
-1. Open Data Cloud Setup -> Data Spaces and confirm the target data space is active.
+1. Open Setup -> Data Spaces and confirm the target data space is active.
 2. Open Developer Tools -> Data Kits and confirm the deployed Data Kit is present.
 3. Open the deployed Data Kit and confirm the expected components are selected for the target data space.
 4. Confirm connectors, streams, mappings, insights, segments, search indexes, and data graphs show the expected active or refreshed status.
-5. Open Data Explorer or the relevant Data Cloud object page and confirm row counts or sample records exist for the objects the agent uses.
+5. Open Data Explorer or the relevant Data 360 object page and confirm row counts or sample records exist for the objects the agent uses.
 
 Optional CLI verification:
 
