@@ -16,7 +16,7 @@ Treat the Lead Nurture Agent sales engagement template as covered by this limita
 | Agent Script in `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
 | Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
 
-**Do not package:** Do not list Lead Nurture Agent runtime metadata. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurture Agent.
+Keep Lead Nurture Agent runtime metadata out of the package. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurture Agent.
 
 ## What can be deployed
 
@@ -51,6 +51,7 @@ Package rules:
 - Do not assume generic Lead, email, or nurture-related flows are Lead Nurture Agent runtime.
 - Package only confirmed custom email templates or custom copies.
 - Treat Salesforce-provided templates, including `Email Templates from Salesforce`, as Salesforce setup artifacts.
+- Leave Salesforce-provided Lead Nurture Agent templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, and Builder activation state out of the package.
 - Review prompt templates for `{!$Input:...}`, `{!$Flow:...}`, `templateDataProviders`, and `SOBJECT://...`.
 - Include required fields, features, provider flows/actions, permissions, and callout configuration, or update the prompt before handoff.
 
@@ -60,8 +61,6 @@ Next:
 
 1. Retrieve custom dependency files with [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed).
 2. Deploy the dependency package with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
-
-**Do not package:** Do not package Salesforce-provided Lead Nurture Agent templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only custom dependencies.
 
 ## Optional legacy agent actions
 
@@ -78,11 +77,11 @@ Use only for custom legacy agent actions.
 5. Add the legacy project action.
 6. Preview generated email behavior and action behavior before activation.
 
-**Manual after deploy:** Adding a legacy action to the target agent is a Builder step. The package only makes the action available.
+Adding a legacy action to the target agent is a Builder step. The package only makes the action available.
 
 ## Complete target setup
 
-**Manual after deploy:** Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
+Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
 
 In the target org:
 
@@ -138,7 +137,7 @@ Capture before handoff:
 | Data library or knowledge source | |
 | Data 360 dependency, if any | |
 
-**Target-org value:** Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only custom dependencies.
+Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only custom dependencies.
 
 ## Checklist
 

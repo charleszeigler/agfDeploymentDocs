@@ -78,7 +78,7 @@ Use when the source agent has a local-only action that does not appear in the As
 
 **Stop if:** The local action belongs to the Lead Nurture Agent template or another Salesforce-managed package. Do not repackage managed runtime metadata.
 
-**Do not package:** Do not edit generated planner, plugin, or action metadata for direct deployment. Use it only as the source for a new deployable legacy action.
+Use generated planner, plugin, or action metadata only as the source for a new deployable legacy action.
 
 ## Verify the target org
 
@@ -107,9 +107,9 @@ Expected result:
 
 In Agentforce Builder, open a draft agent and select **Add Resource** > **Add from Asset Library**. The legacy action should appear there.
 
-**Manual after deploy:** Add the legacy action to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
+After deploy, add the legacy action to the target agent draft, preview with live actions, then publish and activate through the normal target-org process.
 
-**Target-org value:** After a legacy action is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone action later does not prove the already-added agent copy is updated.
+After a legacy action is added to an agent and customized, treat that agent copy as part of that agent draft. Updating the standalone action later does not prove the already-added agent copy is updated.
 
 ## Lead Nurture Agent use
 

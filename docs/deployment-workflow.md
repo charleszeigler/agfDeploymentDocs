@@ -92,8 +92,6 @@ Use a two-pass retrieve for Service and Employee Agent source packages when back
 5. Add referenced prompt templates, objects, fields, permission sets, credentials, and Custom Lightning Types only when the Service or Employee Agent source uses them.
 6. Run retrieve again with the completed manifest.
 
-**Do not package:** Do not edit committed agent version metadata, generated planner/plugin/function metadata, or generated Data Kit metadata to make retrieval work. Make behavior changes in the source sandbox or create standalone legacy actions your team controls.
-
 Review the package before deploy:
 
 - Every `package.xml` member has a matching file under `force-app/main/default`.

@@ -60,7 +60,7 @@ Key qualifier removal is a Data Kit package cleanup step.
 
 **Stop if:** You have not backed up or committed the project. Removing the wrong XML file can break the Data Kit package.
 
-**Do not package:** Do not include confirmed key qualifier metadata in the handoff package. This is local package cleanup only; do not delete target-org fields or objects from Setup.
+Leave confirmed key qualifier metadata out of the handoff package. This is local package cleanup only; do not delete target-org fields or objects from Setup.
 
 Preview first:
 
@@ -71,7 +71,7 @@ Preview first:
 
 Review the list with the packaging owner. Remove only confirmed key qualifier files from the local package folder. If unsure, send the reviewed list to the deployment owner.
 
-**Manual after deploy:** Complete this cleanup in the project before production handoff. Do not ask a production admin to remove files unless the file list has already been reviewed.
+Complete this cleanup in the project before production handoff. Do not ask a production admin to remove files unless the file list has already been reviewed.
 
 ## Deploy the Data Kit package
 
@@ -84,7 +84,7 @@ Deploy generated Data Kit metadata with [Deploy a Package](deployment-workflow.m
 
 Metadata deploy installs Data Kit metadata. Target Data 360 runtime setup is still required.
 
-**Manual after deploy:** This target-org runtime step is required even when the metadata deploy succeeds. A successful `package.xml` deploy does not run streams, refresh data, reauthorize connectors, or make the Data Kit components active.
+A successful `package.xml` deploy does not run streams, refresh data, reauthorize connectors, or make the Data Kit components active. Complete the target-org runtime setup before agent publish.
 
 1. Open Data Cloud Setup -> Developer Tools -> Data Kits.
 2. Confirm the deployed Data Kit is visible.
@@ -123,7 +123,7 @@ After confirming table names, technical teams can optionally verify row counts w
 
 API deployment is available after metadata install, but the payload is component-specific.
 
-**Manual after deploy:** API deployment changes the target Data 360 runtime. Run it only after the package deploy is approved, the target data space is confirmed, and the component payload has been reviewed.
+API deployment changes the target Data 360 runtime. Run it only after the package deploy is approved, the target data space is confirmed, and the component payload has been reviewed.
 
 **Stop if:** You do not have the generated or Salesforce-reviewed component payload. Do not run a generic POST that contains only the Data Kit developer name.
 

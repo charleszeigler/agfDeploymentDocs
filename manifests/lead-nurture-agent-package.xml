@@ -3,7 +3,8 @@
   LEAD NURTURE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
   ============================================================================
   FOR LEAD NURTURE AGENT - DEPENDENCIES ONLY.
-      Do NOT add Bot / BotVersion / GenAiPlannerBundle / GenAiPlugin / GenAiFunction here.
+      This manifest excludes Bot, BotVersion, GenAiPlannerBundle, GenAiPlugin,
+      and GenAiFunction metadata.
       The AGENT is rebuilt from the "Lead Nurture Agent" template in the target org's
       setup flow and Agentforce Builder. See docs/12-lead-nurture-agent.md.
       Salesforce documents metadata deployment/retrieval as unsupported for the
@@ -13,7 +14,7 @@
       BotVersion is current metadata for Agentforce Agent versions.
 
       NOTE: a CUSTOM Agent Script sales outreach agent (one with its own .agent
-      source) is NOT subject to this restriction — deploy it like a Service or
+      source) uses the normal Agent Script path. Deploy it like a Service or
       Employee Agent using docs/10-service-agent.md or docs/11-employee-agent.md instead.
   ============================================================================
   Replace every placeholder and Object.Field__c with real API names, and remove
@@ -59,8 +60,8 @@
   -->
 
   <!-- Custom outreach email template, if separate from Salesforce setup.
-       Do not package the Lead Nurture Agent user's mailbox, EAC connection,
-       generated emails, cadence runtime state, or Builder activation state. -->
+       Mailboxes, EAC connection, generated emails, cadence runtime state,
+       and Builder activation state stay in target-org setup. -->
   <!--
   <types>
     <members>EMAIL_TEMPLATE_FOLDER/EMAIL_TEMPLATE_API_NAME</members>
@@ -86,11 +87,11 @@
   </types>
   -->
 
-  <!-- Data 360 / Data Cloud metadata:
-       NOT HERE. Create a separate DevOps Data Kit package using docs/20-data-cloud-data-kit.md. -->
+  <!-- Data 360 / Data Cloud metadata belongs in a separate DevOps Data Kit package.
+       See docs/20-data-cloud-data-kit.md. -->
 
   <!--
-    NOT INCLUDED (by design):
+    Excluded by design:
       Bot, BotVersion, GenAiPlannerBundle  - Lead Nurture Agent runtime, not part of this package
       Prebuilt subagents / actions / prompt templates - come from the template
   -->

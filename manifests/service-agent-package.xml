@@ -91,8 +91,8 @@
   </types>
   -->
 
-  <!-- Data 360 / Data Cloud metadata:
-       NOT HERE. Create a separate DevOps Data Kit package using docs/20-data-cloud-data-kit.md. -->
+  <!-- Data 360 / Data Cloud metadata belongs in a separate DevOps Data Kit package.
+       See docs/20-data-cloud-data-kit.md. -->
 
   <!-- ============================================================
        APPENDIX (optional) — move a COMMITTED agent version via package.xml.

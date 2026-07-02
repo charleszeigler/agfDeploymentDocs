@@ -31,7 +31,7 @@ Include referenced dependencies:
 | Agent user access | `PermissionSet` |
 | Callout definitions | `NamedCredential`, `ExternalCredential` |
 
-**Do not package:** Do not include the `User` record for the agent user. Create or select the agent user in the target org.
+Package the access metadata, not the `User` record. Create or select the agent user in the target org.
 
 Identify action targets in the source bundle:
 
@@ -70,9 +70,7 @@ Copy `result.username`.
 - It assigns Salesforce base Agentforce permissions.
 - It does not assign project-specific data access.
 
-**Target-org value:** Do not guess the agent username. Sandbox refreshes and production orgs use different usernames.
-
-**Do not package:** Do not move the source sandbox agent user. User records, user licenses, and the final target username are target-org setup.
+Use the target-org username. Sandbox refreshes and production orgs use different usernames, and user records or user licenses are target-org setup.
 
 ## Set `default_agent_user`
 
@@ -89,7 +87,7 @@ Validate the local bundle against the target org:
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-**Required before deploy:** This edit applies to editable draft `AiAuthoringBundle` source. If the package uses committed agent version metadata, do not edit the retrieved generated metadata. Create a new target version or set the agent user in Builder.
+This edit applies to editable draft `AiAuthoringBundle` source. If the package uses committed agent version metadata, create a new target version or set the agent user in Builder.
 
 **Stop if:** The package still contains a source-sandbox agent username. Replace it before deploy.
 
@@ -107,7 +105,7 @@ sf org assign permset --json --name Service_Agent_Access --on-behalf-of <AGENT_U
 
 The custom permission set must cover the agent's Apex, Flows, prompt templates, objects, fields, and callouts.
 
-**Manual after deploy:** Record sharing is not solved by metadata alone. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
+After deploy, confirm record sharing. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
 
 ## Preview, publish, activate
 

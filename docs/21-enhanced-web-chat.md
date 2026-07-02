@@ -47,7 +47,7 @@ Fill from the source sandbox before handoff.
 | Generated site iframe allowed origins, if exposed | |
 | Branding, pre-chat, labels, business hours | |
 
-**Target-org value:** Domains, CORS entries, snippets, generated site URLs, generated site frame settings, auth settings, and publish state are target-org values.
+Domains, CORS entries, snippets, generated site URLs, generated site frame settings, auth settings, and publish state are target-org values.
 
 ## Package candidate metadata
 
@@ -62,9 +62,9 @@ Use as a validation checklist, not a migration guarantee.
 | Security and domains | `CorsWhitelistOrigin`, `CspTrustedSite`, generated site iframe allowed origins as applicable |
 | Agent dependency | Service Agent package from [Deploy and Activate a Service Agent](10-service-agent.md) |
 
-**Do not package:** Do not include Aura `ExperienceBundle` for the generated site unless a project-specific sandbox validation proves it is required and deployable.
+Include Aura `ExperienceBundle` for the generated site only when project-specific sandbox validation proves it is required and deployable.
 
-**Do not package:** Do not reuse the source-org website snippet, generated iframe site URL, or CORS/domain values. Replace them with target-org values after the target deployment is published.
+Use target-org snippets, generated iframe site URLs, and CORS/domain values after the target deployment is published.
 
 ## Validate the metadata path in a sandbox
 
@@ -108,11 +108,11 @@ Use when metadata migration is not validated end to end.
 10. Add the website domain to CORS and generated-site iframe allowed origins if exposed.
 11. Install the target-org snippet, or use the Embedded Messaging component on the Experience Builder site.
 
-**Manual after deploy:** Always publish or republish the target Embedded Service Deployment after configuration changes.
+Publish or republish the target Embedded Service Deployment after configuration changes.
 
-**Manual after deploy:** A real Omni user must sign in, accept any org notices themselves, select a Messaging-available status, and stay online during the smoke test.
+A real Omni user must sign in, accept any org notices themselves, select a Messaging-available status, and stay online during the smoke test.
 
-**Manual after deploy:** If the Builder or setup UI hides inbound flow, external app, or channel-specific connection settings while the agent or deployment is still draft, publish first, then finish that target-org wiring.
+If the Builder or setup UI hides inbound flow, external app, or channel-specific connection settings while the agent or deployment is still draft, publish first, then finish that target-org wiring.
 
 ## Run the built-in setup smoke
 

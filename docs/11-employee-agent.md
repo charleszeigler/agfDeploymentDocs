@@ -33,9 +33,9 @@ Include referenced dependencies:
 | Employee app surface, if included | `CustomApplication`, `CustomTab`, `FlexiPage` |
 | Callout definitions | `NamedCredential`, `ExternalCredential` |
 
-**Do not package:** Do not create a Service Agent user and do not add `default_agent_user` to the Employee Agent source.
+Employee Agents do not use a Service Agent user or `default_agent_user`.
 
-**Do not package:** For a clean target org, do not include `agentAccesses` in the first source package. Deploy the `agentAccesses` permission set after the agent is published and activated.
+For a clean target org, keep `agentAccesses` out of the first source package. Deploy the `agentAccesses` permission set after the agent is published and activated.
 
 ## Clean target order
 
@@ -104,7 +104,7 @@ sf project deploy start --json --manifest manifest/employee-agent-access-package
 sf org assign permset --json --name Employee_Agent_Access --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-**Manual after deploy:** Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or an approved assignment process.
+Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or an approved assignment process.
 
 For the Lightning Agentforce panel, employees can also need Salesforce-provided Agentforce user access. Confirm names in Setup for the target-org SKU. Common defaults:
 
@@ -115,11 +115,11 @@ sf org assign permset --json --name CopilotSalesforceUser --on-behalf-of <EMPLOY
 
 In Setup: assign the equivalent Agentforce permission set license and permission set, then assign the package permission set or group.
 
-**Target-org value:** Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
+Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
 
 Because Employee Agents run as the logged-in user, each employee needs the object, field, record, Apex, Flow, prompt template, and callout access required by the action path.
 
-**Manual after deploy:** If published-agent CLI preview returns `Invalid user ID provided on start session`, verify activation with `BotVersion`, confirm the employee has Agentforce user access and the permission set with `agentAccesses`, then test from the Lightning Agentforce panel as an assigned employee.
+If published-agent CLI preview returns `Invalid user ID provided on start session`, verify activation with `BotVersion`, confirm the employee has Agentforce user access and the permission set with `agentAccesses`, then test from the Lightning Agentforce panel as an assigned employee.
 
 **Stop if:** The only successful smoke test was run by an admin. Test as a real non-admin employee with the assigned access before go-live.
 

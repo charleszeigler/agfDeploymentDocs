@@ -70,7 +70,7 @@
   </types>
 
   <!-- Data/action access for employees during live preview and after go-live.
-       Do NOT include <agentAccesses> in this first clean-target package. -->
+       Put <agentAccesses> in the post-publish access package for a clean target org. -->
   <types>
     <members>EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME</members>
     <name>PermissionSet</name>
@@ -111,8 +111,8 @@
   </types>
   -->
 
-  <!-- Data 360 / Data Cloud metadata:
-       NOT HERE. Create a separate DevOps Data Kit package using docs/20-data-cloud-data-kit.md. -->
+  <!-- Data 360 / Data Cloud metadata belongs in a separate DevOps Data Kit package.
+       See docs/20-data-cloud-data-kit.md. -->
 
   <!-- ============================================================
        APPENDIX (optional) — move a COMMITTED agent version via package.xml.
