@@ -2,11 +2,17 @@
   "title": "Agentforce Deployment",
   "pages": [
     "index",
-    "10-service-agent",
-    "11-employee-agent",
     {
-      "title": "Lead Nurture Agent",
-      "slug": "12-lead-nurture-agent"
+      "title": "Agent Type Guides",
+      "slug": "",
+      "pages": [
+        "10-service-agent",
+        "11-employee-agent",
+        {
+          "title": "Lead Nurture Agent",
+          "slug": "12-lead-nurture-agent"
+        }
+      ]
     },
     "00-before-you-start",
     "01-prepare-and-retrieve-package",
