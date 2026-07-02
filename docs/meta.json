@@ -2,40 +2,22 @@
   "title": "Agentforce Deployment",
   "pages": [
     "index",
+    "10-service-agent",
+    "11-employee-agent",
     {
-      "title": "Agent Guides",
-      "slug": "",
-      "pages": [
-        "10-service-agent",
-        "11-employee-agent",
-        {
-          "title": "Lead Nurture Agent",
-          "slug": "12-lead-nurture-agent"
-        }
-      ]
+      "title": "Lead Nurture Agent",
+      "slug": "12-lead-nurture-agent"
     },
+    "00-before-you-start",
+    "01-prepare-and-retrieve-package",
+    "01-deploy-package",
+    "02-publish-and-activate",
+    "30-final-go-live-validation",
+    "20-data-cloud-data-kit",
+    "21-enhanced-web-chat",
     {
-      "title": "Shared Steps",
-      "slug": "",
-      "pages": [
-        "00-before-you-start",
-        "01-prepare-and-retrieve-package",
-        "01-deploy-package",
-        "02-publish-and-activate",
-        "30-final-go-live-validation"
-      ]
-    },
-    {
-      "title": "Optional Setup",
-      "slug": "",
-      "pages": [
-        "20-data-cloud-data-kit",
-        "21-enhanced-web-chat",
-        {
-          "title": "Legacy Agent Actions",
-          "slug": "13-legacy-agent-actions"
-        }
-      ]
+      "title": "Legacy Agent Actions",
+      "slug": "13-legacy-agent-actions"
     },
     "03-troubleshooting"
   ]
