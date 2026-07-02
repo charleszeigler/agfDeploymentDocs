@@ -30,7 +30,7 @@ The primary guide should be enough to run the deployment without switching pages
 | If your deployment includes | Use this guide | Key instruction |
 |---|---|---|
 | A package that does not fit one agent guide | [Deploy a Package](deployment-workflow.md) | Use as a CLI reference for retrieve, validate, deploy, publish, and activate commands |
-| Data 360 | [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) | Use the source Data Kit generated manifest; keep the Data Kit package separate |
+| Data 360 | [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) | Use before any agent that depends on Data 360 data; keep the Data Kit package separate |
 | Web messaging channel | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Validate the metadata path in a sandbox or rebuild and publish in the target org |
 | Legacy Agent Actions | [Legacy Agent Actions](13-legacy-agent-actions.md) | Deploy standalone `GenAiFunction` / `GenAiPlugin` metadata, then add actions from Asset Library |
 

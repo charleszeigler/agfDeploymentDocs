@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - status [ref=e9]:
+    - generic [ref=e12]:
+      - text: Agentforce is temporarily unavailable. Please try again later or visit Help topics below. For additional support, please contact
+      - link "your local support number" [ref=e13] [cursor=pointer]:
+        - /url: https://help.salesforce.com/s/articleView?id=000989536&type=1
+      - text: for assistance. Thank you!
+    - button "Read More" [ref=e14] [cursor=pointer]
+  - generic:
+    - status
+  - generic [ref=e36]: Salesforce Help | Article

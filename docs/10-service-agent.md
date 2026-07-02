@@ -192,6 +192,12 @@ The custom permission set must cover the agent's Apex, Flows, prompt templates, 
 
 After deploy, confirm record sharing. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
 
+## Data 360 Data Kit
+
+If this Service Agent uses Data 360 data, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before live preview and publish.
+
+Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the agent user has the Data 360 access required by the agent.
+
 ## Preview, publish, activate
 
 Validate the deployed bundle:
@@ -260,7 +266,7 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 - [ ] Target agent user is active, licensed, and assigned base Agentforce permissions.
 - [ ] `default_agent_user` uses the target-org username.
 - [ ] Custom permission set assigned to the agent user.
-- [ ] Data 360 package completed first, if used.
+- [ ] Data 360 Data Kit completed before live preview and publish, if used.
 - [ ] Live-action preview passes before publish.
 - [ ] Active-agent smoke test passes after activation.
 

@@ -95,6 +95,12 @@ sf project deploy start --json --manifest manifest/package.xml --target-org <TAR
 
 Continue only after the deploy result is `Succeeded`.
 
+## Data 360 Data Kit
+
+If Lead Nurture Agent or its custom dependencies use Data 360 data, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before configuring and previewing Lead Nurture Agent in the target org.
+
+Keep the Data 360 package separate from the Lead Nurture Agent dependency package. Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the Lead Nurture Agent users have the required Data 360 access.
+
 ## Optional legacy agent actions
 
 Use only for custom legacy agent actions.
@@ -177,7 +183,7 @@ Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-libra
 - [ ] Dependency package does not include Lead Nurture Agent itself.
 - [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and permission sets are included when used.
 - [ ] Legacy project actions are packaged separately when used.
-- [ ] Data 360 package prepared separately when used.
+- [ ] Data 360 Data Kit completed separately before target-org preview, if used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target-org steps, not `package.xml` members.
 - [ ] Worksheet completed from the source org.
 - [ ] Dependency deploy succeeded.

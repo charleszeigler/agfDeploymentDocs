@@ -1,0 +1,444 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e30]:
+      - generic [ref=e32]:
+        - button "Toggle Navigation" [ref=e35]:
+          - button "mobile menu open" [ref=e36]:
+            - img "mobile menu open" [ref=e37]
+        - link "Salesforce Home" [ref=e40] [cursor=pointer]:
+          - /url: https://www.salesforce.com/
+          - img "Salesforce Home" [ref=e41]
+        - button "Search Help" [ref=e220]
+        - navigation "Site tools" [ref=e42]:
+          - list [ref=e43]:
+            - listitem [ref=e44]:
+              - list [ref=e47]:
+                - listitem [ref=e48]:
+                  - link "Login" [ref=e50] [cursor=pointer]:
+                    - /url: https://help.salesforce.com/services/auth/sso/trailblazerloginCommunity?startURL=%2Fs%2FarticleView%3Fid%3Dsales.sales_agent_sdr_topics_actions_prompts.htm%26type%3D5
+    - navigation "Secondary" [ref=e223]:
+      - generic "Toggle Navigation" [ref=e227]:
+        - button "Help" [ref=e228]:
+          - generic:
+            - img [ref=e229]
+            - generic [ref=e232]: Help
+  - generic [ref=e4]:
+    - region "Message Area" [ref=e53]:
+      - button "Minimize Agentforce" [ref=e55] [cursor=pointer]:
+        - img "dash" [ref=e56]
+      - group [ref=e57]:
+        - generic [ref=e58]:
+          - img "agentforce" [ref=e60]
+          - generic [ref=e62]: Hi there! Ask me product support and troubleshooting questions.
+        - generic [ref=e64]:
+          - img [ref=e67]
+          - generic [ref=e69]: Ask Agentforce
+          - textbox "Ask Agentforce" [ref=e70]
+          - button "Send" [disabled] [ref=e72]:
+            - img "send" [ref=e73]
+    - generic [ref=e5]:
+      - generic [ref=e77]:
+        - status [ref=e80]:
+          - img [ref=e84]
+          - generic [ref=e87]:
+            - generic [ref=e89]: Upcoming Mandatory Changes to Public Key Infrastructure (PKI)
+            - text: Read More
+          - button "Close" [ref=e92] [cursor=pointer]:
+            - img [ref=e94]
+            - generic [ref=e97]: Close
+        - status [ref=e100]:
+          - img [ref=e104]
+          - generic [ref=e107]:
+            - generic [ref=e109]: Ongoing maintenance for Salesforce Help
+            - text: Read More
+          - button "Close" [ref=e112] [cursor=pointer]:
+            - img [ref=e114]
+            - generic [ref=e117]: Close
+        - status [ref=e120]:
+          - img [ref=e124]
+          - generic [ref=e127]:
+            - generic [ref=e129]: Salesforce Enforces New Security Requirements in Summer 2026
+            - text: Read More
+          - button "Close" [ref=e132] [cursor=pointer]:
+            - img [ref=e134]
+            - generic [ref=e137]: Close
+      - generic [ref=e17]:
+        - generic [ref=e236]: AI Sales Agents
+        - generic [ref=e238]:
+          - generic [ref=e241]:
+            - generic [ref=e242]:
+              - generic [ref=e243]: Table of Contents
+              - button "Close Close" [ref=e244] [cursor=pointer]:
+                - generic "Close" [ref=e245]:
+                  - generic [ref=e246]:
+                    - img [ref=e248]
+                    - generic [ref=e251]: Close
+                - generic [ref=e252]: Close
+            - generic [ref=e262]:
+              - generic [ref=e264]: Search
+              - generic [ref=e265]:
+                - button "Search" [ref=e266] [cursor=pointer]:
+                  - img [ref=e267]
+                  - generic [ref=e269]: Search
+                - textbox "Search" [ref=e270]
+            - list [ref=e274]:
+              - treeitem "AI Sales Agents Sales Agents Roles and Responsibilities Prospecting Agentforce Engagement Lead Generation Agent Qualification Agent Lead Nurturing Agent Learn About and Implement Agentforce Lead Nurturing Agentforce Lead Nurturing Overview Lead Nurturing Agent Permission Sets Considerations for Using Agentforce Lead Nurturing Ethical Guidance for Agentforce Lead Nurturing Set Up Agentforce Lead Nurturing Work with Your Lead Nurturing Agent Monitor Lead Nurturing Agent Activity Customize and Test Agentforce Lead Nurturing Lead Nurturing Agent Subagents, Actions, and Prompt Templates Testing Lead Nurturing Actions and Email with Agentforce Builder... Batch Test Lead Nurturing Actions and Email with Testing Center Edit an Inbound Lead Generation or Lead Nurturing Agent Sales Management Sales Coaching Agentforce (Default) for Sales Setup" [level=1] [ref=e275]:
+                - generic [ref=e276]:
+                  - button [ref=e277]:
+                    - img [ref=e278]
+                  - link "AI Sales Agents" [ref=e280] [cursor=pointer]:
+                    - /url: https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5
+                - list [ref=e281]:
+                  - treeitem "Sales Agents Roles and Responsibilities" [level=2] [ref=e282]:
+                    - link "Sales Agents Roles and Responsibilities" [ref=e284] [cursor=pointer]:
+                      - /url: /s/articleView?id=sales.sales_agents_personas.htm&language=en_US&type=5
+                  - treeitem "Prospecting" [level=2] [ref=e285]:
+                    - generic [ref=e286]:
+                      - button [ref=e287]:
+                        - img [ref=e288]
+                      - link "Prospecting" [ref=e290] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_prospecting_parent.htm&language=en_US&type=5
+                  - treeitem "Agentforce Engagement Lead Generation Agent Qualification Agent Lead Nurturing Agent Learn About and Implement Agentforce Lead Nurturing Agentforce Lead Nurturing Overview Lead Nurturing Agent Permission Sets Considerations for Using Agentforce Lead Nurturing Ethical Guidance for Agentforce Lead Nurturing Set Up Agentforce Lead Nurturing Work with Your Lead Nurturing Agent Monitor Lead Nurturing Agent Activity Customize and Test Agentforce Lead Nurturing Lead Nurturing Agent Subagents, Actions, and Prompt Templates Testing Lead Nurturing Actions and Email with Agentforce Builder... Batch Test Lead Nurturing Actions and Email with Testing Center Edit an Inbound Lead Generation or Lead Nurturing Agent" [level=2] [ref=e291]:
+                    - generic [ref=e292]:
+                      - button [ref=e293]:
+                        - img [ref=e294]
+                      - link "Agentforce Engagement" [ref=e296] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agents_customer_engagement_parent.htm&language=en_US&type=5
+                    - list [ref=e297]:
+                      - treeitem "Lead Generation Agent" [level=3] [ref=e298]:
+                        - generic [ref=e299]:
+                          - button [ref=e300]:
+                            - img [ref=e301]
+                          - link "Lead Generation Agent" [ref=e303] [cursor=pointer]:
+                            - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_lead_generation_parent.htm&language=en_US&type=5
+                      - treeitem "Qualification Agent" [level=3] [ref=e304]:
+                        - generic [ref=e305]:
+                          - button [ref=e306]:
+                            - img [ref=e307]
+                          - link "Qualification Agent" [ref=e309] [cursor=pointer]:
+                            - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_qual_overview.htm&language=en_US&type=5
+                      - treeitem "Lead Nurturing Agent Learn About and Implement Agentforce Lead Nurturing Agentforce Lead Nurturing Overview Lead Nurturing Agent Permission Sets Considerations for Using Agentforce Lead Nurturing Ethical Guidance for Agentforce Lead Nurturing Set Up Agentforce Lead Nurturing Work with Your Lead Nurturing Agent Monitor Lead Nurturing Agent Activity Customize and Test Agentforce Lead Nurturing Lead Nurturing Agent Subagents, Actions, and Prompt Templates Testing Lead Nurturing Actions and Email with Agentforce Builder... Batch Test Lead Nurturing Actions and Email with Testing Center" [level=3] [ref=e310]:
+                        - generic [ref=e311]:
+                          - button [ref=e312]:
+                            - img [ref=e313]
+                          - link "Lead Nurturing Agent" [ref=e315] [cursor=pointer]:
+                            - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_parent.htm&language=en_US&type=5
+                        - list [ref=e316]:
+                          - treeitem "Learn About and Implement Agentforce Lead Nurturing" [level=4] [ref=e317]:
+                            - link "Learn About and Implement Agentforce Lead Nurturing" [ref=e319] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_learning_map.htm&language=en_US&type=5
+                          - treeitem "Agentforce Lead Nurturing Overview" [level=4] [ref=e320]:
+                            - link "Agentforce Lead Nurturing Overview" [ref=e322] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_intro.htm&language=en_US&type=5
+                          - treeitem "Lead Nurturing Agent Permission Sets" [level=4] [ref=e323]:
+                            - link "Lead Nurturing Agent Permission Sets" [ref=e325] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_permissions.htm&language=en_US&type=5
+                          - treeitem "Considerations for Using Agentforce Lead Nurturing" [level=4] [ref=e326]:
+                            - link "Considerations for Using Agentforce Lead Nurturing" [ref=e328] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_considerations.htm&language=en_US&type=5
+                          - treeitem "Ethical Guidance for Agentforce Lead Nurturing" [level=4] [ref=e329]:
+                            - link "Ethical Guidance for Agentforce Lead Nurturing" [ref=e331] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_ethical_guidelines.htm&language=en_US&type=5
+                          - treeitem "Set Up Agentforce Lead Nurturing" [level=4] [ref=e332]:
+                            - generic [ref=e333]:
+                              - button [ref=e334]:
+                                - img [ref=e335]
+                              - link "Set Up Agentforce Lead Nurturing" [ref=e337] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.einstein_sdr_setup.htm&language=en_US&type=5
+                          - treeitem "Work with Your Lead Nurturing Agent" [level=4] [ref=e338]:
+                            - generic [ref=e339]:
+                              - button [ref=e340]:
+                                - img [ref=e341]
+                              - link "Work with Your Lead Nurturing Agent" [ref=e343] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_work_with.htm&language=en_US&type=5
+                          - treeitem "Monitor Lead Nurturing Agent Activity" [level=4] [ref=e344]:
+                            - generic [ref=e345]:
+                              - button [ref=e346]:
+                                - img [ref=e347]
+                              - link "Monitor Lead Nurturing Agent Activity" [ref=e349] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_monitoring.htm&language=en_US&type=5
+                          - treeitem "Customize and Test Agentforce Lead Nurturing Lead Nurturing Agent Subagents, Actions, and Prompt Templates Testing Lead Nurturing Actions and Email with Agentforce Builder... Batch Test Lead Nurturing Actions and Email with Testing Center" [level=4] [ref=e350]:
+                            - generic [ref=e351]:
+                              - button [ref=e352]:
+                                - img [ref=e353]
+                              - link "Customize and Test Agentforce Lead Nurturing" [ref=e355] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_customize_and_test.htm&language=en_US&type=5
+                            - list [ref=e356]:
+                              - treeitem "Lead Nurturing Agent Subagents, Actions, and Prompt Templates" [level=5] [ref=e357]:
+                                - link "Lead Nurturing Agent Subagents, Actions, and Prompt Templates" [ref=e359] [cursor=pointer]:
+                                  - /url: /s/articleView?id=sales.sales_agent_sdr_topics_actions_prompts.htm&language=en_US&type=5
+                              - treeitem "Testing Lead Nurturing Actions and Email with Agentforce Builder..." [level=5] [ref=e360]:
+                                - generic [ref=e361]:
+                                  - button [ref=e362]:
+                                    - img [ref=e363]
+                                  - link "Testing Lead Nurturing Actions and Email with Agentforce Builder..." [ref=e365] [cursor=pointer]:
+                                    - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_testing.htm&language=en_US&type=5
+                              - treeitem "Batch Test Lead Nurturing Actions and Email with Testing Center" [level=5] [ref=e366]:
+                                - generic [ref=e367]:
+                                  - button [ref=e368]:
+                                    - img [ref=e369]
+                                  - link "Batch Test Lead Nurturing Actions and Email with Testing Center" [ref=e371] [cursor=pointer]:
+                                    - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_testing_center.htm&language=en_US&type=5
+                      - treeitem "Edit an Inbound Lead Generation or Lead Nurturing Agent" [level=3] [ref=e372]:
+                        - link "Edit an Inbound Lead Generation or Lead Nurturing Agent" [ref=e374] [cursor=pointer]:
+                          - /url: /s/articleView?id=sales.edit_sales_agent_versions.htm&language=en_US&type=5
+                  - treeitem "Sales Management" [level=2] [ref=e375]:
+                    - generic [ref=e376]:
+                      - button [ref=e377]:
+                        - img [ref=e378]
+                      - link "Sales Management" [ref=e380] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sales_mgmt_parent.htm&language=en_US&type=5
+                  - treeitem "Sales Coaching" [level=2] [ref=e381]:
+                    - generic [ref=e382]:
+                      - button [ref=e383]:
+                        - img [ref=e384]
+                      - link "Sales Coaching" [ref=e386] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agents_coach_parent.htm&language=en_US&type=5
+                  - treeitem "Agentforce (Default) for Sales Setup" [level=2] [ref=e387]:
+                    - link "Agentforce (Default) for Sales Setup" [ref=e389] [cursor=pointer]:
+                      - /url: /s/articleView?id=sales.einstein_copilot_for_sales.htm&language=en_US&type=5
+          - generic [ref=e390]:
+            - generic [ref=e391]:
+              - link:
+                - /url: https://help.salesforce.com/s?language=en_US
+              - generic [ref=e392]:
+                - generic [ref=e393]:
+                  - paragraph [ref=e394]: "You are here:"
+                  - list "You are here:" [ref=e395]:
+                    - listitem [ref=e396]:
+                      - link "Salesforce Help" [ref=e397] [cursor=pointer]:
+                        - /url: /s/?language=en_US
+                    - listitem [ref=e398]:
+                      - text: ">"
+                      - link "Docs" [ref=e399] [cursor=pointer]:
+                        - /url: /s/products?language=en_US
+                    - listitem [ref=e400]:
+                      - text: ">"
+                      - link "AI Agents for Sales" [ref=e401] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5
+                - heading "Lead Nurturing Agent Subagents, Actions, and Prompt Templates" [level=1] [ref=e402]
+                - paragraph [ref=e403]: To generate appropriate, customized emails, the Agentforce Lead Nurturing agent template includes these subagents, actions, and prompt templates.
+                - generic [ref=e404]:
+                  - heading "Required Editions" [level=3] [ref=e406]
+                  - table [ref=e408]:
+                    - rowgroup [ref=e411]:
+                      - 'row "Available in: Lightning Experience in Enterprise, Performance, and Unlimited editions with Sales and the Agentforce Lead Nurturing add-on." [ref=e412]':
+                        - 'cell "Available in: Lightning Experience in Enterprise, Performance, and Unlimited editions with Sales and the Agentforce Lead Nurturing add-on." [ref=e413]':
+                          - text: "Available in: Lightning Experience in"
+                          - strong [ref=e414]: Enterprise
+                          - text: ","
+                          - strong [ref=e415]: Performance
+                          - text: ", and"
+                          - strong [ref=e416]: Unlimited
+                          - text: editions with Sales and the Agentforce Lead Nurturing add-on.
+                  - table [ref=e417]:
+                    - rowgroup [ref=e422]:
+                      - row "SUBAGENT Agent Action Prompt Template" [ref=e423]:
+                        - columnheader "SUBAGENT" [ref=e424]
+                        - columnheader "Agent Action" [ref=e425]
+                        - columnheader "Prompt Template" [ref=e426]
+                    - rowgroup [ref=e427]:
+                      - row "Follow-up Outreach Get Record Details None" [ref=e428]:
+                        - cell "Follow-up Outreach" [ref=e429]
+                        - cell "Get Record Details" [ref=e430]
+                        - cell "None" [ref=e431]
+                      - row "Return Calendar Link None" [ref=e432]:
+                        - cell [ref=e433]
+                        - cell "Return Calendar Link" [ref=e434]
+                        - cell "None" [ref=e435]
+                      - row "Generic Response Get Record Details None" [ref=e436]:
+                        - cell "Generic Response" [ref=e437]
+                        - cell "Get Record Details" [ref=e438]
+                        - cell "None" [ref=e439]
+                      - row "Return Calendar Link None" [ref=e440]:
+                        - cell [ref=e441]
+                        - cell "Return Calendar Link" [ref=e442]
+                        - cell "None" [ref=e443]
+                      - row "Initial Outreach Get Record Details None" [ref=e444]:
+                        - cell "Initial Outreach" [ref=e445]
+                        - cell "Get Record Details" [ref=e446]
+                        - cell "None" [ref=e447]
+                      - row "Manage Opt-Out Opt Out Target None" [ref=e448]:
+                        - cell "Manage Opt-Out" [ref=e449]
+                        - cell "Opt Out Target" [ref=e450]
+                        - cell "None" [ref=e451]
+                      - row "Meeting Response Get Record Details None" [ref=e452]:
+                        - cell "Meeting Response" [ref=e453]
+                        - cell "Get Record Details" [ref=e454]
+                        - cell "None" [ref=e455]
+                      - row "Return Calendar Link None" [ref=e456]:
+                        - cell [ref=e457]
+                        - cell "Return Calendar Link" [ref=e458]
+                        - cell "None" [ref=e459]
+                      - row "Product Q & A Get Record Details None" [ref=e460]:
+                        - cell "Product Q & A" [ref=e461]
+                        - cell "Get Record Details" [ref=e462]
+                        - cell "None" [ref=e463]
+                      - row "Answer Questions with Knowledge Answer Question with Knowledge" [ref=e464]:
+                        - cell [ref=e465]
+                        - cell "Answer Questions with Knowledge" [ref=e466]
+                        - cell "Answer Question with Knowledge" [ref=e467]
+                      - row "Return Calendar Link" [ref=e468]:
+                        - cell [ref=e469]
+                        - cell "Return Calendar Link" [ref=e470]
+                        - cell [ref=e471]
+                  - generic [ref=e472]:
+                    - heading "Legacy Subagents and Actions" [level=2] [ref=e473]
+                    - paragraph [ref=e474]: Lead Nurturing agents created before October 7, 2025 used a different set of subagents and actions. When customizing an agent, don’t combine older subagents and actions with newer versions. Don’t use the older subagents or actions with a newer agent configuration.
+                    - paragraph [ref=e475]: If you do use the legacy subagent and action versions of with an agent created after October 7, 2025, be sure to remove the Schedule Email action from the agent’s list of subagents.
+                    - table [ref=e476]:
+                      - rowgroup [ref=e481]:
+                        - row "subagent Agent Action Prompt Template" [ref=e482]:
+                          - columnheader "subagent" [ref=e483]
+                          - columnheader "Agent Action" [ref=e484]
+                          - columnheader "Prompt Template" [ref=e485]
+                      - rowgroup [ref=e486]:
+                        - 'row "Send Outreach Sales SDR: Draft Initial Outreach Email Draft Agentforce SDR Email" [ref=e487]':
+                          - cell "Send Outreach" [ref=e488]
+                          - 'cell "Sales SDR: Draft Initial Outreach Email" [ref=e489]'
+                          - cell "Draft Agentforce SDR Email" [ref=e490]
+                        - 'row "Sales SDR: Draft Nudge Email Follow up Agentforce SDR Email" [ref=e491]':
+                          - cell [ref=e492]
+                          - 'cell "Sales SDR: Draft Nudge Email" [ref=e493]'
+                          - cell "Follow up Agentforce SDR Email" [ref=e494]
+                        - row "Schedule Email None" [ref=e495]:
+                          - cell [ref=e496]
+                          - cell "Schedule Email" [ref=e497]
+                          - cell "None" [ref=e498]
+                        - 'row "Sales SDR: Draft Initial Outreach Email for Contact or Person Account Draft Agentforce SDR Email For Contact" [ref=e499]':
+                          - cell [ref=e500]
+                          - 'cell "Sales SDR: Draft Initial Outreach Email for Contact or Person Account" [ref=e501]'
+                          - cell "Draft Agentforce SDR Email For Contact" [ref=e502]
+                        - 'row "Sales SDR: Draft Nudge Email for Contact or Person Account Follow up Agentforce SDR Email For Contact" [ref=e503]':
+                          - cell [ref=e504]
+                          - 'cell "Sales SDR: Draft Nudge Email for Contact or Person Account" [ref=e505]'
+                          - cell "Follow up Agentforce SDR Email For Contact" [ref=e506]
+                        - 'row "Respond to Prospect Sales SDR: Draft Meeting Request Email Reply with Meeting Agentforce SDR Email" [ref=e507]':
+                          - cell "Respond to Prospect" [ref=e508]
+                          - 'cell "Sales SDR: Draft Meeting Request Email" [ref=e509]'
+                          - cell "Reply with Meeting Agentforce SDR Email" [ref=e510]
+                        - 'row "Sales SDR: Draft Meeting Request Email for Contact or Person Account Reply with meeting Agentforce SDR Email For Contact" [ref=e511]':
+                          - cell [ref=e512]
+                          - 'cell "Sales SDR: Draft Meeting Request Email for Contact or Person Account" [ref=e513]'
+                          - cell "Reply with meeting Agentforce SDR Email For Contact" [ref=e514]
+                        - 'row "Sales SDR: Draft Generic Reply Email Reply with fallback response Agentforce SDR Email" [ref=e515]':
+                          - cell [ref=e516]
+                          - 'cell "Sales SDR: Draft Generic Reply Email" [ref=e517]'
+                          - cell "Reply with fallback response Agentforce SDR Email" [ref=e518]
+                        - 'row "Sales SDR: Draft Generic Reply Email for Contact or Person Account Reply with fallback response Agentforce SDR Email For Contact" [ref=e519]':
+                          - cell [ref=e520]
+                          - 'cell "Sales SDR: Draft Generic Reply Email for Contact or Person Account" [ref=e521]'
+                          - cell "Reply with fallback response Agentforce SDR Email For Contact" [ref=e522]
+                        - row "Schedule Email None" [ref=e523]:
+                          - cell [ref=e524]
+                          - cell "Schedule Email" [ref=e525]
+                          - cell "None" [ref=e526]
+                        - 'row "Sales SDR: Draft Email for Lead Question Reply with Product QnA Agentforce SDR Email" [ref=e527]':
+                          - cell [ref=e528]
+                          - 'cell "Sales SDR: Draft Email for Lead Question" [ref=e529]'
+                          - cell "Reply with Product QnA Agentforce SDR Email" [ref=e530]
+                        - 'row "Sales SDR: Draft Email for Contact or Person Account Question Reply with Product QnA Agentforce SDR Email For Contact" [ref=e531]':
+                          - cell [ref=e532]
+                          - 'cell "Sales SDR: Draft Email for Contact or Person Account Question" [ref=e533]'
+                          - cell "Reply with Product QnA Agentforce SDR Email For Contact" [ref=e534]
+                        - row "Answer Questions with Knowledge Answer Question with Knowledge" [ref=e535]:
+                          - cell [ref=e536]
+                          - cell "Answer Questions with Knowledge" [ref=e537]
+                          - cell "Answer Question with Knowledge" [ref=e538]
+                        - row "Manage Opt Out Opt Out Target None" [ref=e539]:
+                          - cell "Manage Opt Out" [ref=e540]
+                          - cell "Opt Out Target" [ref=e541]
+                          - cell "None" [ref=e542]
+            - generic [ref=e544]:
+              - generic [ref=e545]:
+                - generic [ref=e546]: Did this article solve your issue?
+                - generic [ref=e547]: Let us know so we can improve!
+              - generic [ref=e548]:
+                - button "Yes" [ref=e550] [cursor=pointer]:
+                  - img [ref=e552]
+                  - text: "Yes"
+                - button "No" [ref=e556] [cursor=pointer]:
+                  - img [ref=e558]
+                  - text: "No"
+      - contentinfo [ref=e138]:
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - img "Salesforce logo" [ref=e146]
+            - generic [ref=e147]: 1-800-667-6389
+            - list [ref=e148]:
+              - listitem [ref=e149]:
+                - link "facebook" [ref=e150] [cursor=pointer]:
+                  - /url: https://www.facebook.com/salesforce
+                  - img "facebook" [ref=e152]
+              - listitem [ref=e153]:
+                - link "twitter" [ref=e154] [cursor=pointer]:
+                  - /url: https://twitter.com/asksalesforce
+                  - img "twitter" [ref=e156]
+              - listitem [ref=e157]:
+                - link "linkedin" [ref=e158] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/showcase/salesforcecustomersuccessgroup
+                  - img "linkedin" [ref=e160]
+              - listitem [ref=e161]:
+                - link "youtube" [ref=e162] [cursor=pointer]:
+                  - /url: https://www.youtube.com/channel/UCbrOrrE0lOR2LcfycryZwHw
+                  - img "youtube" [ref=e164]
+          - generic [ref=e165]:
+            - generic [ref=e166]: SALESFORCE
+            - list [ref=e167]:
+              - listitem [ref=e168]:
+                - link "Privacy Statement" [ref=e169] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/company/privacy/
+              - listitem [ref=e170]:
+                - link "Security Statement" [ref=e171] [cursor=pointer]:
+                  - /url: https://trust.salesforce.com/en/
+              - listitem [ref=e172]:
+                - link "Terms of Use" [ref=e173] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/company/program-agreement/
+              - listitem [ref=e174]:
+                - link "Participation Guidelines" [ref=e175] [cursor=pointer]:
+                  - /url: https://success.salesforce.com/resource/1432331846000/SuccessGuidelines
+              - listitem [ref=e176]:
+                - button "Cookie Preference Center" [ref=e177] [cursor=pointer]
+              - listitem [ref=e178]:
+                - link "Your Privacy Choices" [ref=e179] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/form/other/privacy-request/
+                  - img "Your Privacy Choices" [ref=e181]
+                - link "Your Privacy Choices" [ref=e182] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/form/other/privacy-request/
+          - generic [ref=e183]:
+            - generic [ref=e184]: COMMUNITY
+            - list [ref=e185]:
+              - listitem [ref=e186]:
+                - link "AppExchange" [ref=e187] [cursor=pointer]:
+                  - /url: https://appexchange.salesforce.com
+              - listitem [ref=e188]:
+                - link "Salesforce Admins" [ref=e189] [cursor=pointer]:
+                  - /url: https://admin.salesforce.com
+              - listitem [ref=e190]:
+                - link "Salesforce Developers" [ref=e191] [cursor=pointer]:
+                  - /url: https://developer.salesforce.com
+              - listitem [ref=e192]:
+                - link "Trailhead" [ref=e193] [cursor=pointer]:
+                  - /url: https://trailhead.salesforce.com
+              - listitem [ref=e194]:
+                - link "Training" [ref=e195] [cursor=pointer]:
+                  - /url: https://trailheadacademy.salesforce.com
+              - listitem [ref=e196]:
+                - link "Trust" [ref=e197] [cursor=pointer]:
+                  - /url: https://trust.salesforce.com
+        - separator [ref=e198]
+        - generic [ref=e200]:
+          - combobox "Language Selector" [ref=e207]:
+            - button "English" [expanded] [ref=e208] [cursor=pointer]:
+              - generic [ref=e209]: English
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                - generic: Select Org
+          - paragraph [ref=e211]:
+            - generic [ref=e212]: © Copyright 2026 Salesforce.com, inc. All rights reserved. Various trademarks held by their respective owners.
+            - generic [ref=e213]: Salesforce, Inc. Salesforce Tower, 415 Mission Street, 3rd Floor, San Francisco, CA 94105, United States
+  - generic:
+    - status
+  - generic [ref=e27]: Salesforce Help | Article

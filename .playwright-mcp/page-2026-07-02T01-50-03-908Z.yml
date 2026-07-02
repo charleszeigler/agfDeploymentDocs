@@ -1,0 +1,368 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e6]:
+      - generic [ref=e8]:
+        - button "Toggle Navigation" [ref=e11]:
+          - button "mobile menu open" [ref=e12]:
+            - img "mobile menu open" [ref=e13]
+        - link "Salesforce Home" [ref=e16] [cursor=pointer]:
+          - /url: https://www.salesforce.com/
+          - img "Salesforce Home" [ref=e17]
+        - button "Search Help" [ref=e208]
+        - navigation "Site tools" [ref=e209]:
+          - list [ref=e210]:
+            - listitem [ref=e211]:
+              - list [ref=e214]:
+                - listitem [ref=e215]:
+                  - link "Login" [ref=e217] [cursor=pointer]:
+                    - /url: https://help.salesforce.com/services/auth/sso/trailblazerloginCommunity?startURL=%2Fs%2FarticleView%3Fid%3Dsales.sales_agent_sdr_considerations.htm%26type%3D5
+    - navigation "Secondary" [ref=e185]:
+      - generic "Toggle Navigation" [ref=e189]:
+        - button "Help" [ref=e190]:
+          - generic:
+            - img [ref=e191]
+            - generic [ref=e194]: Help
+  - generic [ref=e19]:
+    - region "Message Area" [ref=e219]:
+      - button "Minimize Agentforce" [ref=e221] [cursor=pointer]:
+        - img "dash" [ref=e222]
+      - group [ref=e223]:
+        - generic [ref=e224]:
+          - img "agentforce" [ref=e226]
+          - generic [ref=e228]: Hi there! Ask me product support and troubleshooting questions.
+        - generic [ref=e230]:
+          - img [ref=e233]
+          - generic [ref=e235]: Ask Agentforce
+          - textbox "Ask Agentforce" [ref=e236]
+          - button "Send" [disabled] [ref=e238]:
+            - img "send" [ref=e239]
+    - generic [ref=e20]:
+      - generic [ref=e24]:
+        - status [ref=e27]:
+          - img [ref=e31]
+          - generic [ref=e34]:
+            - generic [ref=e36]: Upcoming Mandatory Changes to Public Key Infrastructure (PKI)
+            - text: Read More
+          - button "Close" [ref=e39] [cursor=pointer]:
+            - img [ref=e41]
+            - generic [ref=e44]: Close
+        - status [ref=e47]:
+          - img [ref=e51]
+          - generic [ref=e54]:
+            - generic [ref=e56]: Ongoing maintenance for Salesforce Help
+            - text: Read More
+          - button "Close" [ref=e59] [cursor=pointer]:
+            - img [ref=e61]
+            - generic [ref=e64]: Close
+        - status [ref=e67]:
+          - img [ref=e71]
+          - generic [ref=e74]:
+            - generic [ref=e76]: Salesforce Enforces New Security Requirements in Summer 2026
+            - text: Read More
+          - button "Close" [ref=e79] [cursor=pointer]:
+            - img [ref=e81]
+            - generic [ref=e84]: Close
+      - generic [ref=e96]:
+        - generic [ref=e240]: AI Sales Agents
+        - generic [ref=e242]:
+          - generic [ref=e245]:
+            - generic [ref=e246]:
+              - generic [ref=e247]: Table of Contents
+              - button "Close Close" [ref=e248] [cursor=pointer]:
+                - generic "Close" [ref=e249]:
+                  - generic [ref=e250]:
+                    - img [ref=e252]
+                    - generic [ref=e255]: Close
+                - generic [ref=e256]: Close
+            - generic [ref=e266]:
+              - generic [ref=e268]: Search
+              - generic [ref=e269]:
+                - button "Search" [ref=e270] [cursor=pointer]:
+                  - img [ref=e271]
+                  - generic [ref=e273]: Search
+                - textbox "Search" [ref=e274]
+            - list [ref=e278]:
+              - treeitem "AI Sales Agents Sales Agents Roles and Responsibilities Prospecting Agentforce Engagement Lead Generation Agent Qualification Agent Lead Nurturing Agent Learn About and Implement Agentforce Lead Nurturing Agentforce Lead Nurturing Overview Lead Nurturing Agent Permission Sets Considerations for Using Agentforce Lead Nurturing Ethical Guidance for Agentforce Lead Nurturing Set Up Agentforce Lead Nurturing Work with Your Lead Nurturing Agent Monitor Lead Nurturing Agent Activity Customize and Test Agentforce Lead Nurturing Edit an Inbound Lead Generation or Lead Nurturing Agent Sales Management Sales Coaching Agentforce (Default) for Sales Setup" [level=1] [ref=e279]:
+                - generic [ref=e280]:
+                  - button [ref=e281]:
+                    - img [ref=e282]
+                  - link "AI Sales Agents" [ref=e284] [cursor=pointer]:
+                    - /url: https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5
+                - list [ref=e285]:
+                  - treeitem "Sales Agents Roles and Responsibilities" [level=2] [ref=e286]:
+                    - link "Sales Agents Roles and Responsibilities" [ref=e288] [cursor=pointer]:
+                      - /url: /s/articleView?id=sales.sales_agents_personas.htm&language=en_US&type=5
+                  - treeitem "Prospecting" [level=2] [ref=e289]:
+                    - generic [ref=e290]:
+                      - button [ref=e291]:
+                        - img [ref=e292]
+                      - link "Prospecting" [ref=e294] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_prospecting_parent.htm&language=en_US&type=5
+                  - treeitem "Agentforce Engagement Lead Generation Agent Qualification Agent Lead Nurturing Agent Learn About and Implement Agentforce Lead Nurturing Agentforce Lead Nurturing Overview Lead Nurturing Agent Permission Sets Considerations for Using Agentforce Lead Nurturing Ethical Guidance for Agentforce Lead Nurturing Set Up Agentforce Lead Nurturing Work with Your Lead Nurturing Agent Monitor Lead Nurturing Agent Activity Customize and Test Agentforce Lead Nurturing Edit an Inbound Lead Generation or Lead Nurturing Agent" [level=2] [ref=e295]:
+                    - generic [ref=e296]:
+                      - button [ref=e297]:
+                        - img [ref=e298]
+                      - link "Agentforce Engagement" [ref=e300] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agents_customer_engagement_parent.htm&language=en_US&type=5
+                    - list [ref=e301]:
+                      - treeitem "Lead Generation Agent" [level=3] [ref=e302]:
+                        - generic [ref=e303]:
+                          - button [ref=e304]:
+                            - img [ref=e305]
+                          - link "Lead Generation Agent" [ref=e307] [cursor=pointer]:
+                            - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_lead_generation_parent.htm&language=en_US&type=5
+                      - treeitem "Qualification Agent" [level=3] [ref=e308]:
+                        - generic [ref=e309]:
+                          - button [ref=e310]:
+                            - img [ref=e311]
+                          - link "Qualification Agent" [ref=e313] [cursor=pointer]:
+                            - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_qual_overview.htm&language=en_US&type=5
+                      - treeitem "Lead Nurturing Agent Learn About and Implement Agentforce Lead Nurturing Agentforce Lead Nurturing Overview Lead Nurturing Agent Permission Sets Considerations for Using Agentforce Lead Nurturing Ethical Guidance for Agentforce Lead Nurturing Set Up Agentforce Lead Nurturing Work with Your Lead Nurturing Agent Monitor Lead Nurturing Agent Activity Customize and Test Agentforce Lead Nurturing" [level=3] [ref=e314]:
+                        - generic [ref=e315]:
+                          - button [ref=e316]:
+                            - img [ref=e317]
+                          - link "Lead Nurturing Agent" [ref=e319] [cursor=pointer]:
+                            - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_parent.htm&language=en_US&type=5
+                        - list [ref=e320]:
+                          - treeitem "Learn About and Implement Agentforce Lead Nurturing" [level=4] [ref=e321]:
+                            - link "Learn About and Implement Agentforce Lead Nurturing" [ref=e323] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_learning_map.htm&language=en_US&type=5
+                          - treeitem "Agentforce Lead Nurturing Overview" [level=4] [ref=e324]:
+                            - link "Agentforce Lead Nurturing Overview" [ref=e326] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_intro.htm&language=en_US&type=5
+                          - treeitem "Lead Nurturing Agent Permission Sets" [level=4] [ref=e327]:
+                            - link "Lead Nurturing Agent Permission Sets" [ref=e329] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_permissions.htm&language=en_US&type=5
+                          - treeitem "Considerations for Using Agentforce Lead Nurturing" [level=4] [ref=e330]:
+                            - link "Considerations for Using Agentforce Lead Nurturing" [ref=e332] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_considerations.htm&language=en_US&type=5
+                          - treeitem "Ethical Guidance for Agentforce Lead Nurturing" [level=4] [ref=e333]:
+                            - link "Ethical Guidance for Agentforce Lead Nurturing" [ref=e335] [cursor=pointer]:
+                              - /url: /s/articleView?id=sales.sales_agent_sdr_ethical_guidelines.htm&language=en_US&type=5
+                          - treeitem "Set Up Agentforce Lead Nurturing" [level=4] [ref=e336]:
+                            - generic [ref=e337]:
+                              - button [ref=e338]:
+                                - img [ref=e339]
+                              - link "Set Up Agentforce Lead Nurturing" [ref=e341] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.einstein_sdr_setup.htm&language=en_US&type=5
+                          - treeitem "Work with Your Lead Nurturing Agent" [level=4] [ref=e342]:
+                            - generic [ref=e343]:
+                              - button [ref=e344]:
+                                - img [ref=e345]
+                              - link "Work with Your Lead Nurturing Agent" [ref=e347] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_work_with.htm&language=en_US&type=5
+                          - treeitem "Monitor Lead Nurturing Agent Activity" [level=4] [ref=e348]:
+                            - generic [ref=e349]:
+                              - button [ref=e350]:
+                                - img [ref=e351]
+                              - link "Monitor Lead Nurturing Agent Activity" [ref=e353] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_monitoring.htm&language=en_US&type=5
+                          - treeitem "Customize and Test Agentforce Lead Nurturing" [level=4] [ref=e354]:
+                            - generic [ref=e355]:
+                              - button [ref=e356]:
+                                - img [ref=e357]
+                              - link "Customize and Test Agentforce Lead Nurturing" [ref=e359] [cursor=pointer]:
+                                - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_customize_and_test.htm&language=en_US&type=5
+                      - treeitem "Edit an Inbound Lead Generation or Lead Nurturing Agent" [level=3] [ref=e360]:
+                        - link "Edit an Inbound Lead Generation or Lead Nurturing Agent" [ref=e362] [cursor=pointer]:
+                          - /url: /s/articleView?id=sales.edit_sales_agent_versions.htm&language=en_US&type=5
+                  - treeitem "Sales Management" [level=2] [ref=e363]:
+                    - generic [ref=e364]:
+                      - button [ref=e365]:
+                        - img [ref=e366]
+                      - link "Sales Management" [ref=e368] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sales_mgmt_parent.htm&language=en_US&type=5
+                  - treeitem "Sales Coaching" [level=2] [ref=e369]:
+                    - generic [ref=e370]:
+                      - button [ref=e371]:
+                        - img [ref=e372]
+                      - link "Sales Coaching" [ref=e374] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_agents_coach_parent.htm&language=en_US&type=5
+                  - treeitem "Agentforce (Default) for Sales Setup" [level=2] [ref=e375]:
+                    - link "Agentforce (Default) for Sales Setup" [ref=e377] [cursor=pointer]:
+                      - /url: /s/articleView?id=sales.einstein_copilot_for_sales.htm&language=en_US&type=5
+          - generic [ref=e378]:
+            - generic [ref=e379]:
+              - link:
+                - /url: https://help.salesforce.com/s?language=en_US
+              - generic [ref=e380]:
+                - generic [ref=e381]:
+                  - paragraph [ref=e382]: "You are here:"
+                  - list "You are here:" [ref=e383]:
+                    - listitem [ref=e384]:
+                      - link "Salesforce Help" [ref=e385] [cursor=pointer]:
+                        - /url: /s/?language=en_US
+                    - listitem [ref=e386]:
+                      - text: ">"
+                      - link "Docs" [ref=e387] [cursor=pointer]:
+                        - /url: /s/products?language=en_US
+                    - listitem [ref=e388]:
+                      - text: ">"
+                      - link "AI Agents for Sales" [ref=e389] [cursor=pointer]:
+                        - /url: https://help.salesforce.com/s/articleView?id=sales.sales_cloud_agents.htm&language=en_US&type=5
+                - heading "Considerations for Using Agentforce Lead Nurturing" [level=1] [ref=e390]
+                - paragraph [ref=e391]: Keep in mind some considerations when using Agentforce Lead Nurturing.
+                - generic [ref=e392]:
+                  - heading "Required Editions" [level=3] [ref=e394]
+                  - table [ref=e396]:
+                    - rowgroup [ref=e399]:
+                      - 'row "Available in: Lightning Experience in Enterprise, Performance, and Unlimited editions with Sales and Einstein for Sales." [ref=e400]':
+                        - 'cell "Available in: Lightning Experience in Enterprise, Performance, and Unlimited editions with Sales and Einstein for Sales." [ref=e401]':
+                          - text: "Available in: Lightning Experience in"
+                          - strong [ref=e402]: Enterprise
+                          - text: ","
+                          - strong [ref=e403]: Performance
+                          - text: ", and"
+                          - strong [ref=e404]: Unlimited
+                          - text: editions with Sales and Einstein for Sales.
+                  - generic [ref=e406]:
+                    - img "Note" [ref=e409]
+                    - generic [ref=e410]:
+                      - link:
+                        - /url: https://help.salesforce.com/s?language=en_US
+                      - text: Note The Agentforce SDR name has changed to Agentforce Lead Nurturing. The new name better describes the work that the agent does to nurture existing prospects and differentiates it from the Agentforce Lead Generation agent template.
+                  - generic [ref=e411]:
+                    - link:
+                      - /url: https://help.salesforce.com/s?language=en_US
+                    - heading "Agent Configuration and Deployment" [level=2] [ref=e412]
+                    - link:
+                      - /url: https://help.salesforce.com/s?language=en_US
+                    - list [ref=e413]:
+                      - listitem [ref=e414]: Deploying Lead Nurturing agents or agent changes via change sets or metadata is not supported and can cause the newly deployed or updated agent to stop working correctly. We recommend creating and editing all agents in Setup or Agentforce Builder.
+                  - generic [ref=e415]:
+                    - heading "Lead Nurturing Consumption of Conversations" [level=2] [ref=e416]
+                    - paragraph [ref=e417]: A Conversation is consumed when a Lead Nurturing agent sends out the initial email to a prospect. All subsequent activities carried out by the agent for that prospect are included in the initial Conversation. A user can cancel an outreach by selecting Cancel Outreach from an email task in the Activity Timeline. If a user later restarts Lead Nurturing for the same prospect, another Conversation is consumed.
+                    - paragraph [ref=e418]: When the Lead Nurturing agent engages prospects, it consumes units of Conversations. You can track your Conversation usage in your Salesforce Digital Wallet. Each Conversation consumes Einstein Requests when it accesses the LLM.
+                    - paragraph [ref=e419]: When you configure your Lead Nurturing agent, you choose how and when the agent engages prospects. You also select what information the agent can access to personalize outreach and replies to prospects. As the agent begins working on a prospect, it uses these settings to know how many times to reach out and how many times to reply.
+                    - paragraph [ref=e420]: When your business purchases Conversations, Salesforce allocates a number of Einstein Requests per Conversation to your order. This allocation approximates the typical consumption pattern of Lead Nurturing agent outreach to a prospect using the default agent settings, including nudges and replies.
+                  - generic [ref=e421]:
+                    - link:
+                      - /url: https://help.salesforce.com/s?language=en_US
+                    - heading "Email Considerations" [level=2] [ref=e422]
+                    - link:
+                      - /url: https://help.salesforce.com/s?language=en_US
+                    - list [ref=e423]:
+                      - listitem [ref=e424]: To adhere to email provider daily limits, each Lead Nurturing agent can send up to 1800 emails a day with a Gmail account and 9800 emails a day with a Microsoft Exchange account. When the agent hits the limit, it stops sending emails for the day. Keep this limit in mind when configuring your Lead Nurturing agent Engagement Rules in Setup or Agentforce Builder. If the email account assigned to the Lead Nurturing agent is also used for sending emails manually, or by another app, there's greater risk of exceeding email provider limits.
+                      - listitem [ref=e425]: It isn’t possible to prioritize specific Lead Nurturing agent emails. For example, you can’t tell the agent to prioritize email replies over nudges.
+                      - listitem [ref=e426]: The email account connected to Lead Nurturing can't be connected to any other user.
+                      - listitem [ref=e427]: The email account connected to Lead Nurturing in Agentforce Builder must be the same email address that’s listed in the Email field of the Lead Nurturing agent user record. If not, nudge and reply emails can fail.
+                      - listitem [ref=e428]:
+                        - text: If Send as Seller is on for the agent, the record owners of prospects assigned to the agent must have email addresses correctly configured and connected to both Inbox and
+                        - link "Einstein Activity Capture permission" [ref=e429] [cursor=pointer]:
+                          - /url: https://help.salesforce.com/s/articleView?id=sales.aac_setup_select_users.htm&language=en_US&type=5
+                        - text: . If they don’t, agent emails can fail.
+                      - listitem [ref=e430]: When Send as Seller is on, the agent includes an AI disclosure at the beginning of each generated email. This disclosure ensures regulatory compliance. Regulations in your area may differ. You can instruct the agent to omit the disclosure by removing the related instruction from the agent actions by using Agentforce Builder.
+                      - listitem [ref=e431]: If Require Manual Approval is turned on for the agent, generated emails omit the AI disclosure because there is a sales rep reviewing each email.
+                      - listitem [ref=e432]: In Einstein Activity Capture setup, the Header-only Email Capture setting within Sync Email as Salesforce Activity affects how the agent generates its emails. When Header-only Email Capture is on, the agent can’t use the email subject or body to understand prospect intent or personalize its responses. Leaving the setting off allows the agent to use the full content of the emails to provide appropriate and accurate responses. If you turn on Agentforce Lead Nurturing before you set up Sync Email as Salesforce Activity, you can’t select Header-only Email Capture.
+                      - listitem [ref=e433]: If a prospect’s email address has the same domain name as the Lead Nurturing agent user record's email address, EAC considers the prospect an internal user. EAC doesn't allow the Lead Nurturing agent to send any email replies to the prospect.
+                      - listitem [ref=e434]: To edit or reschedule Lead Nurturing emails, a user must connect their email account from within their user profile. If the user adds the agent's email address to their profile, an error occurs.
+                  - generic [ref=e435]:
+                    - heading "Meeting Scheduling and Ownership" [level=2] [ref=e436]
+                    - list [ref=e437]:
+                      - listitem [ref=e438]: The agent can assign meetings only to Inbox users with a connected email account in their personal settings.
+                      - listitem [ref=e439]: If a user isn’t listed as an option during setup, they don’t have Inbox set up or a connected email account.
+                      - listitem [ref=e440]: If a group isn’t listed as an option during setup, the group doesn’t have at least one Inbox user with a connected email account or it exceeds 15 users.
+                      - listitem [ref=e441]: When a group is selected as the meeting owner, the agent shows the combined availability of all Inbox users with a connected email account in that group to the customer. The agent then randomly assigns the meeting to one of the available group members.
+                      - listitem [ref=e442]: For group scheduling to work, give Salesforce permission to view your free/busy time on your Gmail and Outlook calendar.
+                      - listitem [ref=e443]: When Send as Sellers is enabled, meetings can only be assigned to users, not groups.
+                  - generic [ref=e444]:
+                    - heading "Other Considerations" [level=2] [ref=e445]
+                    - list [ref=e446]:
+                      - listitem [ref=e447]: When Require Manual Approval is on, the record owner has 14 calendar days to approve each email. After 14 days without approval, the agent cancels the email.
+                      - listitem [ref=e448]: By default, you can add up to 20 sales agents. If you need more, contact your Salesforce account executive.
+                      - listitem [ref=e449]: When you assign a prospect to a Lead Nurturing agent, it begins working the prospect immediately. The agent schedules the first email to be sent within an hour. Sent emails appear in the Activity Timeline. If the prospect doesn’t request a meeting or opt out of emails, the agent generates and sends nudge emails according to the schedule in the agent settings. If the prospect replies to any of those emails, the agent replies right away (within working hours), or queues a reply to be sent when your email send limits allow. Nudges and replies also appear in the Activity Timeline.
+                      - listitem [ref=e450]: The Owner field on leads, person accounts, and contacts must be filled before assigning a record to the Lead Nurturing agent. For contacts, fill the owner field on the related account.
+                      - listitem [ref=e451]: If Activity 360 Reporting is turned on, Agentforce Lead Nurturing doesn’t work
+            - generic [ref=e453]:
+              - generic [ref=e454]:
+                - generic [ref=e455]: Did this article solve your issue?
+                - generic [ref=e456]: Let us know so we can improve!
+              - generic [ref=e457]:
+                - button "Yes" [ref=e459] [cursor=pointer]:
+                  - img [ref=e461]
+                  - text: "Yes"
+                - button "No" [ref=e465] [cursor=pointer]:
+                  - img [ref=e467]
+                  - text: "No"
+      - contentinfo [ref=e105]:
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - img "Salesforce logo" [ref=e113]
+            - generic [ref=e114]: 1-800-667-6389
+            - list [ref=e115]:
+              - listitem [ref=e116]:
+                - link "facebook" [ref=e117] [cursor=pointer]:
+                  - /url: https://www.facebook.com/salesforce
+                  - img "facebook" [ref=e119]
+              - listitem [ref=e120]:
+                - link "twitter" [ref=e121] [cursor=pointer]:
+                  - /url: https://twitter.com/asksalesforce
+                  - img "twitter" [ref=e123]
+              - listitem [ref=e124]:
+                - link "linkedin" [ref=e125] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/showcase/salesforcecustomersuccessgroup
+                  - img "linkedin" [ref=e127]
+              - listitem [ref=e128]:
+                - link "youtube" [ref=e129] [cursor=pointer]:
+                  - /url: https://www.youtube.com/channel/UCbrOrrE0lOR2LcfycryZwHw
+                  - img "youtube" [ref=e131]
+          - generic [ref=e132]:
+            - generic [ref=e133]: SALESFORCE
+            - list [ref=e134]:
+              - listitem [ref=e135]:
+                - link "Privacy Statement" [ref=e136] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/company/privacy/
+              - listitem [ref=e137]:
+                - link "Security Statement" [ref=e138] [cursor=pointer]:
+                  - /url: https://trust.salesforce.com/en/
+              - listitem [ref=e139]:
+                - link "Terms of Use" [ref=e140] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/company/program-agreement/
+              - listitem [ref=e141]:
+                - link "Participation Guidelines" [ref=e142] [cursor=pointer]:
+                  - /url: https://success.salesforce.com/resource/1432331846000/SuccessGuidelines
+              - listitem [ref=e143]:
+                - button "Cookie Preference Center" [ref=e144] [cursor=pointer]
+              - listitem [ref=e145]:
+                - link "Your Privacy Choices" [ref=e146] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/form/other/privacy-request/
+                  - img "Your Privacy Choices" [ref=e148]
+                - link "Your Privacy Choices" [ref=e149] [cursor=pointer]:
+                  - /url: https://www.salesforce.com/form/other/privacy-request/
+          - generic [ref=e150]:
+            - generic [ref=e151]: COMMUNITY
+            - list [ref=e152]:
+              - listitem [ref=e153]:
+                - link "AppExchange" [ref=e154] [cursor=pointer]:
+                  - /url: https://appexchange.salesforce.com
+              - listitem [ref=e155]:
+                - link "Salesforce Admins" [ref=e156] [cursor=pointer]:
+                  - /url: https://admin.salesforce.com
+              - listitem [ref=e157]:
+                - link "Salesforce Developers" [ref=e158] [cursor=pointer]:
+                  - /url: https://developer.salesforce.com
+              - listitem [ref=e159]:
+                - link "Trailhead" [ref=e160] [cursor=pointer]:
+                  - /url: https://trailhead.salesforce.com
+              - listitem [ref=e161]:
+                - link "Training" [ref=e162] [cursor=pointer]:
+                  - /url: https://trailheadacademy.salesforce.com
+              - listitem [ref=e163]:
+                - link "Trust" [ref=e164] [cursor=pointer]:
+                  - /url: https://trust.salesforce.com
+        - separator [ref=e165]
+        - generic [ref=e167]:
+          - combobox "Language Selector" [ref=e174]:
+            - button "English" [expanded] [ref=e175] [cursor=pointer]:
+              - generic [ref=e176]: English
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                - generic: Select Org
+          - paragraph [ref=e178]:
+            - generic [ref=e179]: © Copyright 2026 Salesforce.com, inc. All rights reserved. Various trademarks held by their respective owners.
+            - generic [ref=e180]: Salesforce, Inc. Salesforce Tower, 415 Mission Street, 3rd Floor, San Francisco, CA 94105, United States
+  - generic:
+    - status
+  - generic [ref=e182]: Salesforce Help | Article

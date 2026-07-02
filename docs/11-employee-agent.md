@@ -175,6 +175,12 @@ Continue only after the deploy result is `Succeeded`.
 
 **Stop if:** The access permission set deploys before the agent is published and active. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
+## Data 360 Data Kit
+
+If this Employee Agent uses Data 360 data, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before live preview and publish.
+
+Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and assigned employees have the Data 360 access required by the agent.
+
 ## Publish and activate
 
 Start live preview before publishing:
@@ -279,7 +285,7 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 - [ ] Employee access package with `agentAccesses` is deployed after publish and activation.
 - [ ] Employee permission set or permission set group is assigned.
 - [ ] Employees have the Salesforce-provided Agentforce user access required for the Lightning panel.
-- [ ] Data 360 package completed first, if used.
+- [ ] Data 360 Data Kit completed before live preview and publish, if used.
 - [ ] Live-action preview passes before publish.
 - [ ] Active-agent smoke test passes as a non-admin employee.
 
