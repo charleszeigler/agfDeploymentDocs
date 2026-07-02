@@ -11,8 +11,9 @@ Start with the agent guide that matches what you are moving. Each primary guide 
 | Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Confirm or create the target agent user before publish |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) | Deploy the agent first, then deploy user access after publish and activation |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Package only custom dependencies; configure the agent in the target org |
+| Prospecting Agent | [Deploy Prospecting Agent Dependencies](14-prospecting-agent.md) | Package only custom dependencies; configure the agent in the target org |
 
-Service Agent and Employee Agent paths assume Agent Script source. Lead Nurture Agent is the exception: package only custom dependencies and finish agent configuration in the target org.
+Service Agent and Employee Agent paths assume Agent Script source. Lead Nurture Agent and Prospecting Agent are the exceptions: package only custom dependencies and finish agent configuration in the target org.
 
 ## 2. Follow that guide end to end
 

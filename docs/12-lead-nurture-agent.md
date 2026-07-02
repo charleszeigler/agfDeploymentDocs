@@ -157,26 +157,20 @@ Package does not connect mailboxes or create Builder activation state.
 6. Preview Lead Nurture Agent in Builder and confirm the generated email uses the expected prompt templates and source values.
 7. Do not enable automatic sending until the previewed email behavior is approved.
 
-## Fill the implementation worksheet
+## Confirm target Lead Nurture setup
 
-Capture before handoff:
+Use the source org to understand the intended behavior, then configure the target org deliberately. Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org setup, not package metadata.
 
-| Setting | Value |
-|---|---|
-| Company or product context | |
-| Tone and persona | |
-| Email send caps and cadence | |
-| Agent sender mailbox | |
-| Agent user EAC status | |
-| Sales-user EAC requirement | |
-| Meeting booking source | |
-| Lead assignment rules | |
-| Opt-out process | |
-| Project prompt template overrides | |
-| Data library or knowledge source | |
-| Data 360 dependency, if any | |
+Before enabling automatic sending, confirm:
 
-Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org values. Package only custom dependencies.
+- Voice and content: configure company context, product context, tone, persona, approved prompts, and brand notes; preview an email and confirm it uses approved language.
+- Send behavior: set send caps, cadence, and automatic-send controls; get business approval before enabling automated sends.
+- Sender mailbox: connect the target mailbox, confirm the agent user email connection is active, and confirm EAC is working for that mailbox.
+- Sales-user access: confirm participating sellers have the required Inbox and EAC access when Send as Seller is used.
+- Meeting booking: configure the target booking source and confirm previewed emails contain the correct meeting path.
+- Assignment and opt-out: configure target assignment rules and opt-out handling, then test with an approved lead record.
+- Prompt overrides: deploy project-owned prompt templates and confirm Builder preview uses the target templates.
+- Data sources: connect the target data library, knowledge sources, or Data 360 dependencies, then confirm previewed output uses target-org data.
 
 ## Checklist
 
@@ -185,7 +179,7 @@ Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-libra
 - [ ] Legacy project actions are packaged separately when used.
 - [ ] Data 360 Data Kit completed separately before target-org preview, if used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target-org steps, not `package.xml` members.
-- [ ] Worksheet completed from the source org.
+- [ ] Target Lead Nurture configuration reviewed against the source-org behavior.
 - [ ] Dependency deploy succeeded.
 - [ ] Lead Nurture Agent is enabled in the target org.
 - [ ] Agent user email and EAC connection are active.

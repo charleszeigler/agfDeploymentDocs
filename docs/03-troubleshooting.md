@@ -48,7 +48,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | Symptom | What to do |
 |---|---|
 | Deployment plan expects change sets to move Enhanced Web Chat | Stop. Salesforce change sets list Embedded Service Deployment only for standard Chat, not Enhanced Chat. |
-| `Label data too large:(max length:80)` during Web Chat metadata deploy | Stop and rebuild the web deployment in the target org. Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported. |
+| `Label data too large:(max length:80)` during Web Chat metadata deploy | Rebuild and publish the web deployment in the target org, then reconnect the agent and routing configuration. Salesforce documents this as a migration limitation for generated-site metadata scenarios. |
 | Chat button does not load | Check the target org deployment is published, the website domain is in CORS, the snippet or Embedded Messaging component points at the target deployment, and the page referrer policy is compatible. |
 | Experience Builder chat does not appear | Confirm the Embedded Messaging component is on the site, the correct deployment, service URL, and site endpoint are selected, and the site domain is allowed in CORS. |
 | Authenticated chat opens as an unauthenticated session | Confirm User Verification or equivalent auth configuration was completed in the target org. Treat auth settings as target-org values unless validated as metadata for that org. |

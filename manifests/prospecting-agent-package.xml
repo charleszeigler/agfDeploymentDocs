@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PROSPECTING AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
+  ============================================================================
+  FOR THE AGENTFORCE PROSPECTING AGENT - DEPENDENCIES ONLY.
+      This manifest excludes the Prospecting Agent itself.
+      The AGENT is rebuilt from the Prospecting Agent template in the target org's
+      setup flow and Agentforce Builder. See docs/14-prospecting-agent.md.
+
+      Salesforce documents metadata deployment/retrieval as unsupported for the
+      Lead Nurture (SDR) and Sales Coach agents (KB 005228853). That article does
+      not name the Prospecting Agent, but it is the same pre-built standard-template
+      Sales agent family, so treat it as rebuild-in-target. Re-verify if a
+      Prospecting-specific considerations page or release note appears.
+
+      NOTE: a CUSTOM Agent Script agent (one with its own .agent source) uses the
+      normal Agent Script path. Deploy it like a Service or Employee Agent using
+      docs/10-service-agent.md or docs/11-employee-agent.md instead.
+
+      The ZoomInfo managed package is NOT metadata. Install it from AppExchange and
+      re-authenticate its connection in each org. Do not put it in this package.
+  ============================================================================
+  Replace every placeholder and Object.Field__c with real API names, and remove
+  any block you don't use before handoff.
+
+  Data 360 dependencies are separate. Use a Data Kit manifest from
+  docs/20-data-360-data-kit.md; do not mix Data 360 metadata into this dependencies package.
+-->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+  <!-- Custom fields used as ICP / qualification criteria the agent reads -->
+  <types>
+    <members>Account.Custom_Field__c</members>
+    <members>Contact.Custom_Field__c</members>
+    <name>CustomField</name>
+  </types>
+
+  <!-- Custom objects, if you added prospecting-tracking data -->
+  <!--
+  <types>
+    <members>PROSPECTING_CUSTOM_OBJECT__c</members>
+    <name>CustomObject</name>
+  </types>
+  -->
+
+  <!-- The Accounts report that scopes the in-scope account universe.
+       The agent's SELECTION of the report is a Builder step; the report
+       definition itself moves as metadata. Use folder/DeveloperName. -->
+  <types>
+    <members>REPORT_FOLDER/PROSPECTING_ACCOUNT_SCOPE_REPORT</members>
+    <name>Report</name>
+  </types>
+
+  <!-- Customized prompt template overrides (must be Published) -->
+  <!--
+  <types>
+    <members>PROMPT_TEMPLATE_API_NAME</members>
+    <name>GenAiPromptTemplate</name>
+  </types>
+  -->
+
+  <!-- Custom actions ONLY if you added non-standard ones (the template ships its own) -->
+  <!--
+  <types>
+    <members>APEX_CLASS_API_NAME</members>
+    <members>APEX_CLASS_TEST_API_NAME</members>
+    <name>ApexClass</name>
+  </types>
+  <types>
+    <members>FLOW_API_NAME</members>
+    <name>Flow</name>
+  </types>
+  -->
+
+  <!-- Permission set: must include the current Prospecting Agent setup permission + data access.
+       Verify the Prospecting-specific permission set API names in the target org;
+       do not assume they match the SDR names. -->
+  <types>
+    <members>PROSPECTING_PERMISSION_SET_API_NAME</members>
+    <name>PermissionSet</name>
+  </types>
+
+  <!-- Callout config for enrichment / outbound systems, if used.
+       (The ZoomInfo connection is a managed-package install, not a Named Credential here.) -->
+  <!--
+  <types>
+    <members>NAMED_CREDENTIAL_API_NAME</members>
+    <name>NamedCredential</name>
+  </types>
+  <types>
+    <members>EXTERNAL_CREDENTIAL_API_NAME</members>
+    <name>ExternalCredential</name>
+  </types>
+  -->
+
+  <!-- Data 360 metadata belongs in a separate DevOps Data Kit package.
+       See docs/20-data-360-data-kit.md. -->
+
+  <version>66.0</version>
+</Package>

@@ -6,15 +6,15 @@ Use this guide to deploy an active Service Agent to a web messaging channel thro
 
 ## Read first
 
-Web messaging migration is high risk:
+Plan web messaging as a target-org configuration step:
 
 - Change sets do not carry Enhanced Chat Embedded Service Deployment.
-- Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported and shows deployment failures involving generated site metadata.
-- The practical fallback is to rebuild and publish in the target org, then reconnect the agent and routing configuration.
+- Salesforce documents migration limitations for Messaging for Web when generated site metadata is involved.
+- The customer-ready path is to rebuild and publish the deployment in the target org, then reconnect the agent and routing configuration.
 
 **Stop if:** The deployment plan requires change sets to move the Enhanced Web Chat deployment. Use Metadata API validation in a sandbox or rebuild the deployment manually in the target org.
 
-**Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or override Salesforce Known Issue W-15932771.
+**Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or remove the need for target-org web messaging setup.
 
 ## What this guide covers
 
@@ -28,26 +28,20 @@ Web messaging migration is high risk:
 
 Temporary test host: useful for snippet testing, not final go-live evidence. Final evidence must come from the real website or Experience Builder page.
 
-## Capture source values
+## Build the target configuration plan
 
-Fill from the source sandbox before handoff.
+Use the source sandbox as a reference for intent, not as a set of values to copy. Web messaging includes org-specific domains, snippets, generated site URLs, auth settings, and publish state, so the handoff should say what to configure in the target org and what evidence proves it works.
 
-| Value | Source |
-|---|---|
-| Embedded Service Deployment API name | |
-| Messaging channel API name | |
-| Website domain | |
-| CORS origins | |
-| Experience Builder site domain, if used | |
-| Omni routing flow | |
-| Queue and routing configuration | |
-| Agent API name | |
-| Auth/User Verification setting, if used | |
-| Snippet location or site page | |
-| Generated site iframe allowed origins, if exposed | |
-| Branding, pre-chat, labels, business hours | |
+Before go-live, confirm:
 
-Domains, CORS entries, snippets, generated site URLs, generated site frame settings, auth settings, and publish state are target-org values.
+- Deployment: recreate or update the target Embedded Service Deployment, publish it, and confirm the built-in test page shows the chat launcher.
+- Channel: select or create the target messaging channel and confirm it is active and attached to the deployment.
+- Host page: install the target-org snippet or Embedded Messaging component on the real production website or Experience Builder page.
+- Domains and browser security: add the production website origin, preview origin if used, CORS entries, and iframe allowed origins required by the target org.
+- Routing: connect the target Omni flow, queue, and routing configuration, then confirm a new session routes to the intended path.
+- Service Agent connection: connect the active target Service Agent through the selected channel or routing path.
+- Auth/User Verification, if used: configure target-org auth values and confirm the session resolves to the expected user context.
+- Runtime validation: run the agreed happy path from the target page and confirm a new `MessagingSession` appears for the target channel.
 
 ## Package candidate metadata
 
@@ -100,7 +94,7 @@ Use this path when metadata migration has not been validated end to end.
 2. Confirm the Omni routing flow, queue, and routing configuration exist in the target org.
 3. Confirm at least one target Omni user belongs to the queue and can select a Messaging-available status.
 4. In Setup, open Embedded Service Deployments.
-5. Recreate or update the target Enhanced Chat Web deployment to match the source worksheet.
+5. Recreate or update the target Enhanced Chat Web deployment to match the target configuration plan.
 6. Select the target messaging channel.
 7. Set the website domain.
 8. Configure branding, pre-chat, custom labels, business hours, and auth settings.
@@ -166,7 +160,7 @@ Use UI checks first. CLI checks are optional.
 6. Confirm the session routes through the intended Omni flow and queue.
 7. Confirm the Omni user accepts the work item or the active Service Agent responds, depending on the routing design.
 8. Confirm authenticated chat behavior if auth is used.
-9. Confirm business hours, labels, branding, and pre-chat fields match the worksheet.
+9. Confirm business hours, labels, branding, and pre-chat fields match the target configuration plan.
 
 Optional CLI verification:
 
@@ -195,6 +189,6 @@ Presence alone is not a website smoke test.
 ## Sources
 
 - Components Available in Change Sets: https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&type=5
-- Messaging For Web Deployment is Not Supported: https://help.salesforce.com/s/issue?id=a028c00000zLLiS
+- Salesforce Help: Messaging for Web deployment limitation: https://help.salesforce.com/s/issue?id=a028c00000zLLiS
 - Configure an Enhanced Web Chat Deployment: https://help.salesforce.com/s/articleView?id=service.miaw_configure_web_deployment_1.htm&type=5
 - Configure an Enhanced Web Chat Deployment in an Experience Builder or Commerce Cloud site: https://help.salesforce.com/s/articleView?id=service.miaw_deployment_experience_builder.htm&type=5
