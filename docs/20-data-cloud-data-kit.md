@@ -52,7 +52,7 @@ sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <SOURCE_O
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
-This is the retrieve step from [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md), but the manifest must come from the source Data Kit.
+This is the retrieve step from [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed), but the manifest must come from the source Data Kit.
 
 ## Remove key qualifier files
 
@@ -75,7 +75,7 @@ Review the list with the packaging owner. Remove only confirmed key qualifier fi
 
 ## Deploy the Data Kit package
 
-Deploy generated Data Kit metadata with [Deploy a Package](01-deploy-package.md).
+Deploy generated Data Kit metadata with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
 
 - Production: use validation and quick deploy.
 - Sandbox: use dry run, then deploy.

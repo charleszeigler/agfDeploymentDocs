@@ -55,7 +55,7 @@ Identify action targets in the source bundle:
 3. Search in the file for `flow://`.
 4. Add every referenced Apex class and Flow to the source package manifest.
 
-If source files are not already in the package folder, use [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md):
+If source files are not already in the package folder, use [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed):
 
 1. Retrieve the `AiAuthoringBundle`.
 2. Inspect the `.agent` file for dependencies.
@@ -73,13 +73,13 @@ Fix validation errors before handoff.
 
 ## Deploy the source package
 
-If source files are not retrieved yet, complete [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md). Then deploy with [Deploy a Package](01-deploy-package.md).
+If source files are not retrieved yet, complete [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed). Then validate and deploy with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
 
 **Stop if:** Deploy fails with `In field: botDefinition - no Bot named ... found`. The package included `agentAccesses` too early. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
 ## Publish and activate
 
-Run [Publish and Activate](02-publish-and-activate.md).
+Run [Deploy a Package](deployment-workflow.md#5-publish-service-and-employee-agents).
 
 ## Deploy and assign employee access
 

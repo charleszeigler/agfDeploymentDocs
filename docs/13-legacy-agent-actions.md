@@ -58,7 +58,7 @@ Retrieve the package:
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
-After retrieve, deploy with [Deploy a Package](01-deploy-package.md).
+After retrieve, validate and deploy with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
 
 ## Path 2: make a local action deployable
 

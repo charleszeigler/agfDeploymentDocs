@@ -14,11 +14,10 @@
         }
       ]
     },
-    "00-before-you-start",
-    "01-prepare-and-retrieve-package",
-    "01-deploy-package",
-    "02-publish-and-activate",
-    "30-final-go-live-validation",
+    {
+      "title": "Deploy a Package",
+      "slug": "deployment-workflow"
+    },
     "20-data-cloud-data-kit",
     "21-enhanced-web-chat",
     {

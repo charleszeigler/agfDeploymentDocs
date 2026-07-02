@@ -58,8 +58,8 @@ Package rules:
 
 Next:
 
-1. Retrieve custom dependency files with [Prepare and Retrieve a Package](01-prepare-and-retrieve-package.md).
-2. Deploy the dependency package with [Deploy a Package](01-deploy-package.md).
+1. Retrieve custom dependency files with [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed).
+2. Deploy the dependency package with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
 
 **Do not package:** Do not package Salesforce-provided Lead Nurture Agent templates, generated emails, draft emails, sent-email history, mailbox connections, EAC auth, cadence runtime state, or Builder activation state. Package only custom dependencies.
 

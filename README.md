@@ -6,7 +6,7 @@ Last content review: June 29, 2026. Re-check linked Salesforce source docs befor
 
 Start with [docs/index.md](docs/index.md).
 
-- Build/retrieve: [docs/01-prepare-and-retrieve-package.md](docs/01-prepare-and-retrieve-package.md)
+- Deploy a package: [docs/deployment-workflow.md](docs/deployment-workflow.md)
 - Public navigation: [docs/meta.json](docs/meta.json)
 - Scope rule: each guide lists only the values needed for that path.
 
@@ -16,13 +16,9 @@ Start with `docs/index.md`. Use only the guides that match the package.
 
 | Need | Use |
 |---|---|
-| Setup | `00-before-you-start` |
-| Source retrieve | `01-prepare-and-retrieve-package` when files must be pulled from the source sandbox |
-| Package deploy | `01-deploy-package` |
-| Agent publish | `02-publish-and-activate` when the deployment creates or changes an agent version |
+| Package deploy | `deployment-workflow` for source retrieve, target preflight, package deploy, and Service or Employee Agent publish |
 | Agent type | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
 | Dependencies | `13-legacy-agent-actions`, `20-data-cloud-data-kit`, or `21-enhanced-web-chat` when needed |
-| Go-live | `30-final-go-live-validation` |
 
 ## Package templates
 
