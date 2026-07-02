@@ -4,7 +4,7 @@ Move custom legacy Agentforce actions from sandbox to another org.
 
 **Required before deploy:** Use this guide only for legacy Agent Builder or saved Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
 
-## Metadata model
+## What moves
 
 Legacy action metadata:
 
@@ -19,7 +19,7 @@ Use this path for legacy Agent Builder and saved Builder actions. For draft Agen
 |---|---|
 | Legacy action already visible in Agentforce Builder | Yes |
 | Action that does not appear in the Asset Library | Rebuild it as a standalone custom action first |
-| Topic or plugin wrapper required by that action | Yes, as support metadata |
+| Topic or plugin wrapper required by that action | Yes, as supporting metadata |
 | Lead Nurture Agent template or Salesforce-managed setup | No |
 | Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
 

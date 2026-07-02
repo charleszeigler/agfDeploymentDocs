@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Use this when deployment, publish, activation, or channel setup fails.
+Use this when package deployment, agent publish or activation, Data 360, Lead Nurture Agent email, or web messaging validation fails.
 
 ## Package deployment
 
@@ -48,10 +48,10 @@ Use this when deployment, publish, activation, or channel setup fails.
 | Symptom | What to do |
 |---|---|
 | Deployment plan expects change sets to move Enhanced Web Chat | Stop. Salesforce change sets list Embedded Service Deployment only for standard Chat, not Enhanced Chat. |
-| `Label data too large:(max length:80)` during Web Chat metadata deploy | Stop and use the manual target-org rebuild path. Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported. |
+| `Label data too large:(max length:80)` during Web Chat metadata deploy | Stop and rebuild the web deployment in the target org. Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported. |
 | Chat button does not load | Check the target org deployment is published, the website domain is in CORS, the snippet or Embedded Messaging component points at the target deployment, and the page referrer policy is compatible. |
 | Experience Builder chat does not appear | Confirm the Embedded Messaging component is on the site, the correct deployment, service URL, and site endpoint are selected, and the site domain is allowed in CORS. |
-| Authenticated chat opens as an unauthenticated session | Confirm User Verification or equivalent auth setup was configured in the target org. Treat auth settings as manual target setup unless validated as metadata for that org. |
+| Authenticated chat opens as an unauthenticated session | Confirm User Verification or equivalent auth configuration was completed in the target org. Treat auth settings as target-org values unless validated as metadata for that org. |
 | Conversation does not route | Check the Omni routing flow, queue, routing configuration, and agent/channel connection in the target org. |
 
 ## What to send for help

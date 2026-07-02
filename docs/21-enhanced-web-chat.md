@@ -1,24 +1,24 @@
 # Migrate Enhanced Web Chat
 
-Use when a Service Agent is exposed through Enhanced Web Chat or Messaging for In-App and Web.
+Use this guide to deploy an active Service Agent to a web messaging channel through Enhanced Web Chat or Messaging for In-App and Web.
 
-**Required before deploy:** This guide covers migration of an existing web messaging setup from sandbox to production. It does not cover designing a new channel from scratch.
+**Use this for:** Existing web messaging deployments moving from sandbox to production. This guide does not cover designing a new channel from scratch.
 
 ## Read first
 
-Web Chat migration is high risk:
+Web messaging migration is high risk:
 
 - Change sets do not carry Enhanced Chat Embedded Service Deployment.
 - Salesforce Known Issue W-15932771 lists Messaging for Web deployment as not supported and shows deployment failures involving generated site metadata.
-- The practical fallback is to rebuild and publish in the target org, then reconnect agent and routing setup.
+- The practical fallback is to rebuild and publish in the target org, then reconnect the agent and routing configuration.
 
 **Stop if:** The deployment plan requires change sets to move the Enhanced Web Chat deployment. Use Metadata API validation in a sandbox or rebuild the deployment manually in the target org.
 
 **Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or override Salesforce Known Issue W-15932771.
 
-## What can be completed
+## What this guide covers
 
-| This guide covers | Confirm before go-live |
+| Step | Confirm before go-live |
 |---|---|
 | Deploy validated metadata | Real target website or Experience Builder host page |
 | Publish the target Embedded Service Deployment | Target-org snippet or component selection |
@@ -88,13 +88,13 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
-**Stop if:** The dry run fails on generated site metadata, missing site references, label length, or `EmbeddedServiceConfig` site fields. Use the manual target rebuild path.
+**Stop if:** The dry run fails on generated site metadata, missing site references, label length, or `EmbeddedServiceConfig` site fields. Rebuild the web deployment in the target org.
 
-If dry run succeeds, still complete target publish, CORS/domain setup, snippet or Embedded Messaging component, routing, and conversation smoke testing.
+If dry run succeeds, still publish in the target org, configure CORS and domains, install the snippet or Embedded Messaging component, confirm routing, and run conversation smoke tests.
 
-## Rebuild or finish setup in the target org
+## Rebuild in the target org
 
-Use when metadata migration is not validated end to end.
+Use this path when metadata migration has not been validated end to end.
 
 1. Confirm the Service Agent package is deployed, live-previewed, published, and active.
 2. Confirm the Omni routing flow, queue, and routing configuration exist in the target org.
@@ -112,9 +112,9 @@ Publish or republish the target Embedded Service Deployment after configuration 
 
 A real Omni user must sign in, accept any org notices themselves, select a Messaging-available status, and stay online during the smoke test.
 
-If the Builder or setup UI hides inbound flow, external app, or channel-specific connection settings while the agent or deployment is still draft, publish first, then finish that target-org wiring.
+If the Builder or Setup UI hides inbound flow, external app, or channel-specific connection settings while the agent or deployment is still draft, publish first, then finish the target-org channel configuration.
 
-## Run the built-in setup smoke
+## Run the built-in smoke test
 
 Before website testing, use the target org built-in test page.
 
@@ -127,7 +127,7 @@ Before website testing, use the target org built-in test page.
 
 **Stop if:** The test page opens but no chat launcher appears, or the browser console blocks the generated site bootstrap assets. Fix publish state, generated site access, CORS/domain settings, and routing before continuing to website testing.
 
-## External website setup
+## External website
 
 For an external website:
 
@@ -140,7 +140,7 @@ For an external website:
 
 **Stop if:** The deployment has no target website URL, no Experience Builder page, and no approved temporary test host. There is no surface that can create a `MessagingSession`, so runtime validation cannot finish.
 
-## Experience Builder setup
+## Experience Builder
 
 For Experience Builder:
 
@@ -164,7 +164,7 @@ Use UI checks first. CLI checks are optional.
 4. Start a conversation.
 5. In Salesforce, open Messaging Sessions and confirm a new `MessagingSession` was created.
 6. Confirm the session routes through the intended Omni flow and queue.
-7. Confirm the Omni user accepts the work item or the active Service Agent answers, depending on the routing design.
+7. Confirm the Omni user accepts the work item or the active Service Agent responds, depending on the routing design.
 8. Confirm authenticated chat behavior if auth is used.
 9. Confirm business hours, labels, branding, and pre-chat fields match the worksheet.
 

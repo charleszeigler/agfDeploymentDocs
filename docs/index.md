@@ -2,7 +2,7 @@
 
 Move an existing Agentforce implementation from sandbox to production with Salesforce CLI.
 
-Start with the agent guide that matches what you are moving. Then use the shared deploy workflow for the Salesforce CLI steps. Add the supporting guides only when the deployment includes those features.
+Start with the agent guide that matches what you are moving. Then use the shared deploy workflow for the Salesforce CLI steps. Use additional guides only for the features your deployment includes.
 
 ## 1. Choose the agent guide
 
@@ -12,7 +12,7 @@ Start with the agent guide that matches what you are moving. Then use the shared
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) | Deploy the agent first, then deploy user access after publish and activation |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Package only custom dependencies; configure the agent in the target org |
 
-Service Agent and Employee Agent paths assume Agent Script source. Lead Nurture Agent is the exception: package only custom dependencies and finish setup in the target org.
+Service Agent and Employee Agent paths assume Agent Script source. Lead Nurture Agent is the exception: package only custom dependencies and finish agent configuration in the target org.
 
 ## 2. Deploy the package
 
@@ -25,14 +25,14 @@ After the agent guide tells you what belongs in the package, use [Deploy a Packa
 5. publish and activate Service or Employee Agents
 6. capture go-live proof
 
-## 3. Add supporting setup only when needed
+## 3. Use additional guides only when needed
 
-| Feature in scope | Use this guide | Key instruction |
+| If your deployment includes | Use this guide | Key instruction |
 |---|---|---|
 | Data 360 | [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) | Use the source Data Kit generated manifest; keep the Data Kit package separate |
-| Enhanced Web Chat / Messaging | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Validate the metadata path in a sandbox or rebuild and publish in the target org |
+| Web messaging channel | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Validate the metadata path in a sandbox or rebuild and publish in the target org |
 | Legacy Agent Actions | [Legacy Agent Actions](13-legacy-agent-actions.md) | Deploy standalone `GenAiFunction` / `GenAiPlugin` metadata, then add actions from Asset Library |
 
 ## If something fails
 
-Use [Troubleshooting](03-troubleshooting.md). Stop on failed validation, missing target access, inactive Data 360 runtime, unapproved Lead Nurture Agent email setup, or Web Chat tests that do not create a target `MessagingSession`.
+Use [Troubleshooting](03-troubleshooting.md). Stop on failed validation, missing target access, inactive Data 360 runtime, unapproved Lead Nurture Agent email behavior, or web messaging tests that do not create a target `MessagingSession`.

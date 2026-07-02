@@ -1,6 +1,6 @@
 # Deploy a Data 360 Data Kit
 
-Use when an Agentforce deployment depends on Data 360 metadata.
+Use this guide when an Agentforce deployment depends on Data 360 metadata.
 
 **Data 360 prerequisite:** Data 360 metadata must be added to a Data Kit first. Keep the Data Kit package separate from normal Salesforce Platform metadata.
 
@@ -18,9 +18,9 @@ Data Kit metadata moves definitions:
 
 It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
 
-## What can be completed
+## What this guide covers
 
-| This guide covers | Confirm before go-live |
+| Step | Confirm before go-live |
 |---|---|
 | Create the source Data Kit | Target data space choice |
 | Retrieve the generated manifest | Connector credentials and OAuth consent |
@@ -82,9 +82,9 @@ Deploy generated Data Kit metadata with [Deploy a Package](deployment-workflow.m
 
 ## Deploy Data Kit components in the target org
 
-Metadata deploy installs Data Kit metadata. Target Data 360 runtime setup is still required.
+Metadata deploy installs Data Kit metadata. Target Data 360 runtime configuration is still required.
 
-A successful `package.xml` deploy does not run streams, refresh data, reauthorize connectors, or make the Data Kit components active. Complete the target-org runtime setup before agent publish.
+A successful `package.xml` deploy does not run streams, refresh data, reauthorize connectors, or make the Data Kit components active. Complete the target-org runtime configuration before agent publish.
 
 1. Open Setup -> Developer Tools -> Data Kits.
 2. Confirm the deployed Data Kit is visible.

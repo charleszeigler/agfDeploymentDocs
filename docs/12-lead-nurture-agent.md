@@ -23,7 +23,7 @@ Keep Lead Nurture Agent itself out of the package. Even if metadata deployment a
 | Scope | Items |
 |---|---|
 | Moves with metadata | Custom fields, custom objects, permission sets, Apex, tests, Flows, prompt template overrides, callout configuration for custom actions, and separate custom email templates |
-| Target-org setup | Lead Nurture Agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
+| Configure in the target org | Lead Nurture Agent, agent user, mailbox, Einstein Activity Capture, sender behavior, cadence, data library, Builder preview, activation, generated emails, and runtime state |
 
 Legacy project actions can move separately with [Legacy Agent Actions](13-legacy-agent-actions.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
@@ -79,9 +79,9 @@ Use only for custom legacy agent actions.
 
 Adding a legacy action to the target agent is a Builder step. The package only makes the action available.
 
-## Complete target setup
+## Configure Lead Nurture Agent
 
-Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org setup, not package metadata.
+Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org configuration, not package metadata.
 
 In the target org:
 
@@ -98,7 +98,7 @@ Sales users must connect their own email accounts to EAC if they need to see, ed
 
 ## Validate email setup
 
-Lead Nurture Agent email is target-org runtime setup.
+Lead Nurture Agent email is target-org runtime configuration.
 
 Package can include:
 
@@ -145,7 +145,7 @@ Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-libra
 - [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and permission sets are included when used.
 - [ ] Legacy project actions are packaged separately when used.
 - [ ] Data 360 package prepared separately when used.
-- [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target manual steps, not `package.xml` members.
+- [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target-org steps, not `package.xml` members.
 - [ ] Worksheet completed from the source org.
 - [ ] Dependency deploy succeeded.
 - [ ] Lead Nurture Agent is enabled in the target org.

@@ -2,7 +2,7 @@
 
 Use this page for the common Salesforce CLI steps after choosing a package guide.
 
-This page does not decide what belongs in `package.xml`. The Service Agent, Employee Agent, Lead Nurture Agent, Data 360 Data Kit, Enhanced Web Chat, and Legacy Agent Actions guides define the package contents and target-org setup.
+This page does not decide what belongs in `package.xml`. The Service Agent, Employee Agent, Lead Nurture Agent, Data 360 Data Kit, Enhanced Web Chat, and Legacy Agent Actions guides define the package contents and target-org steps.
 
 ## Use This Page For
 
@@ -12,7 +12,7 @@ This page does not decide what belongs in `package.xml`. The Service Agent, Empl
 | Build package-specific `package.xml` members | The selected package guide |
 | Create the package folder, retrieve files, validate, and deploy | This page |
 | Publish and activate Service or Employee Agents | This page |
-| Data Kit component deployment, Web Chat setup, Lead Nurture Agent email setup, or legacy action wiring | The selected package guide |
+| Data Kit component deployment, web messaging channel, Lead Nurture Agent email, or Legacy Agent Actions | The selected package guide |
 
 ## 1. Create the package folder
 
@@ -97,7 +97,7 @@ Review the package before deploy:
 - Every `package.xml` member has a matching file under `force-app/main/default`.
 - The package contains only the package type being moved.
 - The package does not contain source-org usernames, website domains, generated Web Chat snippets, credential secrets, OAuth tokens, connector auth, or runtime state.
-- The package-specific guide lists all manual target-org steps that remain after deploy.
+- The package guide lists the target-org steps that remain after deploy.
 
 ## 3. Confirm the target org
 
@@ -202,7 +202,7 @@ Continue only after the deploy result is `Succeeded`.
 
 Use this section only for Service and Employee Agents. `sf project deploy` moves editable `AiAuthoringBundle` source. Publish creates a runnable version. Activate makes it available.
 
-Complete target-org setup from the agent-type guide before publishing.
+Complete the target-org steps from the agent guide before publishing.
 
 Validate the deployed bundle:
 
@@ -272,16 +272,16 @@ sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NU
 
 Capture the current and prior agent version numbers, session IDs, failing utterances, and deployment job ID for support. Deactivate the agent only when no version should be available to users.
 
-## 6. Finish target setup and capture proof
+## 6. Capture go-live proof
 
 Save these values or screenshots with the deployment handoff:
 
 - Deployment job ID or Deployment Status screenshot.
 - Apex test result summary when Apex was included.
 - Active Service or Employee Agent version when an agent was published.
-- Non-admin Employee Agent smoke test when employee access is in scope.
-- Data Kit component deployment and refreshed target data when Data 360 is in scope.
-- Approved Lead Nurture Agent email preview and mailbox/EAC setup when Lead Nurture Agent is in scope.
-- Website conversation test and `MessagingSession` ID when Enhanced Web Chat is in scope.
+- Non-admin Employee Agent smoke test if employees will use the agent.
+- Data Kit component deployment and refreshed target data if the agent uses Data 360.
+- Approved Lead Nurture Agent email preview and mailbox/EAC setup if the deployment includes Lead Nurture Agent.
+- Web messaging conversation test and `MessagingSession` ID if the agent is deployed to a web messaging channel.
 
 **Target-org evidence:** Screenshots and IDs prove readiness for one target org only. Do not reuse them for another org.

@@ -105,9 +105,9 @@ After deploy, confirm record sharing. If Apex uses sharing or user-mode access, 
 
 Run [Deploy a Package](deployment-workflow.md#5-publish-service-and-employee-agents).
 
-## Channel setup
+## Web messaging channel
 
-If this Service Agent answers on a website, complete [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) after the agent is active.
+To deploy this Service Agent to a web messaging channel, complete [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) after the agent is active.
 
 ## Checklist
 
