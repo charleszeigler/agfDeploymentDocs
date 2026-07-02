@@ -56,38 +56,32 @@ sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-o
 
 Fix validation errors before handoff.
 
-## Create the target agent user
+## Set the target agent user
 
-Create a dedicated target-org agent user, unless one already exists:
+A Service Agent runs as a Salesforce user in the target org. Use an existing Einstein Agent User or create one.
+
+Create one with CLI if needed:
 
 ```bash
 sf org create agent-user --json --target-org <TARGET_ORG_ALIAS>
 ```
 
-Copy `result.username`.
+Copy the username from `result.username`. If you use an existing user instead, copy the `Username` value from that target-org user record.
 
-- The command creates an Einstein Agent User.
-- It assigns Salesforce base Agentforce permissions.
-- It does not assign project-specific data access.
-
-Use the target-org username. Sandbox refreshes and production orgs use different usernames, and user records or user licenses are target-org setup.
-
-## Set `default_agent_user`
-
-In the target package copy of the `.agent` file, set the target-org username in `config`. Use `result.username` from `sf org create agent-user`, not the User record ID.
+In the `.agent` file you will deploy to the target org, set `default_agent_user` to that target-org username. Use the username, not the User record ID.
 
 ```text
 config:
     default_agent_user: "agent.user@example.com"
 ```
 
+Sandbox refreshes and production orgs use different usernames. Replace any source-sandbox username before deploy.
+
 Validate the local bundle against the target org:
 
 ```bash
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
-
-This edit applies to editable draft `AiAuthoringBundle` source. If the package uses committed agent version metadata, create a new target version or set the agent user in Builder.
 
 **Stop if:** The package still contains a source-sandbox agent username. Replace it before deploy.
 

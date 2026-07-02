@@ -3,7 +3,7 @@
   "pages": [
     "index",
     {
-      "title": "Agent Type Guides",
+      "title": "Agent Guides",
       "slug": "",
       "pages": [
         "10-service-agent",
