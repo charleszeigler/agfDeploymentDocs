@@ -1,8 +1,6 @@
 # Deploy a Package
 
-Use this page as a CLI reference when a package does not fit one primary agent guide.
-
-The Service Agent, Employee Agent, and Lead Nurture Agent guides include their own retrieve, deploy, publish, activation, and validation steps. Start there for normal agent deployments. Use this page for shared command syntax or unusual packages.
+Use this page as a general Salesforce CLI reference for package folder setup, retrieve, validate, deploy, publish, activate, rollback, and go-live proof. The agent guides include these steps in context for each primary path.
 
 ## Use This Page For
 

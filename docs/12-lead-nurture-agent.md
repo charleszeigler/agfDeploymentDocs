@@ -2,21 +2,7 @@
 
 Move custom dependencies for Lead Nurture Agent.
 
-**Required before deploy:** This guide is dependencies-only for Lead Nurture Agent. Configure and activate the agent in the target org after deploying dependencies.
-
-**Stop if:** The plan is to move Lead Nurture Agent itself, or Lead Nurture Agent changes, by change set, Metadata API, or Salesforce CLI. Salesforce documents that this path is not supported. Create and configure the agent directly in the target org.
-
-Treat the Lead Nurture Agent sales engagement template as covered by this limitation unless Salesforce Support confirms otherwise for the target org and release.
-
-## Confirm the agent type
-
-| Source has | Use |
-|---|---|
-| Lead Nurture Agent from Salesforce setup | This guide |
-| Agent Script in `aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` | [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) by agent type |
-| Custom compiled agent version metadata | Package-specific compiled-agent instructions after source-org retrieve |
-
-Keep Lead Nurture Agent itself out of the package. Even if metadata deployment appears to succeed in one org, Salesforce does not support this deployment path for the packaged Lead Nurture Agent.
+**Use this guide for custom dependencies only.** Do not move Lead Nurture Agent itself, or Lead Nurture Agent changes, by change set, Metadata API, or Salesforce CLI. Create and configure the agent directly in the target org after deploying dependencies.
 
 ## What can be deployed
 

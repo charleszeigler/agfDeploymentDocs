@@ -11,7 +11,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | Apex coverage fails in production | Include matching test classes and use `RunLocalTests`, or fix org-wide coverage before deploy. |
 | Deploy succeeds but expected components are missing | Confirm the component is listed in `package.xml` and was retrieved into `force-app/main/default`. |
 
-## Agentforce
+## Service and Employee Agents
 
 | Symptom | What to do |
 |---|---|
