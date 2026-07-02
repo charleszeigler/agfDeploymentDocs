@@ -57,10 +57,57 @@ Package rules:
 
 **Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
 
-Next:
+## Retrieve and deploy dependencies
 
-1. Retrieve custom dependency files with [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed).
-2. Deploy the dependency package with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
+Log in to the source sandbox and retrieve the dependency package:
+
+```bash
+sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+sf org display --json --target-org <SOURCE_ORG_ALIAS>
+sf project retrieve start --json --manifest manifest/package.xml --target-org <SOURCE_ORG_ALIAS>
+```
+
+Confirm the retrieve result is `Succeeded`.
+
+Review the package before deploy:
+
+- Every `package.xml` member has a matching file under `force-app/main/default`.
+- The package contains only custom dependencies.
+- The package does not include Lead Nurture Agent itself.
+- The package does not contain mailbox connections, EAC auth, generated emails, sent-email history, credential secrets, OAuth tokens, connector auth, or runtime state.
+
+Log in to the target org and confirm the org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+
+```bash
+sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+sf org display --json --target-org <TARGET_ORG_ALIAS>
+```
+
+Production deploys must run Apex tests. Validate first:
+
+```bash
+sf project deploy validate --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+If validation succeeds, copy `result.id` and quick deploy:
+
+```bash
+sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
+```
+
+For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
+
+```bash
+sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+```
+
+If the dry run succeeds:
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`.
 
 ## Optional legacy agent actions
 

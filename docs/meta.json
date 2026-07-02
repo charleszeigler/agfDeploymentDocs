@@ -15,13 +15,13 @@
       ]
     },
     {
-      "title": "Deploy a Package",
-      "slug": "deployment-workflow"
-    },
-    {
       "title": "Additional Guides",
       "slug": "",
       "pages": [
+        {
+          "title": "Deploy a Package",
+          "slug": "deployment-workflow"
+        },
         {
           "title": "Data 360 Data Kit",
           "slug": "20-data-360-data-kit"

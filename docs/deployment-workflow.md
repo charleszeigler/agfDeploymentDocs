@@ -1,8 +1,8 @@
 # Deploy a Package
 
-Use this page for the common Salesforce CLI steps after choosing a package guide.
+Use this page as a CLI reference when a package does not fit one primary agent guide.
 
-This page does not decide what belongs in `package.xml`. The Service Agent, Employee Agent, Lead Nurture Agent, Data 360 Data Kit, Enhanced Web Chat, and Legacy Agent Actions guides define the package contents and target-org steps.
+The Service Agent, Employee Agent, and Lead Nurture Agent guides include their own retrieve, deploy, publish, activation, and validation steps. Start there for normal agent deployments. Use this page for shared command syntax or unusual packages.
 
 ## Use This Page For
 
@@ -10,8 +10,8 @@ This page does not decide what belongs in `package.xml`. The Service Agent, Empl
 |---|---|
 | Choose what kind of package you are moving | [Overview](index.md) |
 | Build package-specific `package.xml` members | The selected package guide |
-| Create the package folder, retrieve files, validate, and deploy | This page |
-| Publish and activate Service or Employee Agents | This page |
+| Look up shared retrieve, validate, and deploy commands | This page |
+| Look up Service or Employee Agent publish and activate commands | This page |
 | Data Kit component deployment, web messaging channel, Lead Nurture Agent email, or Legacy Agent Actions | The selected package guide |
 
 ## 1. Create the package folder

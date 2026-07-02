@@ -6,7 +6,7 @@ Last content review: June 29, 2026. Re-check linked Salesforce source docs befor
 
 Start with [docs/index.md](docs/index.md).
 
-- Deploy a package: [docs/deployment-workflow.md](docs/deployment-workflow.md)
+- CLI package reference: [docs/deployment-workflow.md](docs/deployment-workflow.md)
 - Public navigation: [docs/meta.json](docs/meta.json)
 - Scope rule: each guide lists only the values needed for that path.
 
@@ -16,8 +16,8 @@ Start with `docs/index.md`. Use only the guides that match the package.
 
 | Need | Use |
 |---|---|
-| Package deploy | `deployment-workflow` for source retrieve, target preflight, package deploy, and Service or Employee Agent publish |
-| Agent type | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
+| Agent path | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
+| CLI reference | `deployment-workflow` when a package does not fit one primary guide |
 | Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
 
 ## Package templates

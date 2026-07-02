@@ -58,7 +58,40 @@ Retrieve the package:
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
 ```
 
-After retrieve, validate and deploy with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
+Confirm the retrieve result is `Succeeded`.
+
+Log in to the target org and validate the package. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+
+```bash
+sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+sf org display --json --target-org <TARGET_ORG_ALIAS>
+```
+
+Production deploys must run Apex tests if Apex is included. Validate first:
+
+```bash
+sf project deploy validate --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+If validation succeeds, copy `result.id` and quick deploy:
+
+```bash
+sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
+```
+
+For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
+
+```bash
+sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+```
+
+If the dry run succeeds:
+
+```bash
+sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`.
 
 ## Path 2: rebuild a local-only action
 

@@ -13,9 +13,36 @@ Move an employee-facing Agentforce Employee Agent from sandbox to production.
 | Running user | Logged-in user |
 | Publish path | Deploy source, live preview, publish, activate |
 
-## Prepare the package
+## Create the package folder
 
-Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names.
+Create or open one Salesforce DX project folder for this package:
+
+```text
+deploy-employee-agent/
++-- sfdx-project.json
++-- manifest/
+|   +-- package.xml
++-- force-app/main/default/
+```
+
+Use this minimal `sfdx-project.json`:
+
+```json
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "employee-agent-deploy-package",
+  "sourceApiVersion": "66.0"
+}
+```
+
+Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks.
+
+## Prepare the package
 
 Include referenced dependencies:
 
@@ -48,19 +75,50 @@ Use this order when the target org does not already have the Employee Agent:
 | 3 | Deploy the access package with the permission set or group that contains `agentAccesses` |
 | 4 | Assign users and smoke test as a non-admin employee |
 
-Identify action targets in the source bundle:
+## Retrieve and complete the package
+
+Log in to the source sandbox and confirm the org:
+
+```bash
+sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+sf org display --json --target-org <SOURCE_ORG_ALIAS>
+```
+
+Confirm the source bundle exists:
+
+```bash
+sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <SOURCE_ORG_ALIAS>
+```
+
+Retrieve the first package:
+
+```bash
+sf project retrieve start --json --manifest manifest/package.xml --target-org <SOURCE_ORG_ALIAS>
+```
+
+Confirm the retrieve result is `Succeeded`.
+
+Identify action targets in the retrieved source bundle:
 
 1. Open `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`.
 2. Search in the file for `apex://`.
 3. Search in the file for `flow://`.
 4. Add every referenced Apex class and Flow to the source package manifest.
 
-If source files are not already in the package folder, use [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed):
+Also add referenced prompt templates, objects, fields, permission sets, credentials, app surfaces, and Custom Lightning Types only when the source uses them.
 
-1. Retrieve the `AiAuthoringBundle`.
-2. Inspect the `.agent` file for dependencies.
-3. Update `package.xml`.
-4. Retrieve again.
+Retrieve again after updating `package.xml`:
+
+```bash
+sf project retrieve start --json --manifest manifest/package.xml --target-org <SOURCE_ORG_ALIAS>
+```
+
+Review the package before deploy:
+
+- Every `package.xml` member has a matching file under `force-app/main/default`.
+- The package contains only the Employee Agent source and its first-pass dependencies.
+- The first package does not contain a permission set or group with `agentAccesses`.
+- The package does not contain source-org usernames, credential secrets, OAuth tokens, connector auth, or runtime state.
 
 ## Validate in the source sandbox
 
@@ -73,13 +131,93 @@ Fix validation errors before handoff.
 
 ## Deploy the source package
 
-If source files are not retrieved yet, complete [Deploy a Package](deployment-workflow.md#2-retrieve-source-files-when-needed). Then validate and deploy with [Deploy a Package](deployment-workflow.md#4-validate-and-deploy).
+Log in to the target org and confirm the org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+
+```bash
+sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+sf org display --json --target-org <TARGET_ORG_ALIAS>
+sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <TARGET_ORG_ALIAS>
+```
+
+**Stop if:** The target org command returns `INVALID_TYPE` or `Not available for deploy for this organization`. Enable and provision Agentforce for the target org before continuing.
+
+Validate the local bundle against the target org:
+
+```bash
+sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
+Production deploys must run Apex tests. Validate first:
+
+```bash
+sf project deploy validate --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+If validation succeeds, copy `result.id` and quick deploy:
+
+```bash
+sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
+```
+
+For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
+
+```bash
+sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+```
+
+If the dry run succeeds:
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`.
 
 **Stop if:** The access permission set deploys before the agent is published and active. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
 ## Publish and activate
 
-Run [Deploy a Package](deployment-workflow.md#5-publish-service-and-employee-agents).
+Start live preview before publishing:
+
+```bash
+sf agent preview start --json --authoring-bundle <AGENT_API_NAME> --use-live-actions --target-org <TARGET_ORG_ALIAS>
+```
+
+Send a representative message with the returned `result.sessionId`:
+
+```bash
+sf agent preview send --json --authoring-bundle <AGENT_API_NAME> --session-id <SESSION_ID> --utterance "Test the main happy path" --target-org <TARGET_ORG_ALIAS>
+```
+
+End the preview:
+
+```bash
+sf agent preview end --json --authoring-bundle <AGENT_API_NAME> --session-id <SESSION_ID> --target-org <TARGET_ORG_ALIAS>
+```
+
+**Stop if:** Live preview fails, returns no expected data, or reports missing employee permissions. Fix target-org access before publishing.
+
+Publish:
+
+```bash
+sf agent publish authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
+Activate:
+
+```bash
+sf agent activate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
+With `--json` and no `--version`, the CLI activates the latest published version automatically.
+
+Deploy and assign employee access before the non-admin smoke test.
+
+To roll back a bad version, reactivate the prior known-good version:
+
+```bash
+sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NUMBER> --target-org <TARGET_ORG_ALIAS>
+```
 
 ## Deploy and assign employee access
 
@@ -122,6 +260,14 @@ Because Employee Agents run as the logged-in user, each employee needs the objec
 If published-agent CLI preview returns `Invalid user ID provided on start session`, confirm the agent is active, confirm the employee has Agentforce user access and the permission set with `agentAccesses`, then test from the Lightning Agentforce panel as an assigned employee.
 
 **Stop if:** The only successful smoke test was run by an admin. Test as a real non-admin employee with the assigned access before go-live.
+
+Optional CLI smoke test after access is assigned:
+
+```bash
+sf agent preview start --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+sf agent preview send --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID> --utterance "Test the main happy path" --target-org <TARGET_ORG_ALIAS>
+sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID> --target-org <TARGET_ORG_ALIAS>
+```
 
 ## Checklist
 
