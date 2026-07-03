@@ -8,22 +8,28 @@ Move custom dependencies for the Agentforce Prospecting Agent.
 
 ## What the Prospecting Agent is
 
-The Prospecting Agent researches and **ranks net-new, ICP-matched accounts and contacts**. It mines CRM history, call recordings, past emails, and third-party data (ZoomInfo is the primary connector), then builds an always-refreshed prioritized prospect list in Sales Cloud and Slack. It **hands off** qualified prospects to the Engagement Agent (the rebranded Lead Nurture / SDR agent) for outreach.
+The Prospecting Agent (built on the acquired Bluebirds technology) researches and **ranks ICP-matched prospects**, then builds an always-refreshed prioritized prospect list in Sales Cloud and Slack. It **hands off** qualified prospects to a seller, a Sales Engagement cadence, or the Engagement Agent (the rebranded Lead Nurture / SDR agent) for outreach. It draws on CRM fields, call recordings (ECI / Gong), email activity (EAC), and third-party data vendors (ZoomInfo is the primary native connector; Gong is also native at GA).
 
-It does **not** send email or run a cadence. Treat mailbox and Einstein Activity Capture (EAC) as out of scope for this agent — those belong to the downstream Engagement Agent. Do not copy Lead Nurture mailbox/EAC steps onto this agent.
+**Scope caveat — confirm before you scope a project.** The Prospecting Agent works against a defined universe of **existing accounts** (the accounts in a configured Salesforce report). Within that scope it finds and ranks **net-new contacts/leads** at those accounts and can create those contact/lead records. Whether it autonomously pulls **net-new accounts** from a vendor like ZoomInfo by ICP criteria (versus enriching and prioritizing accounts already in the org) is easy to overstate and has caused scoping mismatches. Validate the exact net-new behavior against a live org and current release notes before committing a customer to it.
+
+Extend its data sources two ways: push a vendor's data (Demandbase, 6sense, G2, etc.) into a Salesforce field the agent reads, or wrap the vendor API in a custom Agentforce action the agent calls during research.
+
+It does **not** send email or run a cadence. Treat mailbox and Einstein Activity Capture (EAC) *sending* as out of scope for this agent — outreach belongs to the downstream Engagement Agent. (The agent can still read email activity via EAC as a research signal.)
 
 ## What can be deployed
 
 | Scope | Items |
 |---|---|
 | Moves with metadata | Custom fields used as ICP/qualification criteria, custom objects, the Salesforce Accounts report that scopes the account universe, permission sets, Apex and tests, Flows, custom prompt template overrides, and callout configuration for custom actions |
-| Configure in the target org | Prospecting Agent, agent user, ZoomInfo connection, ICP wizard, Account Research and Prospect Finder sub-agent instructions, account report scope, data library, handoff to the Engagement Agent, Builder preview, activation, and the generated prospect list |
+| Configure in the target org | Prospecting Agent, agent user, ZoomInfo/vendor connection, ICP wizard, Account Research and Prospect Finder sub-agent instructions, account report scope, data library, handoff target, Builder preview, activation, and the generated prospect list |
+
+The agent's runtime is backed by standard objects (`ProspectingAgentSpec`, `ProspectingAgentRcmdTarget`, and a `BotDefinition`) that are created and committed in the org, not authored as portable source. This is the practical reason the agent is treated as rebuild-in-target rather than a clean metadata unit.
 
 A custom, developer-authored Agent Script agent is different: it moves through the normal Agent Script path. Deploy it like a Service or Employee Agent using [Deploy and Activate a Service Agent](10-service-agent.md) instead.
 
 ## Prepare the dependency package
 
-Copy `manifests/prospecting-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
+Copy `manifests/prospecting-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
 
 Common dependencies:
 
@@ -52,7 +58,7 @@ Package rules:
 
 ## Retrieve and deploy dependencies
 
-Log in to the source sandbox and retrieve the dependency package:
+If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving the dependency package:
 
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
@@ -69,7 +75,7 @@ Review the package before deploy:
 - The package does not include the Prospecting Agent itself.
 - The package does not contain the ZoomInfo managed package, ZoomInfo credentials, connector auth, OAuth tokens, credential secrets, or runtime state.
 
-Log in to the target org and confirm the org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
@@ -108,20 +114,21 @@ Prospecting Agent enablement, ZoomInfo connection, ICP, sub-agent instructions, 
 
 Prerequisites in the target org:
 
-1. A recently provisioned org on a post-GA release. The Prospecting Agent template (generally available March 30, 2026) does not appear on older sandboxes or Developer orgs. If the template is missing, provision a newer org before troubleshooting anything else.
-2. Licensing: Agentforce for Sales add-on or Agentforce 1 Edition.
+1. A recently provisioned org on a post-GA release. The Prospecting toggle (generally available March 30, 2026) does not appear on older sandboxes or Developer orgs. If it is missing in a sandbox even though licensing looks correct, run **Match Production Licenses** in the sandbox first, then re-check.
+2. Licensing: Agentforce for Sales add-on or Agentforce 1 Edition, which provisions the **`SalesAgenticProspectingAddOn`** permission set license. This grants the **Sales Agentic Prospecting** and **Sales Agentic Prospecting Manager** permission set licenses.
 3. Agentforce turned on for Sales, and Data 360 (Data Cloud) enabled.
-4. The ZoomInfo Revenue Agent for Agentforce managed package installed from AppExchange and its connection authenticated. A ZoomInfo Lite tier is enough for testing; plan a paid entitlement for production.
+4. The ZoomInfo connection authenticated (primary native vendor). Gong and ECI (call recordings) and EAC (email activity) are also native research sources at GA. Plan a production data-vendor entitlement; a vendor trial tier may be enough for testing only.
 
 Then, in the target org:
 
-1. Enable the Prospecting Agent template and assign the configure and use permissions. Verify the Prospecting-specific permission set API names in the target org's setup flow; do not assume they match the SDR names.
-2. Create or select the Prospecting Agent user and assign the agent license and permission sets. The agent user needs Account, Contact, and Lead read access, write access for created records, and the Data 360 access it grounds on. Follow least privilege.
-3. Create or confirm the Accounts report that defines the in-scope account universe. For broad coverage, use a fresh, unfiltered Accounts report; add filters only to deliberately narrow scope.
+1. In Setup, open **Salesforce Go → Agentforce for Sales** and turn on **Prospecting**. Assign the configure (manager) and use permissions from the Sales Agentic Prospecting permission set group. Verify the exact permission set / group names in the target org's setup flow; do not assume they match the SDR names.
+2. Create or select the Prospecting Agent user and assign the license and permission sets. The agent user needs Account, Contact, and Lead read access, write access for created records, and the Data 360 access it grounds on. Follow least privilege.
+3. Create or confirm the Accounts report that defines the in-scope account universe. For broad coverage, use a fresh, unfiltered Accounts report; add filters only to deliberately narrow scope. An account not in this report is never processed (silent no-op).
 4. Run the guided setup wizard: Getting Started, Add Sources (connect ZoomInfo and other data sources), Assign Prospects, and Tools.
-5. In Agentforce Builder, rewrite the sub-agent instructions. Replace the default Technology-industry placeholders in the **Account Research** qualification criteria and the **Prospect Finder** persona with your real ICP. The wizard does not surface these inline; this step is mandatory.
-6. Configure the handoff so qualified prospects are assigned to the Engagement Agent for outreach.
-7. Preview results, then activate the agent.
+5. In Agentforce Builder, rewrite the sub-agent instructions. Replace the default placeholder qualification criteria in the **Account Research** sub-agent and the placeholder persona in the **Prospect Finder** sub-agent with your real ICP. The wizard does not surface these inline; this step is mandatory or the agent runs against placeholder logic and returns wrong or zero prospects.
+6. Confirm duplicate rules for Account, Contact, and Lead so net-new records do not create duplicates.
+7. Configure the handoff so qualified prospects are assigned to a seller, a Sales Engagement cadence, or the Engagement Agent for outreach.
+8. Preview results, then activate the agent.
 
 ## Validate
 
@@ -183,9 +190,11 @@ ICP, sub-agent instructions, ZoomInfo connection, account report selection, assi
 
 ## Sources
 
+- Salesforce Help: Prospecting Agents (parent): https://help.salesforce.com/s/articleView?id=sales.sales_agent_prospecting_parent.htm&type=5
+- Salesforce Help: Set Up Prospecting Agents: https://help.salesforce.com/s/articleView?id=sales.sales_agent_prospecting_setup_parent.htm&type=5
 - Salesforce: Prospecting Agent product page: https://www.salesforce.com/sales/prospecting/agent/
 - Salesforce News: Agentforce Sales launch (Prospecting agent GA March 30, 2026): https://www.salesforce.com/news/stories/agentforce-sales-announcement/
-- Agentforce metadata deployment and retrieval limitations knowledge article (SDR and Sales Coach): https://help.salesforce.com/s/articleView?id=005228853&type=1
+- Agentforce metadata deployment and retrieval limitations knowledge article (SDR and Sales Coach; does not name Prospecting): https://help.salesforce.com/s/articleView?id=005228853&type=1
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
-- ZoomInfo Revenue Agent for Agentforce (AppExchange): https://appexchange.salesforce.com/appxListingDetail?listingId=b8475d03-96ab-4bb2-b350-93074d1f6def
-- Prospecting Agent configuration walkthrough (third-party; setup detail): https://www.midcai.com/post/how-to-configure-agentforce-prospecting-agent
+
+Deployment stance, the `SalesAgenticProspectingAddOn` license and permission-set names, the Salesforce Go setup path, the `ProspectingAgentSpec` / `ProspectingAgentRcmdTarget` / `BotDefinition` runtime objects, the Match Production Licenses fix, and the net-new scope caveat were validated against internal Salesforce field and engineering discussions (Summer '26). Re-verify against the Help docs above before a customer handoff, since this product is changing rapidly.

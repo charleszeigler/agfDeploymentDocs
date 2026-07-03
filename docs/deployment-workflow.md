@@ -7,7 +7,7 @@ Use this page as a general Salesforce CLI reference for package folder setup, re
 | Need | Where to go |
 |---|---|
 | Choose what kind of package you are moving | [Overview](index.md) |
-| Build package-specific `package.xml` members | The selected package guide |
+| Build exact `package.xml` members | This page, then the selected package guide |
 | Look up shared retrieve, validate, and deploy commands | This page |
 | Look up Service or Employee Agent publish and activate commands | This page |
 | Data Kit component deployment, web messaging channel, Lead Nurture Agent email, or Legacy Agent Actions | The selected package guide |
@@ -50,25 +50,81 @@ Before retrieving or deploying:
 - Keep Lead Nurture Agent itself out of dependency packages.
 - Remove source-org usernames, website domains, generated snippets, credential secrets, OAuth tokens, connector auth, and runtime state.
 
-## 2. Retrieve source files when needed
+## 2. Build package.xml from exact source names
 
-Skip this section if the package folder already contains the reviewed source files.
+Do not start by filling every template block. Start with the smallest proven member for the package, retrieve it, inspect the retrieved source, then add dependencies and retrieve again.
 
-Log in to the source sandbox and confirm the org:
+| Package path | Start with |
+|---|---|
+| Service Agent | `AiAuthoringBundle:<AGENT_API_NAME>` only, then inspect the `.agent` file for action targets and dependencies |
+| Employee Agent | `AiAuthoringBundle:<AGENT_API_NAME>` only, then inspect the `.agent` file; keep `agentAccesses` in the post-publish package |
+| Lead Nurture Agent | Confirmed custom dependencies only; do not include the Lead Nurture Agent itself |
+| Prospecting Agent | Confirmed custom dependencies only; do not include the Prospecting Agent itself |
+| Legacy Agent Actions | The `GenAiFunction` member and required `GenAiPlugin`, then backing Apex, Flow, prompt, schema, and access dependencies |
+| Data 360 | The source Data Kit generated manifest; do not hand-build it unless repairing a generated manifest |
+| Enhanced Web Chat | Only candidate metadata validated in a sandbox; target-org rebuild is usually safer |
 
-```bash
-sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
-sf org display --json --target-org <SOURCE_ORG_ALIAS>
-```
+Use exact API names or Developer Names, not labels. If a name comes from Setup UI, confirm the API name in the source org before placing it in XML.
+
+| Metadata type | `package.xml` member format |
+|---|---|
+| `AiAuthoringBundle` | Agent API name, for example `Service_Agent` |
+| `ApexClass` | Class name only, for example `CaseLookupAction`; do not include `.cls` |
+| `Flow` | Flow API name only; do not include `.flow-meta.xml` or a version number |
+| `GenAiPromptTemplate` | Prompt template API name |
+| `GenAiPlugin`, `GenAiFunction` | Legacy plugin or action API name from metadata listing / Asset Library |
+| `LightningTypeBundle`, `LightningComponentBundle` | Bundle API name |
+| `CustomObject` | Object API name, for example `Prospect_Score__c` |
+| `CustomField` | Object-qualified field API name, for example `Account.Intent_Score__c` or `Prospect_Score__c.Score__c` |
+| `Report` | Folder-qualified report Developer Name, for example `Sales_Reports/Prospecting_Account_Scope` |
+| `EmailTemplate` | Folder-qualified template Developer Name, for example `Sales_Templates/Follow_Up` |
+| `PermissionSet`, `PermissionSetGroup` | API name, not label |
+| `NamedCredential`, `ExternalCredential` | API name; never include secrets or authenticated connection state |
+| `CustomApplication`, `CustomTab`, `FlexiPage`, `Queue`, `QueueRoutingConfig` | API name |
+
+Formatting rules:
+
+- In Markdown, placeholders appear as `<AGENT_API_NAME>`; in XML, use XML-safe values such as `AGENT_API_NAME` or the real API name. Do not put angle-bracket placeholders in `package.xml`.
+- Remove an unused `<types>` block entirely. Do not leave placeholder `<members>` values in a handoff package.
+- Each `<types>` block contains one metadata `<name>` and one or more `<members>` values for that metadata type.
+- Do not put the pseudo metadata type `Agent` in `package.xml`. Use `AiAuthoringBundle` for editable Service or Employee Agent source, or explicit runtime metadata only when a guide says to.
 
 Use these checks when you need exact API names from the source sandbox:
 
 ```bash
 sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type ApexClass --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type Flow --target-org <SOURCE_ORG_ALIAS>
 sf org list metadata --json --metadata-type GenAiPlugin --target-org <SOURCE_ORG_ALIAS>
 sf org list metadata --json --metadata-type GenAiFunction --target-org <SOURCE_ORG_ALIAS>
 sf org list metadata --json --metadata-type GenAiPromptTemplate --target-org <SOURCE_ORG_ALIAS>
 sf org list metadata --json --metadata-type LightningTypeBundle --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type PermissionSet --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type NamedCredential --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type ExternalCredential --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type Report --target-org <SOURCE_ORG_ALIAS>
+sf org list metadata --json --metadata-type EmailTemplate --target-org <SOURCE_ORG_ALIAS>
+```
+
+Use a retrieve-inspect-repeat loop:
+
+1. Copy the selected manifest template to `manifest/package.xml`.
+2. Keep only members you can name exactly.
+3. Retrieve with the current manifest.
+4. If retrieve says a member does not exist, fix the member format or remove it.
+5. Inspect retrieved files for references such as `apex://`, `flow://`, prompt templates, objects, fields, permission sets, Custom Lightning Types, and credentials.
+6. Add the confirmed dependencies to `package.xml` and retrieve again.
+7. Stop when every `package.xml` member has a matching file under `force-app/main/default` or is an intentionally package-only reference called out by the guide.
+
+## 3. Retrieve source files when needed
+
+Skip this section if the package folder already contains the reviewed source files.
+
+If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving:
+
+```bash
+sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+sf org display --json --target-org <SOURCE_ORG_ALIAS>
 ```
 
 For Data Kits, use the source Data Kit generated manifest. Do not hand-build the Data Kit manifest from this page.
@@ -81,15 +137,6 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 Confirm the retrieve result is `Succeeded`.
 
-Use a two-pass retrieve for Service and Employee Agent source packages when backing dependencies are unknown:
-
-1. Retrieve the agent source with the `AiAuthoringBundle` member first.
-2. Open `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`.
-3. Search for `apex://` and add each invocable Apex class and test class to `package.xml`.
-4. Search for `flow://` and add each Flow to `package.xml`.
-5. Add referenced prompt templates, objects, fields, permission sets, credentials, and Custom Lightning Types only when the Service or Employee Agent source uses them.
-6. Run retrieve again with the completed manifest.
-
 Review the package before deploy:
 
 - Every `package.xml` member has a matching file under `force-app/main/default`.
@@ -97,7 +144,7 @@ Review the package before deploy:
 - The package does not contain source-org usernames, website domains, generated Web Chat snippets, credential secrets, OAuth tokens, connector auth, or runtime state.
 - The package guide lists the target-org steps that remain after deploy.
 
-## 3. Confirm the target org
+## 4. Confirm the target org
 
 Install and command checks:
 
@@ -114,7 +161,7 @@ sf data360 --help
 
 **Stop if:** A required command group is unavailable and the machine cannot install or load Salesforce CLI plugins.
 
-Log in to the target org and confirm the org details.
+Authenticate the target alias if needed, then display the alias and confirm the org details before validating or deploying.
 
 Production:
 
@@ -146,7 +193,7 @@ sf api request rest "/services/data/v67.0/ssot/data-kits" --target-org <TARGET_O
 
 Open `data-kits-check.json`. Stop on `FUNCTIONALITY_NOT_ENABLED`, `CdpDataKit`, or any `errorCode`.
 
-## 4. Validate and deploy
+## 5. Validate and deploy
 
 Production deploys must run Apex tests. Validate first:
 
@@ -196,7 +243,7 @@ sf project deploy report --json --use-most-recent --target-org <TARGET_ORG_ALIAS
 
 Continue only after the deploy result is `Succeeded`.
 
-## 5. Publish Service and Employee Agents
+## 6. Publish Service and Employee Agents
 
 Use this section only for Service and Employee Agents. `sf project deploy` moves editable `AiAuthoringBundle` source. Publish creates a runnable version. Activate makes it available.
 
@@ -270,7 +317,7 @@ sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NU
 
 Capture the current and prior agent version numbers, session IDs, failing utterances, and deployment job ID for support. Deactivate the agent only when no version should be available to users.
 
-## 6. Capture go-live proof
+## 7. Capture go-live proof
 
 Save these values or screenshots with the deployment handoff:
 

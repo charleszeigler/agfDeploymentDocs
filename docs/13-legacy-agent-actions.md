@@ -2,7 +2,7 @@
 
 Move custom legacy Agentforce actions from sandbox to another org.
 
-**Required before deploy:** Use this guide only for legacy Agent Builder or saved Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
+Use this guide only for legacy Agent Builder or saved Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
 
 ## What moves
 
@@ -10,8 +10,6 @@ Legacy action metadata:
 
 - `GenAiFunction`: legacy action
 - `GenAiPlugin`: legacy topic or plugin wrapper, only when the action requires it
-
-Use this path for legacy Agent Builder and saved Builder actions. For draft Agent Script source, use the Service or Employee Agent guide.
 
 ## When this applies
 
@@ -25,7 +23,7 @@ Use this path for legacy Agent Builder and saved Builder actions. For draft Agen
 
 ## Prepare the package
 
-Copy `manifests/legacy-agent-actions-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
+Copy `manifests/legacy-agent-actions-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
 
 Common dependencies:
 
@@ -60,7 +58,7 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 Confirm the retrieve result is `Succeeded`.
 
-Log in to the target org and validate the package. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com

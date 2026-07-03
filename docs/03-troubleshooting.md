@@ -7,6 +7,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | Symptom | What to do |
 |---|---|
 | `Required scope (--manifest / --metadata / --source-dir) is required` | Run from the DX project folder and include `--manifest <PACKAGE_XML_PATH>`. |
+| Retrieve says a package member does not exist | Check the member format in `package.xml`: fields must be `Object.Field`, reports and email templates must be `Folder/DeveloperName`, and most other members use API name without a file extension. |
 | Quick deploy cannot find the job | Quick deploy promotes a successful `sf project deploy validate` job, not a sandbox `--dry-run` job. |
 | Apex coverage fails in production | Include matching test classes and use `RunLocalTests`, or fix org-wide coverage before deploy. |
 | Deploy succeeds but expected components are missing | Confirm the component is listed in `package.xml` and was retrieved into `force-app/main/default`. |

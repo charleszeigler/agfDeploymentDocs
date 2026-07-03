@@ -8,7 +8,7 @@ Start with the agent guide that matches what you are moving. Each primary guide 
 
 | What you are moving | Start here | Key instruction |
 |---|---|---|
-| Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Confirm or create the target agent user before publish |
+| Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Set the target-org agent user before deploying the target copy |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) | Deploy the agent first, then deploy user access after publish and activation |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Package only custom dependencies; configure the agent in the target org |
 | Prospecting Agent | [Deploy Prospecting Agent Dependencies](14-prospecting-agent.md) | Package only custom dependencies; configure the agent in the target org |
@@ -20,11 +20,12 @@ Service Agent and Employee Agent paths assume Agent Script source. Lead Nurture 
 The primary guide should be enough to run the deployment without switching pages:
 
 1. create the package folder
-2. retrieve source files when needed
-3. confirm the target org
-4. validate and deploy
-5. publish and activate Service or Employee Agents, or configure Lead Nurture Agent in the target org
-6. capture go-live proof
+2. build `package.xml` from exact source names
+3. retrieve source files when needed
+4. confirm the target org
+5. validate and deploy
+6. publish and activate Service or Employee Agents, or configure Lead Nurture and Prospecting Agents in the target org
+7. capture go-live proof
 
 ## 3. Use additional guides only when needed
 

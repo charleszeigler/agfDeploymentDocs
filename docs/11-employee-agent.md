@@ -2,15 +2,14 @@
 
 Move an employee-facing Agentforce Employee Agent from sandbox to production.
 
-**Required before deploy:** Employee Agents run as the logged-in employee. Do not use `default_agent_user` for an Employee Agent.
-
 ## When this applies
 
 | Field | Value |
 |---|---|
 | Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
 | Agent type | `AgentforceEmployeeAgent` |
-| Running user | Logged-in user |
+| Running user | Logged-in employee |
+| Agent config | Omit `default_agent_user` |
 | Publish path | Deploy source, live preview, publish, activate |
 
 ## Create the package folder
@@ -40,7 +39,7 @@ Use this minimal `sfdx-project.json`:
 }
 ```
 
-Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks.
+Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
 
 ## Prepare the package
 
@@ -60,9 +59,11 @@ Include referenced dependencies:
 | Employee app surface, if included | `CustomApplication`, `CustomTab`, `FlexiPage` |
 | Callout definitions | `NamedCredential`, `ExternalCredential` |
 
-Employee Agents do not use a Service Agent user or `default_agent_user`.
+Employee Agents run as the logged-in employee. Do not package a Service Agent user, and do not add `default_agent_user` to the `.agent` source.
 
 For a clean target org, keep `agentAccesses` out of the first source package. Deploy the `agentAccesses` permission set after the agent is published and activated.
+
+Start with only the `AiAuthoringBundle` member if the agent's dependencies are not known. Retrieve the agent source first, inspect the `.agent` file for `apex://` and `flow://` targets, then add only confirmed dependencies to `package.xml`.
 
 ## Clean target order
 
@@ -77,7 +78,7 @@ Use this order when the target org does not already have the Employee Agent:
 
 ## Retrieve and complete the package
 
-Log in to the source sandbox and confirm the org:
+If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving:
 
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
@@ -117,6 +118,7 @@ Review the package before deploy:
 
 - Every `package.xml` member has a matching file under `force-app/main/default`.
 - The package contains only the Employee Agent source and its first-pass dependencies.
+- The `.agent` source does not contain `default_agent_user`.
 - The first package does not contain a permission set or group with `agentAccesses`.
 - The package does not contain source-org usernames, credential secrets, OAuth tokens, connector auth, or runtime state.
 
@@ -131,7 +133,7 @@ Fix validation errors before handoff.
 
 ## Deploy the source package
 
-Log in to the target org and confirm the org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com

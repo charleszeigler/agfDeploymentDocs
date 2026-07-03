@@ -22,7 +22,7 @@ Start with `docs/index.md`. Use only the guides that match the package.
 
 ## Package templates
 
-Use [manifests](manifests) as starting points. Replace placeholders and remove unused blocks before deployment.
+Use [manifests](manifests) as starting points. Build exact members with [Build package.xml from exact source names](docs/deployment-workflow.md#2-build-packagexml-from-exact-source-names), replace placeholders, and remove unused blocks before deployment.
 
 | Template | Use |
 |---|---|

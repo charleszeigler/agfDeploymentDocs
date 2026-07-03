@@ -15,7 +15,7 @@ Legacy project actions can move separately with [Legacy Agent Actions](13-legacy
 
 ## Prepare the dependency package
 
-Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names.
+Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
 
 Common dependencies:
 
@@ -45,7 +45,7 @@ Package rules:
 
 ## Retrieve and deploy dependencies
 
-Log in to the source sandbox and retrieve the dependency package:
+If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving the dependency package:
 
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
@@ -62,7 +62,7 @@ Review the package before deploy:
 - The package does not include Lead Nurture Agent itself.
 - The package does not contain mailbox connections, EAC auth, generated emails, sent-email history, credential secrets, OAuth tokens, connector auth, or runtime state.
 
-Log in to the target org and confirm the org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com

@@ -64,6 +64,8 @@ Use target-org snippets, generated iframe site URLs, and CORS/domain values afte
 
 If attempting metadata migration, validate in a sandbox before production.
 
+Build the manifest with exact source member names using [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names). Do not copy generated domains, snippets, auth values, or publish state into the target org.
+
 ```bash
 sf org list metadata --json --metadata-type EmbeddedServiceConfig --target-org <SOURCE_ORG_ALIAS>
 sf org list metadata --json --metadata-type MessagingChannel --target-org <SOURCE_ORG_ALIAS>

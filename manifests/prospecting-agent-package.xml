@@ -17,8 +17,12 @@
       normal Agent Script path. Deploy it like a Service or Employee Agent using
       docs/10-service-agent.md or docs/11-employee-agent.md instead.
 
-      The ZoomInfo managed package is NOT metadata. Install it from AppExchange and
-      re-authenticate its connection in each org. Do not put it in this package.
+      Licensing: Agentforce for Sales add-on / Agentforce 1 Edition provisions the
+      SalesAgenticProspectingAddOn permission set license (Sales Agentic Prospecting +
+      Sales Agentic Prospecting Manager). Assign these in the target org; do not package them.
+
+      The data-vendor connection (e.g. ZoomInfo) is authenticated per org, not metadata.
+      Do not put vendor credentials or connection auth in this package.
   ============================================================================
   Replace every placeholder and Object.Field__c with real API names, and remove
   any block you don't use before handoff.

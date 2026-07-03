@@ -2,15 +2,14 @@
 
 Move an Agentforce Service Agent from sandbox to production.
 
-**Required before deploy:** A Service Agent runs as a dedicated Einstein Agent User. The target-org agent username is a per-org value and must be set before publish.
-
 ## When this applies
 
 | Field | Value |
 |---|---|
 | Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
 | Agent type | `AgentforceServiceAgent` |
-| Running user | `default_agent_user` is required |
+| Running user | Dedicated target-org Einstein Agent User |
+| Agent config | `default_agent_user` is required and must use the target-org username |
 | Publish path | Deploy source, live preview, publish, activate |
 
 ## Create the package folder
@@ -40,7 +39,7 @@ Use this minimal `sfdx-project.json`:
 }
 ```
 
-Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks.
+Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
 
 ## Prepare the package
 
@@ -58,11 +57,13 @@ Include referenced dependencies:
 | Agent user access | `PermissionSet` |
 | Callout definitions | `NamedCredential`, `ExternalCredential` |
 
-Package the access metadata, not the `User` record. Create or select the agent user in the target org.
+Package the access metadata, not the `User` record.
+
+Start with only the `AiAuthoringBundle` member if the agent's dependencies are not known. Retrieve the agent source first, inspect the `.agent` file for `apex://` and `flow://` targets, then add only confirmed dependencies to `package.xml`.
 
 ## Retrieve and complete the package
 
-Log in to the source sandbox and confirm the org:
+If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving:
 
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
@@ -115,7 +116,7 @@ Fix validation errors before handoff.
 
 ## Set the target agent user
 
-Log in to the target org and confirm the org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
+If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
@@ -124,6 +125,8 @@ sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <TARG
 ```
 
 **Stop if:** The target org command returns `INVALID_TYPE` or `Not available for deploy for this organization`. Enable and provision Agentforce for the target org before continuing.
+
+Complete this section before deploying the target copy of the agent source. The target user record is org-specific configuration; the deployable `.agent` source references it by username.
 
 A Service Agent runs as a Salesforce user in the target org. Use an existing Einstein Agent User or create one.
 
@@ -135,7 +138,7 @@ sf org create agent-user --json --target-org <TARGET_ORG_ALIAS>
 
 Copy the username from `result.username`. If you use an existing user instead, copy the `Username` value from that target-org user record.
 
-In the `.agent` file you will deploy to the target org, set `default_agent_user` to that target-org username. Use the username, not the User record ID.
+Before deploying the `.agent` file to the target org, set `default_agent_user` to that target-org username. Use the username, not the User record ID.
 
 ```text
 config:
