@@ -1,6 +1,6 @@
-# Deploy a Data 360 Data Kit
+# Deploy Data 360 for Agentforce
 
-Use this guide when an Agentforce deployment depends on Data 360 metadata.
+Use this guide when an Agentforce deployment depends on Data 360 metadata. It covers moving Data 360 metadata by Data Kit, what happens to search indexes and retrievers, and why the Agentforce Data Library is recreated in the target org rather than deployed.
 
 **Data 360 prerequisite:** Data 360 metadata must be added to a Data Kit first. Keep the Data Kit package separate from normal Salesforce Platform metadata.
 
@@ -13,10 +13,21 @@ Data Kit metadata moves definitions:
 - calculated insights
 - segments
 - search indexes
+- retrievers (No-code and Pro-code/ADL retrievers move; ensemble retrievers do not)
 - data graphs
 - related Data 360 components
 
 It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
+
+## What does not move: the Agentforce Data Library
+
+The Agentforce Data Library (ADL) *container* cannot be deployed between orgs by Data Kit or Metadata API. Salesforce documents this directly: "Making Agentforce Data Library changes in a sandbox and deploying those changes back to the production org or another sandbox org isn't supported" (`ai.data_library_sandbox.htm`).
+
+Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever. The search index and retriever it generates *can* be packaged in a Data Kit, but the library that owns them cannot.
+
+For a file-backed Data Library, uploads drive the pipeline (upload → search index → auto-created retriever). A retriever-backed Data Library is a thin wrapper over an existing retriever, so provision that retriever through the Data Kit path first.
+
+**Stop if:** A deployment plan expects to move an Agentforce Data Library by change set, Metadata API, or Data Kit. Recreate it in the target org instead, then confirm its search index reaches a ready state before agent publish.
 
 ## What this guide covers
 
@@ -54,6 +65,8 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 Confirm the retrieve result is `Succeeded`.
 
+**Retriever API names depend on the data space.** A retriever moved by Data Kit keeps its API name only when the target data space prefix matches the source. Deploying into a different data space appends a `<dataspace>_` prefix, which changes the API name. Prompt templates reference a retriever by API name as plain text (a soft reference), so a changed name does not fail the deploy — the prompt errors only at runtime. When the name changes, re-point the prompt template to the new retriever in the target org. Retrievers cannot move in a standard CRM/Metadata API package or change set; they must go through the Data Kit.
+
 ## Remove key qualifier files
 
 Key qualifier removal is a Data Kit package cleanup step.
@@ -77,8 +90,15 @@ Complete this cleanup in the project before production handoff. Do not ask a pro
 
 If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
+Authenticate the target alias if needed:
+
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+```
+
+Confirm the alias points to the expected target org:
+
+```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -132,8 +152,15 @@ Verify target runtime from Setup first:
 
 Optional CLI verification:
 
+List target data spaces:
+
 ```bash
 sf api request rest "/services/data/v67.0/ssot/data-spaces" --target-org <TARGET_ORG_ALIAS> --stream-to-file data-spaces-check.json
+```
+
+Inspect the deployed Data Kit detail:
+
+```bash
 sf api request rest "/services/data/v67.0/ssot/data-kits/<DATA_KIT_DEVELOPER_NAME>" --target-org <TARGET_ORG_ALIAS> --stream-to-file data-kit-detail-check.json
 ```
 
@@ -193,6 +220,7 @@ API notes:
 ## Sources
 
 - Packages and Data Kits: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html
+- Agentforce Data Library sandbox/deployment limitation: https://help.salesforce.com/s/articleView?id=ai.data_library_sandbox.htm&type=5
 - Use CLI to Deploy Changes from a Sandbox to Data 360: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/dc-deploy_data_kit_using_cli.html
 - Deploy Data Kit Components by Using Deploy Data Kit Components Flow: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/dc-deploy_data_kit_components.html
 - Supported Component Types for Data Kit Deployment: https://developer.salesforce.com/docs/data/connectapi/guide/deploy-data-kit-payloads.html

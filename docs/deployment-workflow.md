@@ -16,6 +16,18 @@ Use this page as a general Salesforce CLI reference for package folder setup, re
 
 Create or open one Salesforce DX project folder per deployment package:
 
+Generate the staging project:
+
+```bash
+sf template generate project --name deploy-package --template empty --default-package-dir force-app --api-version 66.0
+```
+
+Create the manifest folder:
+
+```bash
+mkdir -p deploy-package/manifest
+```
+
 ```text
 deploy-package/
 +-- sfdx-project.json
@@ -24,7 +36,7 @@ deploy-package/
 +-- force-app/main/default/
 ```
 
-Use this minimal `sfdx-project.json`:
+The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a Salesforce DX project. This file is local project configuration; it is not deployed. The `packageDirectories.path` value tells the CLI to put retrieved metadata under `force-app/main/default`, `name` is only the local project name, and `sourceApiVersion` controls the Metadata API version. If you are working in an existing Salesforce DX project, keep the existing `sfdx-project.json` and use its package directory instead of replacing it.
 
 ```json
 {
@@ -59,7 +71,6 @@ Do not start by filling every template block. Start with the smallest proven mem
 | Service Agent | `AiAuthoringBundle:<AGENT_API_NAME>` only, then inspect the `.agent` file for action targets and dependencies |
 | Employee Agent | `AiAuthoringBundle:<AGENT_API_NAME>` only, then inspect the `.agent` file; keep `agentAccesses` in the post-publish package |
 | Lead Nurture Agent | Confirmed custom dependencies only; do not include the Lead Nurture Agent itself |
-| Prospecting Agent | Confirmed custom dependencies only; do not include the Prospecting Agent itself |
 | Legacy Agent Actions | The `GenAiFunction` member and required `GenAiPlugin`, then backing Apex, Flow, prompt, schema, and access dependencies |
 | Data 360 | The source Data Kit generated manifest; do not hand-build it unless repairing a generated manifest |
 | Enhanced Web Chat | Only candidate metadata validated in a sandbox; target-org rebuild is usually safer |
@@ -74,9 +85,9 @@ Use exact API names or Developer Names, not labels. If a name comes from Setup U
 | `GenAiPromptTemplate` | Prompt template API name |
 | `GenAiPlugin`, `GenAiFunction` | Legacy plugin or action API name from metadata listing / Asset Library |
 | `LightningTypeBundle`, `LightningComponentBundle` | Bundle API name |
-| `CustomObject` | Object API name, for example `Prospect_Score__c` |
-| `CustomField` | Object-qualified field API name, for example `Account.Intent_Score__c` or `Prospect_Score__c.Score__c` |
-| `Report` | Folder-qualified report Developer Name, for example `Sales_Reports/Prospecting_Account_Scope` |
+| `CustomObject` | Object API name, for example `Customer_Profile__c` |
+| `CustomField` | Object-qualified field API name, for example `Account.Intent_Score__c` or `Customer_Profile__c.Score__c` |
+| `Report` | Folder-qualified report Developer Name, for example `Sales_Reports/Account_Scope` |
 | `EmailTemplate` | Folder-qualified template Developer Name, for example `Sales_Templates/Follow_Up` |
 | `PermissionSet`, `PermissionSetGroup` | API name, not label |
 | `NamedCredential`, `ExternalCredential` | API name; never include secrets or authenticated connection state |
@@ -89,7 +100,7 @@ Formatting rules:
 - Each `<types>` block contains one metadata `<name>` and one or more `<members>` values for that metadata type.
 - Do not put the pseudo metadata type `Agent` in `package.xml`. Use `AiAuthoringBundle` for editable Service or Employee Agent source, or explicit runtime metadata only when a guide says to.
 
-Use these checks when you need exact API names from the source sandbox:
+Use these checks when you need exact API names from the source sandbox. Treat this as a menu, not a script: run only the commands for metadata types you plan to package.
 
 ```bash
 sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <SOURCE_ORG_ALIAS>
@@ -122,8 +133,15 @@ Skip this section if the package folder already contains the reviewed source fil
 
 If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving:
 
+Authenticate the source alias if needed:
+
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+```
+
+Confirm the alias points to the expected source sandbox:
+
+```bash
 sf org display --json --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -148,8 +166,15 @@ Review the package before deploy:
 
 Install and command checks:
 
+Check the Salesforce CLI version:
+
 ```bash
 sf --version
+```
+
+Confirm Agentforce CLI commands are available when deploying Service or Employee Agents:
+
+```bash
 sf agent --help
 ```
 
@@ -165,15 +190,29 @@ Authenticate the target alias if needed, then display the alias and confirm the 
 
 Production:
 
+Authenticate the production alias if needed:
+
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+```
+
+Confirm the alias points to the expected production org:
+
+```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
 Sandbox:
 
+Authenticate the sandbox alias if needed:
+
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://test.salesforce.com
+```
+
+Confirm the alias points to the expected target sandbox:
+
+```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -299,9 +338,21 @@ Activating a new version sends new sessions to that version. Existing sessions c
 
 Smoke test the active agent:
 
+Start a published-agent preview session:
+
 ```bash
 sf agent preview start --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
+Send a representative message with the returned `result.sessionId`:
+
+```bash
 sf agent preview send --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID> --utterance "Test the main happy path" --target-org <TARGET_ORG_ALIAS>
+```
+
+End the preview session:
+
+```bash
 sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID> --target-org <TARGET_ORG_ALIAS>
 ```
 

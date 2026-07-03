@@ -66,6 +66,8 @@ If attempting metadata migration, validate in a sandbox before production.
 
 Build the manifest with exact source member names using [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names). Do not copy generated domains, snippets, auth values, or publish state into the target org.
 
+Use the metadata list commands below as a menu, not a script. Run only the checks for candidate metadata you plan to package.
+
 ```bash
 sf org list metadata --json --metadata-type EmbeddedServiceConfig --target-org <SOURCE_ORG_ALIAS>
 sf org list metadata --json --metadata-type MessagingChannel --target-org <SOURCE_ORG_ALIAS>
@@ -79,8 +81,15 @@ sf org list metadata --json --metadata-type CorsWhitelistOrigin --target-org <SO
 
 Retrieve selected metadata, review source-org references, and dry-run deploy:
 
+Retrieve selected metadata:
+
 ```bash
 sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
+```
+
+Dry-run deploy to the target sandbox:
+
+```bash
 sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
@@ -166,11 +175,33 @@ Use UI checks first. CLI checks are optional.
 
 Optional CLI verification:
 
+Confirm the target messaging channel:
+
 ```bash
 sf data query --json --query "SELECT Id, DeveloperName, MasterLabel, IsActive, MessageType, PlatformType, RoutingType, TargetQueueId, FallbackQueueId, RoutingConfigurationId FROM MessagingChannel WHERE DeveloperName = '<MESSAGING_CHANNEL_API_NAME>' LIMIT 1" --target-org <TARGET_ORG_ALIAS>
+```
+
+Confirm an Omni user is currently available:
+
+```bash
 sf data query --json --query "SELECT Id, UserId, User.Name, ServicePresenceStatus.MasterLabel, StatusStartDate, StatusEndDate, IsCurrentState FROM UserServicePresence WHERE IsCurrentState = true ORDER BY StatusStartDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
+```
+
+Confirm a new messaging session was created:
+
+```bash
 sf data query --json --query "SELECT Id, CreatedDate, StartTime, Status, MessagingChannelId, MessagingChannel.DeveloperName, ChannelName, ChannelType, AgentType FROM MessagingSession ORDER BY CreatedDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
+```
+
+If routing is expected, inspect pending service routing:
+
+```bash
 sf data query --json --query "SELECT Id, WorkItemId, RoutingType, IsReadyForRouting, RoutingModel, ServiceChannelId, QueueId FROM PendingServiceRouting WHERE WorkItemId = '<MESSAGING_SESSION_ID>' LIMIT 1" --target-org <TARGET_ORG_ALIAS>
+```
+
+If Omni accepted the work, inspect agent work:
+
+```bash
 sf data query --json --query "SELECT Id, WorkItemId, UserId, Status, ServiceChannelId, CreatedDate FROM AgentWork WHERE WorkItemId = '<MESSAGING_SESSION_ID>' ORDER BY CreatedDate DESC LIMIT 5" --target-org <TARGET_ORG_ALIAS>
 ```
 

@@ -16,7 +16,7 @@ Start with `docs/index.md`. Use only the guides that match the package.
 
 | Need | Use |
 |---|---|
-| Agent path | `10-service-agent`, `11-employee-agent`, `12-lead-nurture-agent`, or `14-prospecting-agent` |
+| Agent path | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
 | CLI reference | `deployment-workflow` when a package does not fit one primary guide |
 | Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
 
@@ -30,6 +30,5 @@ Use [manifests](manifests) as starting points. Build exact members with [Build p
 | [manifests/employee-agent-package.xml](manifests/employee-agent-package.xml) | Employee Agent source and dependencies |
 | [manifests/employee-agent-access-package.xml](manifests/employee-agent-access-package.xml) | Employee Agent access permission set after publish |
 | [manifests/lead-nurture-agent-package.xml](manifests/lead-nurture-agent-package.xml) | Lead Nurture Agent dependencies only |
-| [manifests/prospecting-agent-package.xml](manifests/prospecting-agent-package.xml) | Prospecting Agent dependencies only |
 | [manifests/legacy-agent-actions-package.xml](manifests/legacy-agent-actions-package.xml) | Legacy Agent Actions |
 | [manifests/data-360-data-kit-package.xml](manifests/data-360-data-kit-package.xml) | Example Data Kit manifest shape; prefer the source Data Kit generated manifest |

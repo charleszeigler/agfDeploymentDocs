@@ -47,9 +47,21 @@ Package rules:
 
 If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving the dependency package:
 
+Authenticate the source alias if needed:
+
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+```
+
+Confirm the alias points to the expected source sandbox:
+
+```bash
 sf org display --json --target-org <SOURCE_ORG_ALIAS>
+```
+
+Retrieve the dependency package:
+
+```bash
 sf project retrieve start --json --manifest manifest/package.xml --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -64,8 +76,15 @@ Review the package before deploy:
 
 If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
+Authenticate the target alias if needed:
+
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+```
+
+Confirm the alias points to the expected target org:
+
+```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -121,6 +140,8 @@ Adding a legacy action to the target agent is a Builder step. The package only m
 ## Configure Lead Nurture Agent
 
 Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org configuration, not package metadata.
+
+The Agentforce Data Library is recreated in the target org, not deployed; if the agent grounds through a prompt template, the retriever API name can differ in the target and may need re-pointing. See [Deploy Data 360 for Agentforce](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
 In the target org:
 

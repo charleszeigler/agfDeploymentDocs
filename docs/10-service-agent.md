@@ -16,6 +16,18 @@ Move an Agentforce Service Agent from sandbox to production.
 
 Create or open one Salesforce DX project folder for this package:
 
+Generate the staging project:
+
+```bash
+sf template generate project --name deploy-service-agent --template empty --default-package-dir force-app --api-version 66.0
+```
+
+Create the manifest folder:
+
+```bash
+mkdir -p deploy-service-agent/manifest
+```
+
 ```text
 deploy-service-agent/
 +-- sfdx-project.json
@@ -24,7 +36,7 @@ deploy-service-agent/
 +-- force-app/main/default/
 ```
 
-Use this minimal `sfdx-project.json`:
+The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a Salesforce DX project. This file is local project configuration; it is not deployed. The `packageDirectories.path` value tells the CLI to put retrieved metadata under `force-app/main/default`, `name` is only the local project name, and `sourceApiVersion` controls the Metadata API version. If you are working in an existing Salesforce DX project, keep the existing `sfdx-project.json` and use its package directory instead of replacing it.
 
 ```json
 {
@@ -65,8 +77,15 @@ Start with only the `AiAuthoringBundle` member if the agent's dependencies are n
 
 If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving:
 
+Authenticate the source alias if needed:
+
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+```
+
+Confirm the alias points to the expected source sandbox:
+
+```bash
 sf org display --json --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -107,8 +126,15 @@ Review the package before deploy:
 
 ## Validate in the source sandbox
 
+Confirm the source bundle is visible in the source sandbox:
+
 ```bash
 sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <SOURCE_ORG_ALIAS>
+```
+
+Validate the source bundle:
+
+```bash
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -118,9 +144,21 @@ Fix validation errors before handoff.
 
 If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
+Authenticate the target alias if needed:
+
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+```
+
+Confirm the alias points to the expected target org:
+
+```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
+```
+
+Confirm Agentforce authoring bundle metadata is available in the target org:
+
+```bash
 sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -201,6 +239,8 @@ If this Service Agent uses Data 360 data, complete [Deploy a Data 360 Data Kit](
 
 Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the agent user has the Data 360 access required by the agent.
 
+If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed — and re-point any prompt template whose retriever API name changed. See [Deploy Data 360 for Agentforce](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+
 ## Preview, publish, activate
 
 Validate the deployed bundle:
@@ -245,9 +285,21 @@ With `--json` and no `--version`, the CLI activates the latest published version
 
 Smoke test the active agent:
 
+Start a published-agent preview session:
+
 ```bash
 sf agent preview start --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
+Send a representative message with the returned `result.sessionId`:
+
+```bash
 sf agent preview send --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID> --utterance "Test the main happy path" --target-org <TARGET_ORG_ALIAS>
+```
+
+End the preview session:
+
+```bash
 sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID> --target-org <TARGET_ORG_ALIAS>
 ```
 

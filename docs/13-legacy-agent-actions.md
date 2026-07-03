@@ -45,8 +45,15 @@ Use when the source sandbox already shows the action as a legacy Agent Builder a
 
 Confirm the asset names:
 
+List legacy plugin or topic wrapper metadata:
+
 ```bash
 sf org list metadata --json --metadata-type GenAiPlugin --target-org <SOURCE_ORG_ALIAS>
+```
+
+List legacy action metadata:
+
+```bash
 sf org list metadata --json --metadata-type GenAiFunction --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -60,8 +67,15 @@ Confirm the retrieve result is `Succeeded`.
 
 If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
+Authenticate the target alias if needed:
+
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
+```
+
+Confirm the alias points to the expected target org:
+
+```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -112,8 +126,15 @@ Do not copy generated local action files directly into the target package.
 
 Confirm metadata exists:
 
+List target legacy plugin or topic wrapper metadata:
+
 ```bash
 sf org list metadata --json --metadata-type GenAiPlugin --target-org <TARGET_ORG_ALIAS>
+```
+
+List target legacy action metadata:
+
+```bash
 sf org list metadata --json --metadata-type GenAiFunction --target-org <TARGET_ORG_ALIAS>
 ```
 
