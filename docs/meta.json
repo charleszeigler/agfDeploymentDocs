@@ -7,30 +7,22 @@
       "slug": "",
       "pages": [
         "10-service-agent",
-        "11-employee-agent",
-        {
-          "title": "Lead Nurture Agent",
-          "slug": "12-lead-nurture-agent"
-        }
+        "11-employee-agent"
       ]
     },
     {
-      "title": "Additional Guides",
+      "title": "Supporting Guides",
       "slug": "",
       "pages": [
         {
-          "title": "Deploy a Package",
+          "title": "Package CLI Reference",
           "slug": "deployment-workflow"
         },
         {
           "title": "Data 360 Data Kit",
           "slug": "20-data-360-data-kit"
         },
-        "21-enhanced-web-chat",
-        {
-          "title": "Legacy Agent Actions",
-          "slug": "13-legacy-agent-actions"
-        }
+        "21-enhanced-web-chat"
       ]
     },
     "03-troubleshooting"

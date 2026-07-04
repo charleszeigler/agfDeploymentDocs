@@ -140,7 +140,7 @@ sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-o
 
 Fix validation errors before handoff.
 
-## Set the target agent user
+## Confirm the target org
 
 If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
@@ -163,6 +163,8 @@ sf org list metadata --json --metadata-type AiAuthoringBundle --target-org <TARG
 ```
 
 **Stop if:** The target org command returns `INVALID_TYPE` or `Not available for deploy for this organization`. Enable and provision Agentforce for the target org before continuing.
+
+## Set the target agent user
 
 Complete this section before deploying the target copy of the agent source. The target user record is org-specific configuration; the deployable `.agent` source references it by username.
 

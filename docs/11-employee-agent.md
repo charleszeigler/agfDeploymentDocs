@@ -157,7 +157,7 @@ sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-o
 
 Fix validation errors before handoff.
 
-## Deploy the source package
+## Confirm the target org
 
 If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
 
@@ -186,6 +186,8 @@ Validate the local bundle against the target org:
 ```bash
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
+
+## Deploy the source package
 
 Production deploys must run Apex tests. Validate first:
 
