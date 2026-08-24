@@ -7,7 +7,7 @@ Last content review: August 24, 2026. Re-check linked Salesforce source docs bef
 Start with [docs/index.md](docs/index.md).
 
 - CLI package reference: [docs/deployment-workflow.md](docs/deployment-workflow.md)
-- Staged deploy script: [docs/30-deployment-script.md](docs/30-deployment-script.md)
+- Staged deploy script: [docs/30-deployment-script.md](docs/30-deployment-script.md). Coordinator template: [templates/deploy.mjs](templates/deploy.mjs) (starting skeleton, not a tested org deployer)
 - Public navigation: [docs/meta.json](docs/meta.json)
 - Scope rule: each guide lists only the values needed for that path.
 

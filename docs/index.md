@@ -33,7 +33,7 @@ If retrieve, deploy, preview, publish, Data 360, email, or web messaging fails, 
 | If your deployment includes | Use this guide | Key instruction |
 |---|---|---|
 | A package that does not fit one agent guide | [Package CLI Reference](deployment-workflow.md) | Shared CLI reference for package setup, member-name syntax, retrieve, validate, and deploy. Not a substitute for guides 10, 11, or 12 |
-| A staged CLI coordinator | [Build a staged Agentforce deploy script](30-deployment-script.md) | Write a Node coordinator for sandbox→prod. Not a substitute for guides 10, 11, or 12 |
+| A staged CLI coordinator | [Build a staged Agentforce deploy script](30-deployment-script.md) | Starting template: `templates/deploy.mjs`. Not a substitute for guides 10, 11, or 12 |
 | Legacy Agent Builder or Asset Library actions | [Legacy Agent Actions](13-legacy-agent-actions.md) | Supporting path for custom `GenAiFunction` actions. Does not move an Agent Script agent or Lead Nurture Agent |
 | Data 360 | [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) | Complete Data 360 provision, DevOps Data Kit metadata, component deploy, and refresh before any agent that depends on Data 360 data |
 | Web messaging channel | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) | Rebuild and publish in the target org. This guide is Enhanced Chat / Messaging for In-App and Web only |

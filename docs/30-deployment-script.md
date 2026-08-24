@@ -10,7 +10,7 @@ This page is for someone writing or running that coordinator. It is not a substi
 |---|---|
 | Audience | Operator writing or running a staged CLI coordinator |
 | Packages | Service Agent, Employee Agent, Lead Nurture dependencies, DevOps Data Kit, Enhanced Web Chat rebuild |
-| Script | Local `deploy.mjs` you write. This repo does not ship one |
+| Script | Starting template: [`templates/deploy.mjs`](../templates/deploy.mjs). Copy it next to retrieved packages and fill env/placeholders. Not a tested org deployer |
 | Runtime | Node, built-in modules only, if any operator uses Windows |
 | API version | `67.0` (Summer ’26) unless a generated manifest says otherwise |
 
@@ -169,8 +169,8 @@ sf agent activate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_AL
 | `--validate-only` | Run preflight and dry-run/validate phases. Do not save to the org past a dry-run or validate job |
 | `--deploy` | Run the real deploy path after successful validation |
 | `--target-org` | Alias passed to every `sf` command |
-| `--operator` | Recorded in the log header |
-| `--start-at` | Resume at a named phase. Do not replay succeeded phases |
+| `--operator` | Optional username for permset assign after Employee access deploy. Also recorded in the log header |
+| `--start-at` | Resume at a named phase from [`templates/deploy.mjs`](../templates/deploy.mjs) only after earlier phases really completed. Do not replay succeeded phases |
 | `--non-interactive` | Fail at any human checkpoint. Do not skip the checkpoint |
 
 Production confirmation: the operator types exactly `DEPLOY`. Any other string aborts.
@@ -203,6 +203,7 @@ UI checkpoints (Data Kit component deploy, connector reauth, data refresh, Promp
 | Search index Ready but no rows | A DevOps Data Kit moves metadata, not data. Refresh, confirm rows, rebuild the index. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) |
 | Data Kit metadata ≠ data | Metadata deploy does not run streams or reauthorize connectors. Wait for the human `DONE` checkpoint |
 | `agentAccesses` too early | Employee access package deploys only after publish and activation. See [Deploy and Activate an Employee Agent](11-employee-agent.md) |
+| Coverage missing after a green deploy | Do not read coverage until the Apex test run is terminal |
 
 If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Troubleshooting](03-troubleshooting.md).
 
@@ -210,7 +211,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 
 1. Confirm the path: Service Agent ([Deploy and Activate a Service Agent](10-service-agent.md)), Employee Agent ([Deploy and Activate an Employee Agent](11-employee-agent.md)), and/or Lead Nurture dependencies ([Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md)).
 2. List only the packages this handoff includes. Add [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) and [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) only when used.
-3. Create `deploy.mjs` next to the DX project, not inside `force-app`. Use Node built-ins only if Windows operators exist. Prefer API `67.0` unless a generated manifest says otherwise.
+3. Copy `templates/deploy.mjs` next to the DX project, not inside `force-app`. Fill env and placeholders. Use Node built-ins only if Windows operators exist. Prefer API `67.0` unless a generated manifest says otherwise.
 4. Resolve `sf` / `sf.cmd`. Spawn every child with stdin ignored and `--json`. Parse stdout from the first `{`.
 5. Open `~/.agf-deployment/<alias>/<timestamp>/deploy.log` before the first `sf` call.
 6. Implement `--validate-only`, `--deploy`, `--target-org`, `--operator`, `--start-at`, and `--non-interactive`.
@@ -228,6 +229,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 | Need | Do this |
 |---|---|
 | See the path | Start at [docs/index.md](index.md) |
+| Starting template | Copy [`templates/deploy.mjs`](../templates/deploy.mjs) next to the retrieved DX project and fill env/placeholders |
 | Hand-run one agent package | Use [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md), not this page |
 | CLI verbs only | [Package CLI Reference](deployment-workflow.md) |
 | Dry-run production | `--validate-only --target-org <ALIAS>` |
@@ -242,7 +244,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 
 ## Summary
 
-A staged `deploy.mjs` is a Node coordinator that confirms the org, sequences this repo's Data 360 → platform → prompts → Apex → agent → publish → Employee access → web chat order, and stops on the first real failure. [Inventory](#inventory-what-is-not-a-normal-mdapi-deploy) and [Trap catalog](#trap-catalog) are the source for those rules.
+Start from [`templates/deploy.mjs`](../templates/deploy.mjs). A staged coordinator confirms the org, sequences this repo's Data 360 → platform → prompts → Apex → agent → publish → Employee access → web chat order, and stops on the first real failure. [Inventory](#inventory-what-is-not-a-normal-mdapi-deploy) and [Trap catalog](#trap-catalog) are the source for those rules.
 
 ## Related guides
 
