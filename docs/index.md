@@ -8,7 +8,7 @@ Start with the agent guide that matches what you are moving. Service Agent and E
 
 | What you are moving | Start here | Key instruction |
 |---|---|---|
-| Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Set the target-org agent user before deploying the target copy |
+| Service Agent | [Deploy and Activate a Service Agent](10-service-agent.md) | Set `access.default_agent_user` to the target-org username before deploying the target copy |
 | Employee Agent | [Deploy and Activate an Employee Agent](11-employee-agent.md) | Deploy the agent first, then deploy user access after publish and activation |
 | Lead Nurture Agent | [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) | Deploy custom dependencies only. Do not deploy Lead Nurture Agent itself |
 

@@ -2,7 +2,7 @@
 
 Use this guide when an Agentforce deployment depends on Data 360 metadata. It covers moving Data 360 metadata by DevOps Data Kit, what happens to search indexes and retrievers, and why the Agentforce Data Library is recreated in the target org rather than deployed.
 
-**Data 360 prerequisite:** Data 360 metadata must be added to a DevOps Data Kit first. Keep the DevOps Data Kit package separate from normal Salesforce Platform metadata. Use API `67.0` for Data Kit REST calls and generated DevOps Data Kit manifests unless the generated file says otherwise.
+**Data 360 prerequisite:** Data 360 metadata must be added to a DevOps Data Kit first. Starting in Winter ’25, do not mix Data 360 metadata and Salesforce Platform metadata in a **single package** ([Packages and Data Kits](https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html)). Separate packages or projects are the supported path; this repo already keeps them separate. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
 ## What moves
 
@@ -13,7 +13,7 @@ A DevOps Data Kit moves metadata, not data. It moves definitions:
 - calculated insights
 - segments
 - search indexes
-- retrievers (No-code and Pro-code/ADL retrievers move; ensemble retrievers do not)
+- retrievers: no-code only (Standard Yes, DevOps Yes). Pro-code/ADL retrievers do not move (Standard No, DevOps No). Ensemble retrievers do not move (Standard No, DevOps No). See the [Data 360 Extensibility Readiness Matrix](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html).
 - data graphs
 - related Data 360 components
 
@@ -23,11 +23,11 @@ It does not move records, ingested data, connector secrets, OAuth tokens, comple
 
 The Agentforce Data Library (ADL) *container* cannot be deployed between orgs by DevOps Data Kit or Metadata API. Salesforce documents this directly: "Making Agentforce Data Library changes in a sandbox and deploying those changes back to the production org or another sandbox org isn't supported" (`ai.data_library_sandbox.htm`).
 
-Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever. The search index and retriever it generates *can* be packaged in a DevOps Data Kit, but the library that owns them cannot.
+Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever in that org. The library container does not move. The generated Pro-code/ADL retriever does not deploy through a Data Kit; the Extensibility Readiness Matrix lists Retrievers: Pro-code/ADL as Standard No, DevOps No.
 
-For a file-backed Data Library, uploads drive the pipeline (upload → search index → auto-created retriever). A retriever-backed Data Library is a thin wrapper over an existing retriever, so provision that retriever through the DevOps Data Kit path first.
+For a file-backed Data Library, uploads drive the pipeline in the target org (upload → search index → auto-created retriever). A retriever-backed Data Library is a thin wrapper over an existing retriever. Only a no-code retriever is kit-supported; recreate a Pro-code/ADL retriever in the target org.
 
-**Stop if:** A deployment plan expects to move an Agentforce Data Library by change set, Metadata API, or Data Kit. Recreate it in the target org instead, then confirm its search index reaches a ready state before agent publish.
+**Stop if:** A deployment plan expects to move an Agentforce Data Library by change set, Metadata API, or Data Kit. Recreate it in the target org instead, then confirm its search index is Ready and has rows before agent publish.
 
 ## What this guide covers
 
@@ -41,7 +41,7 @@ For a file-backed Data Library, uploads drive the pipeline (upload → search in
 
 ## Prepare the DevOps Data Kit package in the source sandbox
 
-1. Confirm Data 360 is enabled and provisioned in both orgs.
+1. Confirm Data 360 is enabled and provisioned in both orgs. Data 360 provision can take up to 60 minutes; finish it before Agentforce enablement.
 2. Confirm the same data space exists in the source sandbox and target org. Salesforce requires a DevOps Data Kit to deploy to the same data space in the target org.
 
 **Stop if:** The target data space does not match the source data space. Same-data-space is required. Do not treat a different-data-space retriever rename as the happy path.
@@ -70,13 +70,13 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 Confirm the retrieve result is `Succeeded`.
 
-Retrievers cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit.
+Only no-code retrievers are kit-supported. They cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by kit (Standard No, DevOps No).
 
 ## Recovery only: retriever API name changed
 
 Do not plan a different-data-space deploy. If a retriever API name already changed, treat re-pointing as recovery.
 
-A retriever moved by Data Kit keeps its API name only when the target data space prefix matches the source. A different data space can append a `<dataspace>_` prefix. Prompt templates reference a retriever by API name as plain text (a soft reference), so a changed name does not fail the deploy — the prompt errors only at runtime. Re-point the prompt template to the new retriever in the target org, then return to the same-data-space path for later deploys.
+A no-code retriever moved by Data Kit keeps its API name only when the target data space prefix matches the source. A different data space can append a `<dataspace>_` prefix. Prompt templates reference a retriever by API name as plain text (a soft reference), so a changed name does not fail the deploy — the prompt errors only at runtime. Re-point the prompt template to the new retriever in the target org, then return to the same-data-space path for later deploys.
 
 ## Remove key qualifier files
 
@@ -151,7 +151,7 @@ A successful `package.xml` deploy does not run streams, refresh data, reauthoriz
 4. Reauthorize inactive connectors in the target org.
 5. Run or refresh required streams, mappings, identity rulesets, calculated insights, segments, search indexes, and data graphs.
 6. Confirm the target data exists before agent publish.
-7. Assign required Data 360 access. For API deployment, Salesforce calls out the Data 360 Architect permission set.
+7. Assign required Data 360 access. Data Kit component deploy needs the Data Cloud Architect permission set. For API deployment, Salesforce also calls out that permission set.
 
 Verify target runtime from Setup first:
 
@@ -159,7 +159,7 @@ Verify target runtime from Setup first:
 2. Open Developer Tools -> Data Kits and confirm the deployed Data Kit is present.
 3. Open the deployed Data Kit and confirm the expected components are selected for the target data space.
 4. Confirm connectors, streams, mappings, insights, segments, search indexes, and data graphs show the expected active or refreshed status.
-5. Open Data Explorer or the relevant Data 360 object page and confirm row counts or sample records exist for the objects the agent uses.
+5. Open Data Explorer or the relevant Data 360 object page and confirm row counts or sample records exist for the objects the agent uses. Confirm each required search index is Ready and has rows before agent publish.
 
 Optional CLI verification:
 
@@ -209,7 +209,7 @@ API notes:
 
 ## Deployment order
 
-1. Data 360 provisioned and data spaces created.
+1. Data 360 provisioned and data spaces created. Provision can take up to 60 minutes; finish it before Agentforce enablement.
 2. Platform metadata required by the DevOps Data Kit, if any.
 3. DevOps Data Kit metadata package deploy.
 4. Data Kit component deploy, connector reauthorization, and data refresh.
@@ -230,7 +230,7 @@ API notes:
 | Duplicate API names | Clean up the target data space or deploy to the intended data space. |
 | REST manifest response starts with `{"dataKitMembers":...}` | That is not package XML. Use the UI manifest download or transform the JSON into valid XML before retrieve. |
 | Agent preview returns no Data 360 result | Confirm all target Data 360 processing and permissions before troubleshooting the agent. |
-| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A DevOps Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index. The retriever is metadata only and has nothing to rebuild. |
+| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A DevOps Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index until it is Ready and has rows. Only no-code retrievers are kit-supported; recreate a Pro-code/ADL retriever with the Agentforce Data Library in the target org. The retriever is metadata only and has nothing to rebuild. |
 | Retriever works in the prompt template tester but fails through the agent | The tester runs as your admin; the agent runs as the bot (Run-As) user. Grant the bot user Data Cloud access and the retriever's data space on the bot user's permission set. Granting the data space to the admin does not cover the bot user. |
 | Retriever activation or deploy fails after the search index is Ready and references were removed | The retriever is referenced by an ensemble retriever version, active or inactive. Delete every retriever version that still references it. Editing the current ensemble is not enough, because prior versions are immutable and still hold the reference. |
 | `Prepend fields to each chunk` is off in the target after deploying a search index | Known issue: the deploy can drop the chunking "prepend fields" setting, which orphans chunks and degrades retrieval. Re-enable the chunking configuration on the search index in the target org and rebuild. |
@@ -243,6 +243,8 @@ See also [Troubleshooting](03-troubleshooting.md).
 - [ ] The retrieve used the generated DevOps Data Kit manifest, not a hand-built copy of the partial example.
 - [ ] Data Kit metadata deploy succeeded, then components were deployed and refreshed in the target org.
 - [ ] Target rows exist for the objects the agent uses. A DevOps Data Kit moves metadata, not data.
+- [ ] Required search indexes are Ready and have rows before agent publish.
+- [ ] Data Kit component deploy was run by a user with the Data Cloud Architect permission set.
 - [ ] Go-live proof saved for this target org: Data Kit metadata deploy job ID, component-deploy confirmation, and Data Explorer or Query Editor evidence. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 - [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
@@ -256,3 +258,4 @@ See also [Troubleshooting](03-troubleshooting.md).
 - Data 360 Connect REST API Data Kits reference: https://developer.salesforce.com/docs/data/connectapi/references/spec#tag/Data-Kits
 - Data 360 Extensibility Readiness Matrix: https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
 - DataKitObjectTemplate sourceObjectType values: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_datakitobjecttemplate.htm
+- Set Up Your DX Environment (Data 360 provision timing): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html

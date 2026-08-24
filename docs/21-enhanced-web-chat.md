@@ -8,11 +8,12 @@ Use this guide to deploy an active Service Agent to a web messaging channel thro
 
 Plan web messaging as a target-org configuration step:
 
-- Change sets do not carry Enhanced Chat Embedded Service Deployment.
+- Rebuild and publish in the target org is the supported path.
+- Do not treat change sets as the supported path unless you re-verify the [Components Available in Change Sets](https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&type=5) Help table for Enhanced Chat Embedded Service Deployment.
 - Salesforce documents migration limitations for Messaging for Web when generated site metadata is involved.
-- The customer-ready path is to rebuild and publish the deployment in the target org, then reconnect the agent and routing configuration.
+- After rebuild, reconnect the agent and routing configuration.
 
-**Stop if:** The deployment plan requires change sets to move the Enhanced Web Chat deployment. Use Metadata API validation in a sandbox or rebuild the deployment manually in the target org.
+**Stop if:** The deployment plan treats change sets as the supported path for Enhanced Web Chat. Rebuild and publish the deployment in the target org. Metadata API validation in a sandbox is optional and does not replace rebuild-and-publish.
 
 **Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or remove the need for target-org web messaging setup.
 

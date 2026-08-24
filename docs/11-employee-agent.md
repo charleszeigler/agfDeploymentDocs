@@ -9,14 +9,14 @@ Move an employee-facing Agentforce Employee Agent from sandbox to production.
 | Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
 | Agent type | `AgentforceEmployeeAgent` |
 | Running user | Logged-in employee |
-| Agent config | Omit `default_agent_user` |
+| Agent access | Omit `default_agent_user` from `access:` and `config:` |
 | Publish path | Deploy source, live preview, publish, activate |
 
 ## Deployment order
 
 When this Employee Agent also uses Data 360, keep this order:
 
-1. Data 360 provisioned and data spaces created.
+1. Data 360 provisioned and data spaces created. Provision can take up to 60 minutes; finish it before Agentforce enablement.
 2. DevOps Data Kit metadata package deploy.
 3. Data Kit component deploy, connector reauthorization, and data refresh.
 4. Employee Agent source package deploy.
@@ -47,7 +47,7 @@ Create or open one Salesforce DX project folder for this package:
 Generate the staging project:
 
 ```bash
-sf template generate project --name deploy-employee-agent --template empty --default-package-dir force-app --api-version 66.0
+sf template generate project --name deploy-employee-agent --template empty --default-package-dir force-app --api-version 67.0
 ```
 
 Create the manifest folder:
@@ -75,11 +75,11 @@ The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a
     }
   ],
   "name": "employee-agent-deploy-package",
-  "sourceApiVersion": "66.0"
+  "sourceApiVersion": "67.0"
 }
 ```
 
-Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `66.0` for Agent Script packages unless Salesforce examples change.
+Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
 ## Prepare the package
 
@@ -99,7 +99,7 @@ Include referenced dependencies:
 | Employee app surface, if included | `CustomApplication`, `CustomTab`, `FlexiPage` |
 | Callout definitions | `NamedCredential`, `ExternalCredential` |
 
-Employee Agents run as the logged-in employee. Do not package a Service Agent user, and do not add `default_agent_user` to the `.agent` source.
+Employee Agents run as the logged-in employee. Do not package a Service Agent user, and do not add `default_agent_user` under `access:` or `config:` in the `.agent` source.
 
 For a clean target org, keep `agentAccesses` out of the first source package. Deploy the `agentAccesses` permission set after the agent is published and activated.
 
@@ -169,7 +169,7 @@ Review the package before deploy:
 
 - Every `package.xml` member has a matching file under `force-app/main/default`.
 - The package contains only the Employee Agent source and its first-pass dependencies.
-- The `.agent` source does not contain `default_agent_user`.
+- The `.agent` source does not contain `default_agent_user` under `access:` or `config:`.
 - The first package does not contain a permission set or group with `agentAccesses`.
 - The package does not contain source-org usernames, credential secrets, OAuth tokens, connector auth, or runtime state.
 
@@ -225,7 +225,7 @@ If this Employee Agent uses Data 360 data, complete [Deploy a Data 360 DevOps Da
 
 Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and assigned employees have the Data 360 access required by the agent.
 
-If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed. Same-data-space is the intended path. Re-point a prompt template only if a retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed. Recreating it provisions a new search index and retriever in that org. Do not expect a Data Kit to move the library’s generated Pro-code/ADL retriever. Same-data-space is the intended path. Re-point a prompt template only if a no-code retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
 **Stop if:** The agent depends on Data 360 and the target data space does not match the source, or target data is not refreshed.
 
@@ -271,6 +271,8 @@ Without `--on-behalf-of`, the command assigns access only to the running admin. 
 
 **Stop if:** Live preview starts before `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned to the preview user.
 
+Who runs what: live preview needs the Agent Platform Builder permission set. Publish needs Manage AI Agents.
+
 Start live preview before publishing:
 
 ```bash
@@ -311,6 +313,12 @@ To roll back a bad version, reactivate the prior known-good version:
 
 ```bash
 sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NUMBER> --target-org <TARGET_ORG_ALIAS>
+```
+
+`sf agent deactivate` exists when you need to take the current version offline before a swap:
+
+```bash
+sf agent deactivate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
 ## Deploy and assign employee access
@@ -397,7 +405,7 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 ## Checklist
 
 - [ ] Agent API name replaced everywhere.
-- [ ] `default_agent_user` omitted from the Employee Agent source.
+- [ ] `default_agent_user` omitted from `access:` and `config:` in the Employee Agent source.
 - [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
 - [ ] First clean-target package does not include `agentAccesses`.
@@ -415,3 +423,4 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
+- Agent Script Blocks (`access.default_agent_user`): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html

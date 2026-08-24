@@ -19,11 +19,12 @@
   Keep only the required skeleton live. Uncomment a block only when you can
   name the custom dependency exactly.
 
-  API version: 66.0 for Agent Script / platform dependency packages unless
-  Salesforce examples change.
+  API version: Summer '26 Metadata API is 67.0. Use 67.0 unless a generated
+  Data Kit manifest or current Agentforce DX example says otherwise.
 
-  Data 360 dependencies are separate. Use a DevOps Data Kit manifest from
-  docs/20-data-360-data-kit.md; do not mix Data 360 metadata into this dependencies package.
+  Data 360 dependencies are a separate package. Winter '25 forbids mixing
+  Data 360 and platform metadata in a single package. See
+  docs/20-data-360-data-kit.md.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 
@@ -98,5 +99,5 @@
   <!-- Data 360 metadata belongs in a separate DevOps Data Kit package.
        See docs/20-data-360-data-kit.md. -->
 
-  <version>66.0</version>
+  <version>67.0</version>
 </Package>

@@ -9,14 +9,14 @@ Move an Agentforce Service Agent from sandbox to production.
 | Source metadata | `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent` |
 | Agent type | `AgentforceServiceAgent` |
 | Running user | Dedicated target-org Einstein Agent User |
-| Agent config | `default_agent_user` is required and must use the target-org username |
+| Agent access | `default_agent_user` is required under `access:` and must use the target-org username |
 | Publish path | Deploy source, live preview, publish, activate |
 
 ## Deployment order
 
 When this Service Agent also uses Data 360 or Enhanced Web Chat, keep this order:
 
-1. Data 360 provisioned and data spaces created.
+1. Data 360 provisioned and data spaces created. Provision can take up to 60 minutes; finish it before Agentforce enablement.
 2. DevOps Data Kit metadata package deploy.
 3. Data Kit component deploy, connector reauthorization, and data refresh.
 4. Service Agent package deploy.
@@ -45,7 +45,7 @@ Create or open one Salesforce DX project folder for this package:
 Generate the staging project:
 
 ```bash
-sf template generate project --name deploy-service-agent --template empty --default-package-dir force-app --api-version 66.0
+sf template generate project --name deploy-service-agent --template empty --default-package-dir force-app --api-version 67.0
 ```
 
 Create the manifest folder:
@@ -73,11 +73,11 @@ The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a
     }
   ],
   "name": "service-agent-deploy-package",
-  "sourceApiVersion": "66.0"
+  "sourceApiVersion": "67.0"
 }
 ```
 
-Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `66.0` for Agent Script packages unless Salesforce examples change.
+Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
 ## Prepare the package
 
@@ -206,10 +206,10 @@ sf org create agent-user --json --target-org <TARGET_ORG_ALIAS>
 
 Copy the username from `result.username`. If you use an existing user instead, copy the `Username` value from that target-org user record.
 
-Before deploying the `.agent` file to the target org, set `default_agent_user` to that target-org username. Use the username, not the User record ID.
+Before deploying the `.agent` file to the target org, set `default_agent_user` to that target-org username. Official [Agent Script Blocks](https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html) put this field under `access:`, not `config:` (`config.default_agent_user` is deprecated). CLI help that still says `config.default_agent_user` is stale. Use the username, not the User record ID.
 
 ```text
-config:
+access:
     default_agent_user: "agent.user@example.com"
 ```
 
@@ -229,7 +229,7 @@ If this Service Agent uses Data 360 data, complete [Deploy a Data 360 DevOps Dat
 
 Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the agent user has the Data 360 access required by the agent.
 
-If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed. Same-data-space is the intended path. Re-point a prompt template only if a retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed. Recreating it provisions a new search index and retriever in that org. Do not expect a Data Kit to move the library’s generated Pro-code/ADL retriever. Same-data-space is the intended path. Re-point a prompt template only if a no-code retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
 **Stop if:** The agent depends on Data 360 and the target data space does not match the source, or target data is not refreshed.
 
@@ -274,6 +274,8 @@ The custom permission set must cover the agent's Apex, Flows, prompt templates, 
 After deploy, confirm record sharing. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
 
 ## Preview, publish, activate
+
+Who runs what: live preview needs the Agent Platform Builder permission set. Publish needs Manage AI Agents.
 
 Validate the deployed bundle:
 
@@ -341,6 +343,12 @@ To roll back a bad version, reactivate the prior known-good version:
 sf agent activate --json --api-name <AGENT_API_NAME> --version <PRIOR_VERSION_NUMBER> --target-org <TARGET_ORG_ALIAS>
 ```
 
+`sf agent deactivate` exists when you need to take the current version offline before a swap:
+
+```bash
+sf agent deactivate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
 ## Web messaging channel
 
 To deploy this Service Agent to a web messaging channel, complete [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) after the agent is active.
@@ -351,7 +359,7 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 - [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
 - [ ] Target agent user is active, licensed, and assigned base Agentforce permissions.
-- [ ] `default_agent_user` uses the target-org username.
+- [ ] `access.default_agent_user` uses the target-org username.
 - [ ] Custom permission set `AGENT_ACCESS_PERMISSION_SET_API_NAME` assigned to the agent user.
 - [ ] Data 360 DevOps Data Kit completed before the agent package, if used.
 - [ ] Live-action preview passes before publish.
@@ -363,3 +371,5 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
+- Agent Script Blocks (`access.default_agent_user`): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
+- Set Up Your DX Environment (Data 360 provision timing): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html

@@ -12,8 +12,8 @@
   wrapper. Replace every placeholder and remove any block you do not use before
   handoff.
 
-  API version: 67.0 for legacy action manifests unless the generated file says
-  otherwise.
+  API version: Summer '26 Metadata API is 67.0. Use 67.0 unless a generated
+  Data Kit manifest or current Agentforce DX example says otherwise.
 
   In Markdown docs these values appear as <LEGACY_PLUGIN_API_NAME> and
   <LEGACY_ACTION_API_NAME>; in XML use XML-safe placeholders without brackets.

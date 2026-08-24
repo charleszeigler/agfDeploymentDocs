@@ -16,12 +16,12 @@
   If the REST manifest endpoint returns JSON dataKitMembers instead of XML,
   transform it first. Do not save that JSON response as package.xml.
 
-  Keep Data 360 metadata in its own package/project. Starting in Winter '25,
+  Keep Data 360 metadata in its own package. Starting in Winter '25,
   Salesforce doesn't allow Data 360 metadata and non-Data 360 metadata in a
-  single package.
+  single package. Separate packages or projects are the supported path.
 
-  API version: 67.0 for Data Kit REST and generated DevOps Data Kit manifests
-  unless the generated file says otherwise.
+  API version: Summer '26 Metadata API is 67.0. Use 67.0 unless a generated
+  Data Kit manifest or current Agentforce DX example says otherwise.
 
   Generated DataKitObjectTemplate records may set sourceObjectType to values
   such as ML_RETRIEVER, DATA_GRAPH, IDENTITY_RESOLUTION, DATA_CUSTOM_CODE, or

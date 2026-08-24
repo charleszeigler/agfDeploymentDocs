@@ -8,7 +8,7 @@ Move custom dependencies for Lead Nurture Agent.
 
 When Lead Nurture Agent also uses Data 360 or legacy actions, keep this order:
 
-1. Data 360 provisioned and data spaces created.
+1. Data 360 provisioned and data spaces created. Provision can take up to 60 minutes; finish it before Agentforce enablement.
 2. DevOps Data Kit metadata package deploy.
 3. Data Kit component deploy, connector reauthorization, and data refresh.
 4. Lead Nurture custom dependency package deploy.
@@ -28,7 +28,7 @@ Legacy project actions can move separately with [Legacy Agent Actions](13-legacy
 
 ## Prepare the dependency package
 
-Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `66.0` unless Salesforce examples change. The live permission-set member is project-owned data access only. Do not package Salesforce-provided Lead Nurture Agent setup permission sets.
+Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise. The live permission-set member is project-owned data access only. Do not package Salesforce-provided Lead Nurture Agent setup permission sets.
 
 Common dependencies:
 
@@ -60,7 +60,7 @@ Package rules:
 
 If Lead Nurture Agent or its custom dependencies use Data 360 data, complete [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) before deploying this dependency package and before configuring Lead Nurture Agent in the target org.
 
-Keep the DevOps Data Kit package separate from the Lead Nurture Agent dependency package. Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the Lead Nurture Agent users have the required Data 360 access.
+Keep the DevOps Data Kit in a separate package from the Lead Nurture Agent dependency package. Winter ’25 forbids mixing Data 360 and platform metadata in a single package; separate packages are the supported path. Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the Lead Nurture Agent users have the required Data 360 access.
 
 **Stop if:** The agent depends on Data 360 and the target data space does not match the source, or target data is not refreshed.
 
@@ -156,7 +156,7 @@ Adding a legacy action to the target agent is a Builder step. The package only m
 
 Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org configuration, not package metadata.
 
-The Agentforce Data Library is recreated in the target org, not deployed. Same-data-space is the intended path. Re-point a prompt template only if a retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+The Agentforce Data Library is recreated in the target org, not deployed. Recreating it provisions a new search index and retriever in that org. Do not expect a Data Kit to move the library’s generated Pro-code/ADL retriever. Same-data-space is the intended path. Re-point a prompt template only if a no-code retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
 In the target org:
 
