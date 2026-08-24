@@ -21,6 +21,7 @@ Use only the guides that match the package.
 | CLI reference | `deployment-workflow` when a package does not fit one primary guide |
 | Staged deploy script | `30-deployment-script` when writing or running a Node coordinator instead of stepping 10/11 by hand |
 | Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
+| Failed retrieve, deploy, preview, or runtime check | `03-troubleshooting` |
 
 Shared deploy order when more than one path applies: Data 360 provision → DevOps Data Kit metadata → component deploy and refresh → agent package → preview → publish/activate → Employee access package → web chat.
 

@@ -237,6 +237,12 @@ Without `--on-behalf-of`, the command assigns access only to the running admin. 
 
 Who runs what: live preview needs the Agent Platform Builder system permission. Publish needs Modify All Data and Manage AI Agents. Assign those system permissions with a permission set if the runner is not a system administrator.
 
+Validate the deployed bundle:
+
+```bash
+sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
 Start live preview before publishing:
 
 ```bash

@@ -177,7 +177,7 @@ Create one with CLI if needed:
 sf org create agent-user --json --target-org <TARGET_ORG_ALIAS>
 ```
 
-Copy the username from `result.username`. If you use an existing user instead, copy the `Username` value from that target-org user record.
+Copy the username from `result.username`. If you use an existing Einstein Agent User instead, copy the `Username` value from that target-org user record and confirm it has the Salesforce-provided sets that `sf org create agent-user` assigns: `AgentforceServiceAgentBase`, `AgentforceServiceAgentUser`, and `EinsteinGPTPromptTemplateUser`.
 
 Before deploying the `.agent` file to the target org, set `default_agent_user` to that target-org username. Official [Agent Script Blocks](https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html) put this field under `access:`, not `config:` (`config.default_agent_user` is deprecated). CLI help that still says `config.default_agent_user` is stale. Use the username, not the User record ID.
 
@@ -335,7 +335,7 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 - [ ] Agent API name replaced everywhere.
 - [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
-- [ ] Target agent user is active, licensed, and assigned base Agentforce permissions.
+- [ ] Target agent user is active, licensed, and assigned `AgentforceServiceAgentBase`, `AgentforceServiceAgentUser`, and `EinsteinGPTPromptTemplateUser` (or the org's current equivalents).
 - [ ] `access.default_agent_user` uses the target-org username.
 - [ ] Custom permission set `AGENT_ACCESS_PERMISSION_SET_API_NAME` assigned to the agent user.
 - [ ] Data 360 DevOps Data Kit completed before the agent package, if used.
@@ -349,4 +349,4 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
 - Agent Script Blocks (`access.default_agent_user`): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
-- Set Up Your DX Environment (Data 360 provision timing, preview/publish permissions): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html
+- Set Up Your DX Environment (Data 360 provision timing, preview/publish permissions, `sf org create agent-user` permission sets): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html

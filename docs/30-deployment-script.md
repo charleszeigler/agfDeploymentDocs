@@ -78,21 +78,22 @@ access:
 
 ## Phase spine
 
-Align the coordinator with this repo's order. Stop on the first real failure. A watch timeout is not a failure; resume or report the job.
+Align the coordinator with the `--start-at` names in [`templates/deploy.mjs`](../templates/deploy.mjs). Stop on the first real failure. A watch timeout is not a failure; resume or report the job. There is no separate `agent-package` phase.
 
-| Order | Phase | What runs |
+| Order | `--start-at` | What runs |
 |---|---|---|
-| 1 | Preflight / org confirm | Authenticate. `sf org display`. Confirm username, org Id, and instance URL. Do not log tokens |
-| 2 | Data 360 provision + DevOps kit metadata | Confirm Data 360 and the same data space. Deploy the generated DevOps Data Kit metadata package |
-| 3 | Kit component deploy / reauth / refresh | Human deploys kit components, reauthorizes connectors, and refreshes data. Operator types `DONE` |
-| 4 | Platform dependencies | Objects, fields, Flows, permission sets without `agentAccesses`, named/external credentials, Custom Lightning Types |
-| 5 | Prompt templates + activate | Deploy `GenAiPromptTemplate`. Confirm published/active in Prompt Builder **before** Apex |
-| 6 | Apex + tests | Deploy project Apex and its tests only after prompts are active. The coordinator recognizes test classes by a `Test` / `Tests` suffix; declare any other naming convention in `APEX_TESTS` so it is not coverage-gated as a unit class |
-| 7 | Agent package | Deploy `AiAuthoringBundle` (Service or Employee source). Service Agent: `default_agent_user` under `access:` uses the target-org username. Lead Nurture: dependencies only; do not deploy the agent |
-| 8 | Preview | Live-action preview. Fix access before publish |
-| 9 | Publish / activate | `sf agent publish authoring-bundle --skip-retrieve`, then `sf agent activate`. Lead Nurture: configure in Builder instead |
-| 10 | Employee access | After publish and activation, deploy the `agentAccesses` package. Skip for Service Agent |
-| 11 | Web chat rebuild | Rebuild and publish Enhanced Web Chat in the target org. No package template |
+| 1 | `preflight` | Authenticate. `sf org display`. Confirm username, org Id, and instance URL. Do not log tokens |
+| 2 | `data360-kit` | Confirm Data 360 and the same data space. Deploy the generated DevOps Data Kit metadata package |
+| 3 | `data360-ui` | Human deploys kit components, reauthorizes connectors, and refreshes data. Operator types `DONE` |
+| 4 | `platform-deps` | Deploy the shipped Service, Employee, or Lead manifest. That file already includes `AiAuthoringBundle` (or Lead dependencies only) plus first-pass deps |
+| 5 | `prompts` | Optional split `GenAiPromptTemplate` package, only when `PROMPTS_MANIFEST` / `prompts-package.xml` exists |
+| 6 | `prompts-activate` | Confirm published/active in Prompt Builder **before** Apex. Operator types `DONE` |
+| 7 | `apex` | Optional split Apex package, only when `APEX_MANIFEST` / `apex-package.xml` or an Apex source dir exists. The coordinator recognizes test classes by a `Test` / `Tests` suffix; declare any other naming convention in `APEX_TESTS` so it is not coverage-gated as a unit class |
+| 8 | `agent-preview` | Live-action preview. Service Agent: `default_agent_user` under `access:` uses the target-org username. Lead Nurture: skip publish later and configure in Builder |
+| 9 | `agent-publish` | `sf agent publish authoring-bundle --skip-retrieve`, then `sf agent activate`. Lead Nurture: configure in Builder instead |
+| 10 | `employee-access` | After publish and activation, deploy the `agentAccesses` package. Skip for Service Agent |
+| 11 | `permset-assign` | Assign `PERMSET_NAME` to each `--operator` username |
+| 12 | `web-chat` | Rebuild and publish Enhanced Web Chat in the target org. No package template |
 
 **Stop if:** Data 360 is required and the target data space does not match the source, or target data is not refreshed. Do not deploy or preview the agent yet.
 
@@ -100,7 +101,7 @@ Align the coordinator with this repo's order. Stop on the first real failure. A 
 
 **Stop if:** Employee `agentAccesses` is in the first source package. Remove it, publish the agent, then deploy the access package.
 
-When following [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) by hand, prompts, Apex, and the bundle may travel in one package. A coordinator splits them so first-install Apex tests do not run against missing templates.
+When following [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) by hand, prompts, Apex, and the bundle may travel in one package. A coordinator only splits them when you point `PROMPTS_*` and `APEX_*` at separate packages, so first-install Apex tests do not run against missing templates. If those env paths are unset, `platform-deps` deploys the combined shipped manifest.
 
 ## Critical production lesson
 
@@ -255,6 +256,7 @@ Start from [`templates/deploy.mjs`](../templates/deploy.mjs). A staged coordinat
 - [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md)
 - [Migrate Enhanced Web Chat](21-enhanced-web-chat.md)
 - [Package CLI Reference](deployment-workflow.md)
+- [Legacy Agent Actions](13-legacy-agent-actions.md)
 - [Troubleshooting](03-troubleshooting.md)
 
 ## Sources
