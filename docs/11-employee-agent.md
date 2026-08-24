@@ -391,6 +391,7 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 - [ ] Test classes are included for production deploys.
 - [ ] First clean-target package does not include `agentAccesses`.
 - [ ] `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned before live preview.
+- [ ] Deployed bundle validates in the target org before live preview.
 - [ ] Employee access package with `agentAccesses` is deployed after publish and activation.
 - [ ] `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` or permission set group is assigned.
 - [ ] Employees have the Salesforce-provided Agentforce user access required for the Lightning panel.
