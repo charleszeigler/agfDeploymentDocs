@@ -324,9 +324,20 @@ sf org assign permset --json --name EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAM
 
 Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or an approved assignment process.
 
-For the Lightning Agentforce panel, employees can also need Salesforce-provided Agentforce user access. Confirm names in Setup for the target-org SKU. Common defaults:
+For the Lightning Agentforce panel, employees can also need Salesforce-provided Agentforce user access. The package permission set with `agentAccesses` grants access to this agent; the Salesforce-provided access below surfaces the Agentforce panel itself.
 
-Assign the Salesforce-provided permission set license:
+Setup path, from [Give Users Access to Agentforce (Default)](https://help.salesforce.com/s/articleView?id=ai.copilot_setup_user_access.htm&type=5):
+
+1. Open the employee's user record and edit **Permission Set Group Assignments**.
+2. Add the `CopilotSalesforceUserPSG` permission set group, or assign the permission sets labeled **Access Agentforce Default Agent** and **Prompt Template User**.
+
+The Einstein Copilot-era API names survived the Agentforce rename; only labels changed. The permission set license labeled **Agentforce (Default)** keeps API name `EinsteinGPTCopilotPsl`, and **Access Agentforce Default Agent** keeps `CopilotSalesforceUser`. Confirm they exist in the target org before scripting assignments:
+
+```bash
+sf data query --json --query "SELECT DeveloperName, MasterLabel, Status FROM PermissionSetLicense WHERE DeveloperName = 'EinsteinGPTCopilotPsl'" --target-org <TARGET_ORG_ALIAS>
+```
+
+If confirmed, assign the Salesforce-provided permission set license:
 
 ```bash
 sf org assign permsetlicense --json --name EinsteinGPTCopilotPsl --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
@@ -338,9 +349,7 @@ Assign the Salesforce-provided permission set:
 sf org assign permset --json --name CopilotSalesforceUser --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
-In Setup: assign the equivalent Agentforce permission set license and permission set, then assign the package permission set or group.
-
-Salesforce-provided Agentforce permission set license and permission set names can vary by SKU. If the command says the license or permission set does not exist, assign the equivalent Agentforce user access from Setup.
+Agentforce (Default) reached end of sale on June 17, 2025 and is not provisioned in new Salesforce environments. If the query returns no rows or an assignment says the license or permission set does not exist, assign the org's current Agentforce user access from Setup instead.
 
 Because Employee Agents run as the logged-in user, each employee needs the object, field, record, Apex, Flow, prompt template, and callout access required by the action path.
 
@@ -391,3 +400,4 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
 - Agent Script Blocks (`access.default_agent_user`): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
 - Set Up Your DX Environment (preview/publish permissions): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html
+- Give Users Access to Agentforce (Default) (`CopilotSalesforceUserPSG`, panel access, end-of-sale note): https://help.salesforce.com/s/articleView?id=ai.copilot_setup_user_access.htm&type=5
