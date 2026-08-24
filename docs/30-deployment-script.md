@@ -12,7 +12,7 @@ This page is for someone writing or running that coordinator. It is not a substi
 | Packages | Service Agent, Employee Agent, Lead Nurture dependencies, DevOps Data Kit, Enhanced Web Chat rebuild |
 | Script | Local `deploy.mjs` you write. This repo does not ship one |
 | Runtime | Node, built-in modules only, if any operator uses Windows |
-| API version | `67.0` (Summer '26) unless a generated manifest says otherwise |
+| API version | `67.0` (Summer ’26) unless a generated manifest says otherwise |
 
 **Stop if:** The plan is one Metadata API push of `force-app`. Split the work into the phases below.
 
@@ -65,7 +65,7 @@ Always pass `--json`. Confirm the target with `sf org display`. Do not write acc
 | Customer Admin profiles | Org-specific profile | Do not deploy |
 | Hardcoded org IDs | Org-specific IDs in retrieved source | Blank them in the handoff package. Fill only after target publish creates the target IDs |
 
-Winter '25 "do not mix Data 360 and platform metadata" is a **packaging** rule: keep kit metadata out of the agent/platform package. It is not a CLI law that forbids one `sf project deploy` from seeing both kinds of files. The coordinator still deploys them as separate packages.
+Winter ’25 "do not mix Data 360 and platform metadata" is a **packaging** rule: keep kit metadata out of the agent/platform package. It is not a CLI law that forbids one `sf project deploy` from seeing both kinds of files. The coordinator still deploys them as separate packages.
 
 **Stop if:** The package includes customer Admin profiles, source-org usernames, website domains, generated Web Chat snippets, credential secrets, OAuth tokens, connector auth, or runtime state.
 
@@ -149,7 +149,7 @@ Cite these commands. Do not invent substitutes.
 | Job Id lifetime | Job Ids last 10 days from start | Prefer an explicit `--job-id`. `--use-most-recent` only sees about 3 days |
 | Errors | Omit `--ignore-errors` | Never `--ignore-errors` on production. Successful components would save and failed ones would skip |
 | Org confirm | `sf org display` | Do not log tokens from `--json` |
-| API version | Prefer `--api-version 67.0` (Summer '26) | Do not keep `66.0` as the coordinator default. Use another version only when a generated manifest says otherwise |
+| API version | Prefer `--api-version 67.0` (Summer ’26) | Do not keep `66.0` as the coordinator default. Use another version only when a generated manifest says otherwise |
 
 Existing guides pass `--wait 30`. That is an explicit watch window, not a different CLI contract. Timeout still returns a job Id.
 
@@ -219,7 +219,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 9. Gate production with a `DEPLOY` prompt. Gate Data Kit, Prompt Builder, and web chat with `DONE`. `--non-interactive` fails those gates.
 10. Split prompt-template deploy and activate from Apex. Mock Einstein / `ConnectApi` / Data 360 in tests.
 11. For your Apex package use `RunSpecifiedTests`. For this repo's Agentforce packages keep `RunLocalTests` on production validate unless the operator is targeting a messy customer org and has accepted that risk.
-12. Forceignore published bot/planner snapshots. Publish with `--skip-retrieve`. For Service Agent, set `default_agent_user` under `access:`. Deploy Employee `agentAccesses` only after publish. Do not expect Pro-code/ADL or ensemble retrievers to move in the Data Kit.
+12. Follow [Inventory: what is not a normal MDAPI deploy](#inventory-what-is-not-a-normal-mdapi-deploy) and [Trap catalog](#trap-catalog).
 13. Rehearse on a fresh Developer sandbox. Encode coverage gates. Use a full sandbox for data-shaped smoke.
 14. Capture go-live proof for that target org only. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 
@@ -235,14 +235,14 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 | Resume | `--start-at <PHASE> --target-org <ALIAS>` |
 | CI / no keyboard | `--non-interactive` fails at `DEPLOY` / `DONE`; do not skip |
 | Data 360 | [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md), then type `DONE` after component deploy, reauth, and refresh |
-| Service Agent user | Set `access.default_agent_user` to the target-org username. Not `config:` |
+| Service Agent user | See [Inventory](#inventory-what-is-not-a-normal-mdapi-deploy) for `access.default_agent_user` |
 | Employee access | After publish, deploy `manifests/employee-agent-access-package.xml` |
 | Web chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) after the Service Agent is active |
 | Failure | [Troubleshooting](03-troubleshooting.md). Do not publish after a failed validate |
 
 ## Summary
 
-A staged `deploy.mjs` is a Node coordinator that confirms the org, sequences this repo's Data 360 → platform → prompts → Apex → agent → publish → Employee access → web chat order, and stops on the first real failure.
+A staged `deploy.mjs` is a Node coordinator that confirms the org, sequences this repo's Data 360 → platform → prompts → Apex → agent → publish → Employee access → web chat order, and stops on the first real failure. [Inventory](#inventory-what-is-not-a-normal-mdapi-deploy) and [Trap catalog](#trap-catalog) are the source for those rules.
 
 ## Related guides
 

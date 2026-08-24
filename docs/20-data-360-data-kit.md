@@ -80,8 +80,6 @@ A no-code retriever moved by Data Kit keeps its API name only when the target da
 
 ## Remove key qualifier files
 
-Key qualifier removal is a Data Kit package cleanup step.
-
 **Stop if:** You have not backed up or committed the project. Removing the wrong XML file can break the Data Kit package.
 
 Leave confirmed key qualifier metadata out of the handoff package. This is local package cleanup only; do not delete target-org fields or objects from Setup.
@@ -93,23 +91,12 @@ Preview first:
 3. Search the same folder for files whose names start with `KQ_`.
 4. Write down the matching file paths.
 
-Review the list with the packaging owner. Remove only confirmed key qualifier files from the local package folder. If unsure, send the reviewed list to the deployment owner.
-
-Complete this cleanup in the project before production handoff. Do not ask a production admin to remove files unless the file list has already been reviewed.
-
 ## Deploy the DevOps Data Kit package
 
-If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
-
-Authenticate the target alias if needed:
+Authenticate the target alias if needed, then confirm it is the expected org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox:
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
-```
-
-Confirm the alias points to the expected target org:
-
-```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -230,12 +217,8 @@ API notes:
 | Duplicate API names | Clean up the target data space or deploy to the intended data space. |
 | REST manifest response starts with `{"dataKitMembers":...}` | That is not package XML. Use the UI manifest download or transform the JSON into valid XML before retrieve. |
 | Agent preview returns no Data 360 result | Confirm all target Data 360 processing and permissions before troubleshooting the agent. |
-| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A DevOps Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index until it is Ready and has rows. Only no-code retrievers are kit-supported; recreate a Pro-code/ADL retriever with the Agentforce Data Library in the target org. The retriever is metadata only and has nothing to rebuild. |
-| Retriever works in the prompt template tester but fails through the agent | The tester runs as your admin; the agent runs as the bot (Run-As) user. Grant the bot user Data Cloud access and the retriever's data space on the bot user's permission set. Granting the data space to the admin does not cover the bot user. |
-| Retriever activation or deploy fails after the search index is Ready and references were removed | The retriever is referenced by an ensemble retriever version, active or inactive. Delete every retriever version that still references it. Editing the current ensemble is not enough, because prior versions are immutable and still hold the reference. |
-| `Prepend fields to each chunk` is off in the target after deploying a search index | Known issue: the deploy can drop the chunking "prepend fields" setting, which orphans chunks and degrades retrieval. Re-enable the chunking configuration on the search index in the target org and rebuild. |
 
-See also [Troubleshooting](03-troubleshooting.md).
+For RAG empty results, bot-user retriever access, ensemble reference locks, and prepend-fields chunking, see [Troubleshooting](03-troubleshooting.md).
 
 ## Checklist
 

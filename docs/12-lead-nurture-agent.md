@@ -66,17 +66,10 @@ Keep the DevOps Data Kit in a separate package from the Lead Nurture Agent depen
 
 ## Retrieve and deploy dependencies
 
-If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving the dependency package:
-
-Authenticate the source alias if needed:
+Authenticate the source alias if needed, then confirm it is the expected sandbox:
 
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
-```
-
-Confirm the alias points to the expected source sandbox:
-
-```bash
 sf org display --json --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -95,17 +88,10 @@ Review the package before deploy:
 - The package does not include Lead Nurture Agent itself.
 - The package does not contain mailbox connections, EAC auth, generated emails, sent-email history, credential secrets, OAuth tokens, connector auth, or runtime state.
 
-If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
-
-Authenticate the target alias if needed:
+Authenticate the target alias if needed, then confirm it is the expected org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox:
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
-```
-
-Confirm the alias points to the expected target org:
-
-```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -156,8 +142,6 @@ Adding a legacy action to the target agent is a Builder step. The package only m
 
 Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org configuration, not package metadata.
 
-The Agentforce Data Library is recreated in the target org, not deployed. Recreating it provisions a new search index and retriever in that org. Do not expect a Data Kit to move the library’s generated Pro-code/ADL retriever. Same-data-space is the intended path. Re-point a prompt template only if a no-code retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
-
 In the target org:
 
 1. Turn on Lead Nurture Agent and supporting features.
@@ -171,42 +155,22 @@ In the target org:
 
 Sales users must connect their own email accounts to EAC if they need to see, edit, reschedule, or cancel agent emails.
 
-## Validate email setup
+The Agentforce Data Library is recreated in the target org, not deployed. Recreating it provisions a new search index and retriever in that org. Do not expect a Data Kit to move the library’s generated Pro-code/ADL retriever. Same-data-space is the intended path. Re-point a prompt template only if a no-code retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
-Lead Nurture Agent email is target-org runtime configuration.
+## Validate before automatic send
 
-Package can include:
-
-- Custom email templates
-- Prompt overrides
-- Fields
-- Actions
-- Permissions
-
-Package does not connect mailboxes or create Builder activation state.
-
-1. Use a test lead or an approved lead record.
-2. Confirm the Lead Nurture Agent user has an active email account connection.
-3. Confirm Einstein Activity Capture is active for the agent user and any sales users who manage agent emails.
-4. Confirm sender address, cadence, send caps, meeting-booking source, opt-out handling, and assignment rules.
-5. If Send as Seller is on, confirm record owners have Inbox and Einstein Activity Capture access.
-6. Preview Lead Nurture Agent in Builder and confirm the generated email uses the expected prompt templates and source values.
-7. Do not enable automatic sending until the previewed email behavior is approved.
-
-## Confirm target Lead Nurture setup
-
-Use the source org to understand the intended behavior, then configure the target org deliberately. Email sender, EAC auth, meeting links, cadence, opt-out behavior, and data-library choices are target-org setup, not package metadata.
+Lead Nurture Agent email is target-org runtime configuration. The package can include custom email templates, prompt overrides, fields, actions, and permissions. It does not connect mailboxes or create Builder activation state.
 
 Before enabling automatic sending, confirm:
 
-- Voice and content: configure company context, product context, tone, persona, approved prompts, and brand notes; preview an email and confirm it uses approved language.
-- Send behavior: set send caps, cadence, and automatic-send controls; get business approval before enabling automated sends.
-- Sender mailbox: connect the target mailbox, confirm the agent user email connection is active, and confirm EAC is working for that mailbox.
-- Sales-user access: confirm participating sellers have the required Inbox and EAC access when Send as Seller is used.
-- Meeting booking: configure the target booking source and confirm previewed emails contain the correct meeting path.
-- Assignment and opt-out: configure target assignment rules and opt-out handling, then test with an approved lead record.
-- Prompt overrides: deploy project-owned prompt templates and confirm Builder preview uses the target templates.
-- Data sources: connect the target data library, knowledge sources, or Data 360 dependencies, then confirm previewed output uses target-org data.
+- Voice and content: company context, product context, tone, persona, approved prompts, and brand notes; preview uses approved language.
+- Send behavior: send caps, cadence, and automatic-send controls; get business approval before enabling automated sends.
+- Sender mailbox: target mailbox connected, agent user email active, and EAC working for that mailbox.
+- Sales-user access: participating sellers have Inbox and EAC access when Send as Seller is used.
+- Meeting booking: target booking source configured; previewed emails contain the correct meeting path.
+- Assignment and opt-out: target assignment rules and opt-out handling; test with an approved lead.
+- Prompt overrides: project-owned prompt templates deploy; Builder preview uses the target templates.
+- Data sources: target data library, knowledge, or Data 360 dependencies connected; preview uses target-org data.
 
 ## Checklist
 

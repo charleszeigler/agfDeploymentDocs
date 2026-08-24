@@ -64,20 +64,7 @@ deploy-employee-agent/
 +-- force-app/main/default/
 ```
 
-The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a Salesforce DX project. This file is local project configuration; it is not deployed. The `packageDirectories.path` value tells the CLI to put retrieved metadata under `force-app/main/default`, `name` is only the local project name, and `sourceApiVersion` controls the Metadata API version. If you are working in an existing Salesforce DX project, keep the existing `sfdx-project.json` and use its package directory instead of replacing it.
-
-```json
-{
-  "packageDirectories": [
-    {
-      "path": "force-app",
-      "default": true
-    }
-  ],
-  "name": "employee-agent-deploy-package",
-  "sourceApiVersion": "67.0"
-}
-```
+Generated `sfdx-project.json` is local CLI config (not deployed). Keep an existing project’s file. `sourceApiVersion` should be `67.0` unless a generated Data Kit manifest says otherwise.
 
 Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
@@ -107,30 +94,14 @@ Start with only the `AiAuthoringBundle` member if the agent's dependencies are n
 
 ## Clean target order
 
-Use this order when the target org does not already have the Employee Agent:
-
-| Order | Action |
-|---|---|
-| 1 | Complete the Data 360 DevOps Data Kit path first if the agent uses Data 360 data |
-| 2 | Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used |
-| 3 | Assign `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME`, then live preview |
-| 4 | Publish and activate the agent |
-| 5 | Deploy the access package with the permission set or group that contains `agentAccesses` |
-| 6 | Assign `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` and smoke test as a non-admin employee |
+For a clean target org, follow [Deployment order](#deployment-order) and deploy the `agentAccesses` access package only after publish and activation.
 
 ## Retrieve and complete the package
 
-If the alias is not already authenticated, log in to the source sandbox. Then display the alias and confirm it is the expected org before retrieving:
-
-Authenticate the source alias if needed:
+Authenticate the source alias if needed, then confirm it is the expected sandbox:
 
 ```bash
 sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
-```
-
-Confirm the alias points to the expected source sandbox:
-
-```bash
 sf org display --json --target-org <SOURCE_ORG_ALIAS>
 ```
 
@@ -191,17 +162,10 @@ Fix validation errors before handoff.
 
 ## Confirm the target org
 
-If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
-
-Authenticate the target alias if needed:
+Authenticate the target alias if needed, then confirm it is the expected org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox:
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
-```
-
-Confirm the alias points to the expected target org:
-
-```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -296,8 +260,10 @@ sf agent preview end --json --authoring-bundle <AGENT_API_NAME> --session-id <SE
 Publish:
 
 ```bash
-sf agent publish authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+sf agent publish authoring-bundle --json --api-name <AGENT_API_NAME> --skip-retrieve --target-org <TARGET_ORG_ALIAS>
 ```
+
+`--skip-retrieve` keeps published `Bot` / `BotVersion` / planner files out of the local project.
 
 Activate:
 

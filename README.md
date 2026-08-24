@@ -13,7 +13,7 @@ Start with [docs/index.md](docs/index.md).
 
 ## Deployment Path
 
-Start with `docs/index.md`. Use only the guides that match the package.
+Use only the guides that match the package.
 
 | Need | Use |
 |---|---|
@@ -42,8 +42,3 @@ There is no Enhanced Web Chat `package.xml` template. Rebuild and publish the Em
 ## API versions
 
 Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
-
-| Package or call | Version | Rule |
-|---|---|---|
-| Agent Script, platform, and legacy action packages | `67.0` | Follow a current Agentforce DX example if it specifies another version |
-| Data Kit REST calls and generated DevOps Data Kit manifests | `67.0` | Follow the generated manifest if it specifies another version |

@@ -65,17 +65,10 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 Confirm the retrieve result is `Succeeded`.
 
-If the alias is not already authenticated, log in to the target org. Then display the alias and confirm it is the expected org before validating or deploying. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox.
-
-Authenticate the target alias if needed:
+Authenticate the target alias if needed, then confirm it is the expected org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox:
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
-```
-
-Confirm the alias points to the expected target org:
-
-```bash
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
@@ -162,6 +155,7 @@ This can reduce rebuild work for custom actions. It does not make Lead Nurture A
 - [ ] Rebuilt local-only actions are first deployed and retrieved as standalone assets from the source sandbox.
 - [ ] Action appears in **Add from Asset Library** in the target org.
 - [ ] Target agent preview passes before publish.
+- [ ] Go-live proof saved for this target org: deploy job ID or Deployment Status screenshot, Apex test summary when Apex was included, and Asset Library evidence. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 - [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources

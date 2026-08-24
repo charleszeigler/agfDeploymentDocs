@@ -2,20 +2,15 @@
 
 Use this guide to deploy an active Service Agent to a web messaging channel through Enhanced Web Chat or Messaging for In-App and Web. This guide is Enhanced Chat / Messaging for In-App and Web only; legacy Chat is retired.
 
-**Use this for:** Existing web messaging deployments moving from sandbox to production. This guide does not cover designing a new channel from scratch. There is no Enhanced Web Chat `package.xml` template in this repo because rebuild-and-publish in the target org is the supported path.
+**Use this for:** Existing sandbox-to-production Enhanced Chat / Messaging for In-App and Web. Not a new-channel design guide. Rebuild and publish in the target org; there is no `package.xml` template.
 
 ## Read first
 
-Plan web messaging as a target-org configuration step:
-
 - Rebuild and publish in the target org is the supported path.
 - Do not treat change sets as the supported path unless you re-verify the [Components Available in Change Sets](https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&type=5) Help table for Enhanced Chat Embedded Service Deployment.
-- Salesforce documents migration limitations for Messaging for Web when generated site metadata is involved.
 - After rebuild, reconnect the agent and routing configuration.
 
-**Stop if:** The deployment plan treats change sets as the supported path for Enhanced Web Chat. Rebuild and publish the deployment in the target org. Metadata API validation in a sandbox is optional and does not replace rebuild-and-publish.
-
-**Production path:** A successful Metadata API dry run proves only that the selected package shape is accepted by that target org. It does not publish the deployment, install the website snippet, validate authenticated chat, or remove the need for target-org web messaging setup.
+**Stop if:** The deployment plan treats change sets as the supported path for Enhanced Web Chat. Rebuild and publish the deployment in the target org.
 
 ## What this guide covers
 
@@ -96,7 +91,7 @@ sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-
 
 **Stop if:** The dry run fails on generated site metadata, missing site references, label length, or `EmbeddedServiceConfig` site fields. Rebuild the web deployment in the target org.
 
-If dry run succeeds, still publish in the target org, configure CORS and domains, install the snippet or Embedded Messaging component, confirm routing, and run conversation smoke tests.
+If dry run succeeds, still complete [Rebuild in the target org](#rebuild-in-the-target-org).
 
 ## Rebuild in the target org
 
@@ -113,6 +108,7 @@ Use this path when metadata migration has not been validated end to end.
 9. Publish the deployment.
 10. Add the website domain to CORS and generated-site iframe allowed origins if exposed.
 11. Install the target-org snippet, or use the Embedded Messaging component on the Experience Builder site.
+12. Reconnect the agent and routing configuration.
 
 Publish or republish the target Embedded Service Deployment after configuration changes.
 
