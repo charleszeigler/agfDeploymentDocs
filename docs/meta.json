@@ -23,12 +23,18 @@
           "title": "Staged deploy script",
           "slug": "30-deployment-script"
         },
-        "13-legacy-agent-actions",
+        {
+          "title": "Legacy Agent Actions",
+          "slug": "13-legacy-agent-actions"
+        },
         {
           "title": "Data 360 DevOps Data Kit",
           "slug": "20-data-360-data-kit"
         },
-        "21-enhanced-web-chat"
+        {
+          "title": "Migrate Enhanced Web Chat",
+          "slug": "21-enhanced-web-chat"
+        }
       ]
     },
     "03-troubleshooting"
