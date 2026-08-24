@@ -1025,11 +1025,20 @@ export async function main(argv = process.argv.slice(2)) {
     process.stdout.write(USAGE);
     return 0;
   }
-  if (!options.targetOrg) {
-    throw new Error(`--target-org is required.\n\n${USAGE}`);
+  if (options.validateOnly && options.deploy) {
+    throw new Error(`Choose --validate-only or --deploy, not both.\n\n${USAGE}`);
   }
   if (!options.validateOnly && !options.deploy) {
     throw new Error(`Choose --validate-only or --deploy.\n\n${USAGE}`);
+  }
+  if (!options.targetOrg) {
+    throw new Error(`--target-org is required.\n\n${USAGE}`);
+  }
+  if (/\s/.test(options.targetOrg)) {
+    throw new Error(`--target-org must not contain whitespace.\n\n${USAGE}`);
+  }
+  if (options.startAt && !PHASES.includes(options.startAt)) {
+    throw new Error(`Unknown --start-at ${options.startAt}. Use one of: ${PHASES.join(', ')}`);
   }
   const coordinator = new Coordinator(options);
   try {
@@ -1044,11 +1053,11 @@ const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fil
 if (invokedDirectly) {
   main().then(
     (code) => {
-      process.exitCode = code;
+      process.exit(code);
     },
     (error) => {
       process.stderr.write(`${error.message || error}\n`);
-      process.exitCode = 1;
+      process.exit(1);
     },
   );
 }
