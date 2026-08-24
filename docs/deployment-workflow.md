@@ -13,6 +13,8 @@ Use this page as a shared Salesforce CLI reference when a deployment guide tells
 
 Do not use this page as a substitute for a primary deployment guide. Agent publish, activation, channel setup, Data 360 readiness, and feature-specific validation belong in the guide for that deployment path. Service Agent is one primary path, not the only one.
 
+Write a staged coordinator only when an operator must run this repo's packages in order across Data 360, platform metadata, prompts, Apex, agent publish, Employee access, and web chat. For a single agent package, follow [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) by hand and use this page for the CLI commands. See [Build a staged Agentforce deploy script](30-deployment-script.md).
+
 ## 1. Create the package folder
 
 Use one Salesforce DX project folder per deployment package, or use an existing project if it already has the right package directory.

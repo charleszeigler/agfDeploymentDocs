@@ -19,6 +19,10 @@
           "title": "Package CLI Reference",
           "slug": "deployment-workflow"
         },
+        {
+          "title": "Staged deploy script",
+          "slug": "30-deployment-script"
+        },
         "13-legacy-agent-actions",
         {
           "title": "Data 360 DevOps Data Kit",

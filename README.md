@@ -7,6 +7,7 @@ Last content review: August 24, 2026. Re-check linked Salesforce source docs bef
 Start with [docs/index.md](docs/index.md).
 
 - CLI package reference: [docs/deployment-workflow.md](docs/deployment-workflow.md)
+- Staged deploy script: [docs/30-deployment-script.md](docs/30-deployment-script.md)
 - Public navigation: [docs/meta.json](docs/meta.json)
 - Scope rule: each guide lists only the values needed for that path.
 
@@ -18,6 +19,7 @@ Start with `docs/index.md`. Use only the guides that match the package.
 |---|---|
 | Agent path | `10-service-agent`, `11-employee-agent`, or `12-lead-nurture-agent` |
 | CLI reference | `deployment-workflow` when a package does not fit one primary guide |
+| Staged deploy script | `30-deployment-script` when writing or running a Node coordinator instead of stepping 10/11 by hand |
 | Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
 
 Shared deploy order when more than one path applies: Data 360 provision → DevOps Data Kit metadata → component deploy and refresh → agent package → preview → publish/activate → Employee access package → web chat.
