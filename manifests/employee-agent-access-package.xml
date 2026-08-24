@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  EMPLOYEE AGENT ACCESS MANIFEST  (POST-PUBLISH TEMPLATE — not deploy-ready)
+  EMPLOYEE AGENT ACCESS MANIFEST  (POST-PUBLISH TEMPLATE — not retrieve-ready or deploy-ready)
   ============================================================================
+  This file is not retrieve-ready or deploy-ready until unused blocks are
+  removed and every placeholder is replaced with a real API name.
+
   Use this package after the Employee Agent source package is deployed, published,
   and activated in the target org.
 
@@ -9,7 +12,7 @@
   In a clean target org, deploying that permission set before publish can fail
   because the target agent is not available for access assignment yet.
 
-  Replace every placeholder with real API names before handoff.
+  API version: 66.0 for Agent Script packages unless Salesforce examples change.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <types>

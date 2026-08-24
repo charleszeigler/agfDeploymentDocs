@@ -1,6 +1,6 @@
 # Package CLI Reference
 
-Use this page as a compact Salesforce CLI reference when a deployment guide tells you to create, retrieve, validate, or deploy a metadata package. The Service Agent guide remains the primary end-to-end path.
+Use this page as a shared Salesforce CLI reference when a deployment guide tells you to create, retrieve, validate, or deploy a metadata package. It is not a substitute for [Deploy and Activate a Service Agent](10-service-agent.md), [Deploy and Activate an Employee Agent](11-employee-agent.md), or [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md).
 
 ## Use this page for
 
@@ -11,7 +11,7 @@ Use this page as a compact Salesforce CLI reference when a deployment guide tell
 | Retrieve source metadata | [Retrieve source files when needed](#3-retrieve-source-files-when-needed) |
 | Validate or deploy a reviewed package | [Validate and deploy](#4-validate-and-deploy) |
 
-Do not use this page as a substitute for a primary deployment guide. Agent publish, activation, channel setup, Data 360 readiness, and feature-specific validation belong in the guide for that deployment path.
+Do not use this page as a substitute for a primary deployment guide. Agent publish, activation, channel setup, Data 360 readiness, and feature-specific validation belong in the guide for that deployment path. Service Agent is one primary path, not the only one.
 
 ## 1. Create the package folder
 
@@ -21,6 +21,8 @@ Use one Salesforce DX project folder per deployment package, or use an existing 
 sf template generate project --name deploy-package --template empty --default-package-dir force-app --api-version 66.0
 mkdir -p deploy-package/manifest
 ```
+
+API version policy: use `66.0` for Agent Script packages unless Salesforce examples change. Use `67.0` for Data Kit REST calls and generated DevOps Data Kit or legacy action manifests unless the generated file says otherwise.
 
 Expected shape:
 
@@ -88,7 +90,7 @@ Retrieve-inspect-repeat loop:
 2. Keep only members you can name exactly.
 3. Retrieve with the current manifest.
 4. Fix or remove any member that does not exist.
-5. Inspect retrieved files for references to Apex, flows, prompt templates, objects, fields, permission sets, Custom Lightning Types, and credentials.
+5. Inspect retrieved files for references to Apex, flows, prompt templates, objects, fields, permission sets, Custom Lightning Types, and named or external credentials. In `.agent` source, search `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, and named-credential names when used.
 6. Add only confirmed dependencies.
 7. Stop when each manifest member has a matching file under `force-app/main/default`, unless the guide explicitly calls out a package-only reference.
 

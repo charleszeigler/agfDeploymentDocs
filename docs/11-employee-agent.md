@@ -12,6 +12,34 @@ Move an employee-facing Agentforce Employee Agent from sandbox to production.
 | Agent config | Omit `default_agent_user` |
 | Publish path | Deploy source, live preview, publish, activate |
 
+## Deployment order
+
+When this Employee Agent also uses Data 360, keep this order:
+
+1. Data 360 provisioned and data spaces created.
+2. DevOps Data Kit metadata package deploy.
+3. Data Kit component deploy, connector reauthorization, and data refresh.
+4. Employee Agent source package deploy.
+5. Assign `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME`.
+6. Live preview.
+7. Publish and activate.
+8. Employee access package deploy.
+9. Assign `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` and smoke test.
+
+**Stop if:** The agent depends on Data 360 and the target data is not refreshed. Do not deploy or preview the agent yet.
+
+## Authoring bundle states
+
+Salesforce documents draft, committed, and versioned representations in [Retrieve and deploy Agentforce metadata](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html):
+
+| State | Metadata | Editable |
+|---|---|---|
+| Draft (uncommitted) | `AiAuthoringBundle` | Yes |
+| Committed | `AiAuthoringBundle`, `Bot`, `BotVersion` | No. Create a new version |
+| Legacy agent | `Bot`, `BotVersion` | n/a |
+
+This guide deploys `AiAuthoringBundle` only, then publishes and activates in the target org. That remains the recommended path. Do not add `Bot` or `BotVersion` to the package unless that is the actual retrieved state you intend to deploy. If you saved more bundle versions than you committed, the `AiAuthoringBundle` version can differ from `Bot`/`BotVersion`.
+
 ## Create the package folder
 
 Create or open one Salesforce DX project folder for this package:
@@ -51,7 +79,7 @@ The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a
 }
 ```
 
-Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
+Copy `manifests/employee-agent-package.xml` to `manifest/package.xml` for the first source package; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `66.0` for Agent Script packages unless Salesforce examples change.
 
 ## Prepare the package
 
@@ -75,7 +103,7 @@ Employee Agents run as the logged-in employee. Do not package a Service Agent us
 
 For a clean target org, keep `agentAccesses` out of the first source package. Deploy the `agentAccesses` permission set after the agent is published and activated.
 
-Start with only the `AiAuthoringBundle` member if the agent's dependencies are not known. Retrieve the agent source first, inspect the `.agent` file for `apex://` and `flow://` targets, then add only confirmed dependencies to `package.xml`.
+Start with only the `AiAuthoringBundle` member if the agent's dependencies are not known. Retrieve the agent source first, inspect the `.agent` file for `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, and named-credential names when used, then add only confirmed dependencies to `package.xml`.
 
 ## Clean target order
 
@@ -83,10 +111,12 @@ Use this order when the target org does not already have the Employee Agent:
 
 | Order | Action |
 |---|---|
-| 1 | Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used |
-| 2 | Publish and activate the agent |
-| 3 | Deploy the access package with the permission set or group that contains `agentAccesses` |
-| 4 | Assign users and smoke test as a non-admin employee |
+| 1 | Complete the Data 360 DevOps Data Kit path first if the agent uses Data 360 data |
+| 2 | Deploy the source package: `AiAuthoringBundle`, actions, prompts, objects, fields, data/action access, and Custom Lightning Types only when used |
+| 3 | Assign `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME`, then live preview |
+| 4 | Publish and activate the agent |
+| 5 | Deploy the access package with the permission set or group that contains `agentAccesses` |
+| 6 | Assign `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` and smoke test as a non-admin employee |
 
 ## Retrieve and complete the package
 
@@ -121,11 +151,13 @@ Confirm the retrieve result is `Succeeded`.
 Identify action targets in the retrieved source bundle:
 
 1. Open `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`.
-2. Search in the file for `apex://`.
-3. Search in the file for `flow://`.
-4. Add every referenced Apex class and Flow to the source package manifest.
+2. Search in the file for `apex://` and add every referenced Apex class.
+3. Search in the file for `flow://` and add every referenced Flow.
+4. Search in the file for `prompt://` and `generatePromptResponse://` and add every referenced prompt template.
+5. Search in the file for `complex_data_type_name` and add Custom Lightning Types and their editor or renderer LWCs when used.
+6. Search retrieved Apex, Flow, and prompt files for named credential or external credential API names when the source uses callouts.
 
-Also add referenced prompt templates, objects, fields, permission sets, credentials, app surfaces, and Custom Lightning Types only when the source uses them.
+Also add referenced objects, fields, permission sets, and app surfaces only when the source uses them.
 
 Retrieve again after updating `package.xml`:
 
@@ -187,6 +219,16 @@ Validate the local bundle against the target org:
 sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
+## Data 360 DevOps Data Kit
+
+If this Employee Agent uses Data 360 data, complete [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) before deploying the agent source package.
+
+Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and assigned employees have the Data 360 access required by the agent.
+
+If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed. Same-data-space is the intended path. Re-point a prompt template only if a retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+
+**Stop if:** The agent depends on Data 360 and the target data space does not match the source, or target data is not refreshed.
+
 ## Deploy the source package
 
 Production deploys must run Apex tests. Validate first:
@@ -217,15 +259,17 @@ Continue only after the deploy result is `Succeeded`.
 
 **Stop if:** The access permission set deploys before the agent is published and active. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
-## Data 360 Data Kit
+## Assign data access and publish
 
-If this Employee Agent uses Data 360 data, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before live preview and publish.
+Assign the project-owned data access permission set before live preview:
 
-Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and assigned employees have the Data 360 access required by the agent.
+```bash
+sf org assign permset --json --name EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
+```
 
-If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed — and re-point any prompt template whose retriever API name changed. See [Deploy Data 360 for Agentforce](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+Without `--on-behalf-of`, the command assigns access only to the running admin. Assign it to the user who will run live preview.
 
-## Publish and activate
+**Stop if:** Live preview starts before `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned to the preview user.
 
 Start live preview before publishing:
 
@@ -282,14 +326,26 @@ The Employee Agent access permission set must include `agentAccesses`:
 </agentAccesses>
 ```
 
-For a clean target org, copy `manifests/employee-agent-access-package.xml` to `manifest/employee-agent-access-package.xml`, then deploy it after publish and activation:
+For a clean target org, copy `manifests/employee-agent-access-package.xml` to `manifest/employee-agent-access-package.xml`, then deploy it after publish and activation.
+
+Production deploys should validate first and run Apex tests:
 
 ```bash
+sf project deploy validate --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
+sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
+```
+
+Sandbox dry run, then deploy. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
+
+```bash
+sf project deploy start --json --dry-run --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 sf project deploy start --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
+If the access package is permission-set-only and contains no Apex, confirm org policy before using `NoTestRun`. Do not use `NoTestRun` on the production alias unless that policy is explicit.
+
 ```bash
-sf org assign permset --json --name Employee_Agent_Access --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
+sf org assign permset --json --name EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
 Without `--on-behalf-of`, the command assigns access only to the running admin. For many users, use a permission set group or an approved assignment process.
@@ -342,15 +398,18 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 
 - [ ] Agent API name replaced everywhere.
 - [ ] `default_agent_user` omitted from the Employee Agent source.
-- [ ] Every `apex://`, `flow://`, prompt template, object, field, permission, and applicable Custom Lightning Type dependency is included.
+- [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
 - [ ] First clean-target package does not include `agentAccesses`.
+- [ ] `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned before live preview.
 - [ ] Employee access package with `agentAccesses` is deployed after publish and activation.
-- [ ] Employee permission set or permission set group is assigned.
+- [ ] `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` or permission set group is assigned.
 - [ ] Employees have the Salesforce-provided Agentforce user access required for the Lightning panel.
-- [ ] Data 360 Data Kit completed before live preview and publish, if used.
+- [ ] Data 360 DevOps Data Kit completed before the agent source package, if used.
 - [ ] Live-action preview passes before publish.
 - [ ] Active-agent smoke test passes as a non-admin employee.
+- [ ] Go-live proof saved for this target org: source-package deploy job ID, access-package deploy job ID, Apex test summary when Apex was included, live-preview `sessionId`, and non-admin smoke-test evidence. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
+- [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
 

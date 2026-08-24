@@ -7,7 +7,8 @@
       "slug": "",
       "pages": [
         "10-service-agent",
-        "11-employee-agent"
+        "11-employee-agent",
+        "12-lead-nurture-agent"
       ]
     },
     {
@@ -18,8 +19,9 @@
           "title": "Package CLI Reference",
           "slug": "deployment-workflow"
         },
+        "13-legacy-agent-actions",
         {
-          "title": "Data 360 Data Kit",
+          "title": "Data 360 DevOps Data Kit",
           "slug": "20-data-360-data-kit"
         },
         "21-enhanced-web-chat"

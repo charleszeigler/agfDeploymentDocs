@@ -23,7 +23,7 @@ Legacy action metadata:
 
 ## Prepare the package
 
-Copy `manifests/legacy-agent-actions-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
+Copy `manifests/legacy-agent-actions-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. `GenAiPlugin` and unused Apex stay commented unless the action requires them. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `67.0` unless the generated file says otherwise.
 
 Common dependencies:
 
@@ -162,6 +162,7 @@ This can reduce rebuild work for custom actions. It does not make Lead Nurture A
 - [ ] Rebuilt local-only actions are first deployed and retrieved as standalone assets from the source sandbox.
 - [ ] Action appears in **Add from Asset Library** in the target org.
 - [ ] Target agent preview passes before publish.
+- [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
 

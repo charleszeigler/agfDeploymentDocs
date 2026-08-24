@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  LEAD NURTURE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not deploy-ready)
+  LEAD NURTURE AGENT — DEPENDENCIES MANIFEST  (TEMPLATE — not retrieve-ready or deploy-ready)
   ============================================================================
+  This file is not retrieve-ready or deploy-ready until unused blocks are
+  removed and every placeholder is replaced with a real API name.
+
   FOR LEAD NURTURE AGENT - DEPENDENCIES ONLY.
       This manifest excludes the Lead Nurture Agent itself.
       The AGENT is rebuilt from the "Lead Nurture Agent" template in the target org's
@@ -13,34 +16,42 @@
       source) uses the normal Agent Script path. Deploy it like a Service or
       Employee Agent using docs/10-service-agent.md or docs/11-employee-agent.md instead.
   ============================================================================
-  Replace every placeholder and Object.Field__c with real API names, and remove
-  any block you don't use before handoff.
+  Keep only the required skeleton live. Uncomment a block only when you can
+  name the custom dependency exactly.
 
-  Data 360 dependencies are separate. Use a Data Kit manifest from
+  API version: 66.0 for Agent Script / platform dependency packages unless
+  Salesforce examples change.
+
+  Data 360 dependencies are separate. Use a DevOps Data Kit manifest from
   docs/20-data-360-data-kit.md; do not mix Data 360 metadata into this dependencies package.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 
-  <!-- Sales data dependencies the agent reads (qualification / scoring / routing) -->
+  <!-- Sales data dependencies the agent reads (qualification / scoring / routing).
+       CustomField members MUST be Object.Field. -->
+  <!--
   <types>
-    <members>Lead.Custom_Field__c</members>
-    <members>Contact.Custom_Field__c</members>
+    <members>Lead.CUSTOM_FIELD_API_NAME</members>
+    <members>Contact.CUSTOM_FIELD_API_NAME</members>
     <name>CustomField</name>
   </types>
+  -->
 
   <!-- Custom objects, if you added nurture-tracking data -->
   <!--
   <types>
-    <members>NURTURE_CUSTOM_OBJECT__c</members>
+    <members>NURTURE_CUSTOM_OBJECT_API_NAME</members>
     <name>CustomObject</name>
   </types>
   -->
 
   <!-- Customized email / response prompt templates (must be Published) -->
+  <!--
   <types>
     <members>PROMPT_TEMPLATE_API_NAME</members>
     <name>GenAiPromptTemplate</name>
   </types>
+  -->
 
   <!-- Custom actions ONLY if you added non-standard ones (the template ships its own) -->
   <!--
@@ -65,7 +76,8 @@
   </types>
   -->
 
-  <!-- Permission set: must include the current Lead Nurture Agent setup permission + data access -->
+  <!-- Project-owned data access only. Do not package Salesforce-provided
+       Lead Nurture Agent setup permission sets. -->
   <types>
     <members>LEAD_NURTURE_PERMISSION_SET_API_NAME</members>
     <name>PermissionSet</name>

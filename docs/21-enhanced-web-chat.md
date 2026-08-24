@@ -1,8 +1,8 @@
 # Migrate Enhanced Web Chat
 
-Use this guide to deploy an active Service Agent to a web messaging channel through Enhanced Web Chat or Messaging for In-App and Web.
+Use this guide to deploy an active Service Agent to a web messaging channel through Enhanced Web Chat or Messaging for In-App and Web. This guide is Enhanced Chat / Messaging for In-App and Web only; legacy Chat is retired.
 
-**Use this for:** Existing web messaging deployments moving from sandbox to production. This guide does not cover designing a new channel from scratch.
+**Use this for:** Existing web messaging deployments moving from sandbox to production. This guide does not cover designing a new channel from scratch. There is no Enhanced Web Chat `package.xml` template in this repo because rebuild-and-publish in the target org is the supported path.
 
 ## Read first
 
@@ -218,6 +218,16 @@ Presence alone is not a website smoke test.
 **Stop if:** No new `MessagingSession` appears after the website test. Fix publish status, snippet or component selection, CORS/domain settings, and routing before declaring the channel ready.
 
 **Stop if:** The session stays `Waiting` and no `AgentWork` appears. Confirm queue membership, service presence configuration, Omni user availability, and routing before declaring the channel ready.
+
+## Checklist
+
+- [ ] Service Agent is deployed, previewed, published, and active before channel setup.
+- [ ] Target Embedded Service Deployment is rebuilt or updated and published.
+- [ ] Website or Experience Builder host page uses the target-org snippet or Embedded Messaging component.
+- [ ] CORS and iframe allowed origins include the production host.
+- [ ] A new `MessagingSession` is created from the real host page.
+- [ ] Go-live proof saved for this target org: metadata deploy job ID if a sandbox metadata path was used, published deployment confirmation, `MessagingSession` ID, and routing or `AgentWork` evidence. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
+- [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
 
