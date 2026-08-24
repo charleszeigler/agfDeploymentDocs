@@ -188,6 +188,8 @@ access:
 
 Sandbox refreshes and production orgs use different usernames. Replace any source-sandbox username before deploy.
 
+Official retrieve/deploy guidance is: do not modify retrieved metadata (uploading edited metadata can corrupt the org). The documented exception is string-replacing the agent username on a draft bundle. You cannot string-replace a committed agent's username; create a new version instead.
+
 Validate the local bundle against the target org:
 
 ```bash
@@ -248,7 +250,7 @@ After deploy, confirm record sharing. If Apex uses sharing or user-mode access, 
 
 ## Preview, publish, activate
 
-Who runs what: live preview needs the Agent Platform Builder permission set. Publish needs Manage AI Agents.
+Who runs what: live preview needs the Agent Platform Builder system permission. Publish needs Modify All Data and Manage AI Agents. Assign those system permissions with a permission set if the runner is not a system administrator.
 
 Validate the deployed bundle:
 
@@ -347,4 +349,4 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
 - Agent Script Blocks (`access.default_agent_user`): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
-- Set Up Your DX Environment (Data 360 provision timing): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html
+- Set Up Your DX Environment (Data 360 provision timing, preview/publish permissions): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html

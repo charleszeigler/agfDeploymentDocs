@@ -7,7 +7,7 @@ Use this guide to deploy an active Service Agent to a web messaging channel thro
 ## Read first
 
 - Rebuild and publish in the target org is the supported path.
-- Do not treat change sets as the supported path unless you re-verify the [Components Available in Change Sets](https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&type=5) Help table for Enhanced Chat Embedded Service Deployment.
+- The [Components Available in Change Sets](https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&type=5) table lists Embedded Service Deployment as limited to standard Chat, not Enhanced Chat. Rebuild and publish the Embedded Service Deployment in the target org.
 - After rebuild, reconnect the agent and routing configuration.
 
 **Stop if:** The deployment plan treats change sets as the supported path for Enhanced Web Chat. Rebuild and publish the deployment in the target org.

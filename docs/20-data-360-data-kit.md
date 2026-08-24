@@ -70,7 +70,7 @@ sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOU
 
 Confirm the retrieve result is `Succeeded`.
 
-Only no-code retrievers are kit-supported. They cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by kit (Standard No, DevOps No).
+Only no-code retrievers are kit-supported. They cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by kit (Standard No, DevOps No). Retriever deployment via a DevOps Data Kit is limited to a sandbox→production merge-back. Salesforce documents no workaround for sandbox-to-sandbox or production-to-production retriever kit deploys (KA 005315426).
 
 ## Recovery only: retriever API name changed
 
@@ -242,3 +242,4 @@ For RAG empty results, bot-user retriever access, ensemble reference locks, and 
 - Data 360 Extensibility Readiness Matrix: https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
 - DataKitObjectTemplate sourceObjectType values: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_datakitobjecttemplate.htm
 - Set Up Your DX Environment (Data 360 provision timing): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html
+- Retriever DevOps Data Kit environment limitation (KA 005315426): https://help.salesforce.com/s/articleView?id=005315426&type=1
