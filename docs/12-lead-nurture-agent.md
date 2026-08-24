@@ -4,6 +4,19 @@ Move custom dependencies for Lead Nurture Agent.
 
 **Use this guide for custom dependencies only.** Do not move Lead Nurture Agent itself, or Lead Nurture Agent changes, by change set, Metadata API, or Salesforce CLI. Create and configure the agent directly in the target org after deploying dependencies.
 
+## Deployment order
+
+When Lead Nurture Agent also uses Data 360 or legacy actions, keep this order:
+
+1. Data 360 provisioned and data spaces created.
+2. DevOps Data Kit metadata package deploy.
+3. Data Kit component deploy, connector reauthorization, and data refresh.
+4. Lead Nurture custom dependency package deploy.
+5. Configure Lead Nurture Agent in the target org.
+6. Optional legacy agent actions, then Builder preview.
+
+**Stop if:** The agent depends on Data 360 and the target data is not refreshed. Do not preview Lead Nurture Agent yet.
+
 ## What can be deployed
 
 | Scope | Items |
@@ -15,7 +28,7 @@ Legacy project actions can move separately with [Legacy Agent Actions](13-legacy
 
 ## Prepare the dependency package
 
-Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
+Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `66.0` unless Salesforce examples change. The live permission-set member is project-owned data access only. Do not package Salesforce-provided Lead Nurture Agent setup permission sets.
 
 Common dependencies:
 
@@ -28,7 +41,7 @@ Common dependencies:
 | Custom email templates or custom copies, if separate from Salesforce setup | `EmailTemplate` |
 | Callout configuration for custom enrichment or outbound actions | `NamedCredential`, `ExternalCredential` |
 | Data access and setup permissions | `PermissionSet` |
-| Data 360 dependencies | Separate Data Kit package |
+| Data 360 dependencies | Separate DevOps Data Kit package |
 | Custom legacy agent actions | Separate legacy agent actions package |
 
 Package rules:
@@ -42,6 +55,14 @@ Package rules:
 - Include required fields, features, provider flows/actions, permissions, and callout configuration, or update the prompt before handoff.
 
 **Stop if:** A prompt template validation fails with an invalid merge field, missing data provider, or missing output schema. Fix the target prerequisite, include the dependency, or remove that prompt from the package before deploy.
+
+## Data 360 DevOps Data Kit
+
+If Lead Nurture Agent or its custom dependencies use Data 360 data, complete [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) before deploying this dependency package and before configuring Lead Nurture Agent in the target org.
+
+Keep the DevOps Data Kit package separate from the Lead Nurture Agent dependency package. Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the Lead Nurture Agent users have the required Data 360 access.
+
+**Stop if:** The agent depends on Data 360 and the target data space does not match the source, or target data is not refreshed.
 
 ## Retrieve and deploy dependencies
 
@@ -114,12 +135,6 @@ sf project deploy start --json --manifest manifest/package.xml --target-org <TAR
 
 Continue only after the deploy result is `Succeeded`.
 
-## Data 360 Data Kit
-
-If Lead Nurture Agent or its custom dependencies use Data 360 data, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before configuring and previewing Lead Nurture Agent in the target org.
-
-Keep the Data 360 package separate from the Lead Nurture Agent dependency package. Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the Lead Nurture Agent users have the required Data 360 access.
-
 ## Optional legacy agent actions
 
 Use only for custom legacy agent actions.
@@ -141,7 +156,7 @@ Adding a legacy action to the target agent is a Builder step. The package only m
 
 Lead Nurture Agent email, agent user, Einstein Activity Capture, data library, cadence, and activation are target-org configuration, not package metadata.
 
-The Agentforce Data Library is recreated in the target org, not deployed; if the agent grounds through a prompt template, the retriever API name can differ in the target and may need re-pointing. See [Deploy Data 360 for Agentforce](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+The Agentforce Data Library is recreated in the target org, not deployed. Same-data-space is the intended path. Re-point a prompt template only if a retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
 In the target org:
 
@@ -196,9 +211,9 @@ Before enabling automatic sending, confirm:
 ## Checklist
 
 - [ ] Dependency package does not include Lead Nurture Agent itself.
-- [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and permission sets are included when used.
+- [ ] Custom fields, objects, prompt templates, actions, email templates, callout configuration, and project-owned permission sets are included when used.
 - [ ] Legacy project actions are packaged separately when used.
-- [ ] Data 360 Data Kit completed separately before target-org preview, if used.
+- [ ] Data 360 DevOps Data Kit completed before the dependency package, if used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target-org steps, not `package.xml` members.
 - [ ] Target Lead Nurture configuration reviewed against the source-org behavior.
 - [ ] Dependency deploy succeeded.
@@ -208,6 +223,8 @@ Before enabling automatic sending, confirm:
 - [ ] Builder preview completed with a test lead or approved lead.
 - [ ] Generated emails use the expected prompt templates and source values.
 - [ ] Opt-out, assignment, and meeting-booking behavior confirmed.
+- [ ] Go-live proof saved for this target org: dependency deploy job ID or Deployment Status screenshot, Apex test summary when Apex was included, and Builder preview evidence for the approved lead. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
+- [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
 

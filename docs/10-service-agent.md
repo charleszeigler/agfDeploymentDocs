@@ -12,6 +12,32 @@ Move an Agentforce Service Agent from sandbox to production.
 | Agent config | `default_agent_user` is required and must use the target-org username |
 | Publish path | Deploy source, live preview, publish, activate |
 
+## Deployment order
+
+When this Service Agent also uses Data 360 or Enhanced Web Chat, keep this order:
+
+1. Data 360 provisioned and data spaces created.
+2. DevOps Data Kit metadata package deploy.
+3. Data Kit component deploy, connector reauthorization, and data refresh.
+4. Service Agent package deploy.
+5. Live preview.
+6. Publish and activate.
+7. Enhanced Web Chat rebuild and publish, if used.
+
+**Stop if:** The agent depends on Data 360 and the target data is not refreshed. Do not deploy or preview the agent yet.
+
+## Authoring bundle states
+
+Salesforce documents draft, committed, and versioned representations in [Retrieve and deploy Agentforce metadata](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html):
+
+| State | Metadata | Editable |
+|---|---|---|
+| Draft (uncommitted) | `AiAuthoringBundle` | Yes |
+| Committed | `AiAuthoringBundle`, `Bot`, `BotVersion` | No. Create a new version |
+| Legacy agent | `Bot`, `BotVersion` | n/a |
+
+This guide deploys `AiAuthoringBundle` only, then publishes and activates in the target org. That remains the recommended path. Do not add `Bot` or `BotVersion` to the package unless that is the actual retrieved state you intend to deploy. If you saved more bundle versions than you committed, the `AiAuthoringBundle` version can differ from `Bot`/`BotVersion`.
+
 ## Create the package folder
 
 Create or open one Salesforce DX project folder for this package:
@@ -51,7 +77,7 @@ The generated `sfdx-project.json` makes the Salesforce CLI treat the folder as a
 }
 ```
 
-Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats.
+Copy `manifests/service-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Use API `66.0` for Agent Script packages unless Salesforce examples change.
 
 ## Prepare the package
 
@@ -71,7 +97,7 @@ Include referenced dependencies:
 
 Package the access metadata, not the `User` record.
 
-Start with only the `AiAuthoringBundle` member if the agent's dependencies are not known. Retrieve the agent source first, inspect the `.agent` file for `apex://` and `flow://` targets, then add only confirmed dependencies to `package.xml`.
+Start with only the `AiAuthoringBundle` member if the agent's dependencies are not known. Retrieve the agent source first, inspect the `.agent` file for `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, and named-credential names when used, then add only confirmed dependencies to `package.xml`.
 
 ## Retrieve and complete the package
 
@@ -106,11 +132,13 @@ Confirm the retrieve result is `Succeeded`.
 Identify action targets in the retrieved source bundle:
 
 1. Open `force-app/main/default/aiAuthoringBundles/<AGENT_API_NAME>/<AGENT_API_NAME>.agent`.
-2. Search in the file for `apex://`.
-3. Search in the file for `flow://`.
-4. Add every referenced Apex class and Flow to the package manifest.
+2. Search in the file for `apex://` and add every referenced Apex class.
+3. Search in the file for `flow://` and add every referenced Flow.
+4. Search in the file for `prompt://` and `generatePromptResponse://` and add every referenced prompt template.
+5. Search in the file for `complex_data_type_name` and add Custom Lightning Types and their editor or renderer LWCs when used.
+6. Search retrieved Apex, Flow, and prompt files for named credential or external credential API names when the source uses callouts.
 
-Also add referenced prompt templates, objects, fields, permission sets, credentials, and Custom Lightning Types only when the source uses them.
+Also add referenced objects, fields, and permission sets only when the source uses them.
 
 Retrieve again after updating `package.xml`:
 
@@ -195,6 +223,16 @@ sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-o
 
 **Stop if:** The package still contains a source-sandbox agent username. Replace it before deploy.
 
+## Data 360 DevOps Data Kit
+
+If this Service Agent uses Data 360 data, complete [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) before deploying the agent package.
+
+Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the agent user has the Data 360 access required by the agent.
+
+If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed. Same-data-space is the intended path. Re-point a prompt template only if a retriever API name changed during recovery. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
+
+**Stop if:** The agent depends on Data 360 and the target data space does not match the source, or target data is not refreshed.
+
 ## Deploy the package
 
 Production deploys must run Apex tests. Validate first:
@@ -228,20 +266,12 @@ Continue only after the deploy result is `Succeeded`.
 Assign the custom access permission set shipped with the package:
 
 ```bash
-sf org assign permset --json --name Service_Agent_Access --on-behalf-of <AGENT_USER_USERNAME> --target-org <TARGET_ORG_ALIAS>
+sf org assign permset --json --name AGENT_ACCESS_PERMISSION_SET_API_NAME --on-behalf-of <AGENT_USER_USERNAME> --target-org <TARGET_ORG_ALIAS>
 ```
 
 The custom permission set must cover the agent's Apex, Flows, prompt templates, objects, fields, and callouts.
 
 After deploy, confirm record sharing. If Apex uses sharing or user-mode access, confirm the agent user can see the target records.
-
-## Data 360 Data Kit
-
-If this Service Agent uses Data 360 data, complete [Deploy a Data 360 Data Kit](20-data-360-data-kit.md) before live preview and publish.
-
-Confirm the target Data 360 components are deployed, connector access is reauthorized, required data is refreshed, and the agent user has the Data 360 access required by the agent.
-
-If the agent grounds on an Agentforce Data Library, recreate it in the target org — it is not deployed — and re-point any prompt template whose retriever API name changed. See [Deploy Data 360 for Agentforce](20-data-360-data-kit.md#what-does-not-move-the-agentforce-data-library).
 
 ## Preview, publish, activate
 
@@ -318,14 +348,16 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 ## Checklist
 
 - [ ] Agent API name replaced everywhere.
-- [ ] Every `apex://`, `flow://`, prompt template, object, field, permission, and applicable Custom Lightning Type dependency is included.
+- [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
 - [ ] Target agent user is active, licensed, and assigned base Agentforce permissions.
 - [ ] `default_agent_user` uses the target-org username.
-- [ ] Custom permission set assigned to the agent user.
-- [ ] Data 360 Data Kit completed before live preview and publish, if used.
+- [ ] Custom permission set `AGENT_ACCESS_PERMISSION_SET_API_NAME` assigned to the agent user.
+- [ ] Data 360 DevOps Data Kit completed before the agent package, if used.
 - [ ] Live-action preview passes before publish.
 - [ ] Active-agent smoke test passes after activation.
+- [ ] Go-live proof saved for this target org: deploy job ID or Deployment Status screenshot, Apex test summary when Apex was included, live-preview `sessionId`, and published-agent smoke-test `sessionId`. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
+- [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
 

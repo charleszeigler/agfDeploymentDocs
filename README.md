@@ -2,7 +2,7 @@
 
 Public Markdown for moving existing Agentforce implementations from sandbox to production with Salesforce CLI.
 
-Last content review: June 29, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
+Last content review: August 24, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
 
 Start with [docs/index.md](docs/index.md).
 
@@ -20,9 +20,11 @@ Start with `docs/index.md`. Use only the guides that match the package.
 | CLI reference | `deployment-workflow` when a package does not fit one primary guide |
 | Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
 
+Shared deploy order when more than one path applies: Data 360 provision → DevOps Data Kit metadata → component deploy and refresh → agent package → preview → publish/activate → Employee access package → web chat.
+
 ## Package templates
 
-Use [manifests](manifests) as starting points. Build exact members with [Build package.xml from exact source names](docs/deployment-workflow.md#2-build-packagexml-from-exact-source-names), replace placeholders, and remove unused blocks before deployment.
+Use [manifests](manifests) as starting points. These files are not retrieve-ready or deploy-ready if copied blindly. Build exact members with [Build package.xml from exact source names](docs/deployment-workflow.md#2-build-packagexml-from-exact-source-names), replace placeholders, and remove unused blocks before retrieve or deployment.
 
 | Template | Use |
 |---|---|
@@ -31,4 +33,13 @@ Use [manifests](manifests) as starting points. Build exact members with [Build p
 | [manifests/employee-agent-access-package.xml](manifests/employee-agent-access-package.xml) | Employee Agent access permission set after publish |
 | [manifests/lead-nurture-agent-package.xml](manifests/lead-nurture-agent-package.xml) | Lead Nurture Agent dependencies only |
 | [manifests/legacy-agent-actions-package.xml](manifests/legacy-agent-actions-package.xml) | Legacy Agent Actions |
-| [manifests/data-360-data-kit-package.xml](manifests/data-360-data-kit-package.xml) | Example Data Kit manifest shape; prefer the source Data Kit generated manifest |
+| [manifests/data-360-data-kit-package.xml](manifests/data-360-data-kit-package.xml) | Partial example of DevOps Data Kit manifest shape; prefer the source DevOps Data Kit generated manifest |
+
+There is no Enhanced Web Chat `package.xml` template. Rebuild and publish the Embedded Service Deployment in the target org is the supported path.
+
+## API versions
+
+| Package or call | Version | Rule |
+|---|---|---|
+| Agent Script packages (`AiAuthoringBundle` and platform dependencies) | `66.0` | Use unless Salesforce examples change |
+| Data Kit REST calls and generated DevOps Data Kit or legacy action manifests | `67.0` | Use unless the generated file says otherwise |

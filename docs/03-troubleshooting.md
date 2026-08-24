@@ -37,13 +37,15 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 
 ## Data 360
 
+Use [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) for the happy path. Same-data-space is required.
+
 | Symptom | What to do |
 |---|---|
-| `FUNCTIONALITY_NOT_ENABLED ... [CdpDataKit]` | Complete Data 360 provisioning and Data Kit access before packaging or deploying. |
+| `FUNCTIONALITY_NOT_ENABLED ... [CdpDataKit]` | Complete Data 360 provisioning and DevOps Data Kit access before packaging or deploying. |
 | Missing `FieldSrcTrgtRelationship` | Retrieve the exact missing relationship members from the source org, remove related key qualifier files, and redeploy in a sandbox first. |
 | Connectors are inactive after deploy | Reauthorize connectors in the target org, then deploy Data Kit components again if needed. |
 | Agent returns no Data 360 result | Confirm data streams, mappings, identity, calculated insights, search indexes, and data graphs have completed in the target org. |
-| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index. The retriever is metadata only and has nothing to rebuild. |
+| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A DevOps Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index. The retriever is metadata only and has nothing to rebuild. |
 | Retriever works in the prompt template tester but fails through the agent | The tester runs as your admin; the agent runs as the bot (Run-As) user. Grant the bot user Data Cloud access and the retriever's data space on the bot user's permission set. Granting the data space to the admin does not cover the bot user. |
 | Retriever activation or deploy fails after the search index is Ready and references were removed | The retriever is referenced by an ensemble retriever version, active or inactive. Delete every retriever version that still references it. Editing the current ensemble is not enough, because prior versions are immutable and still hold the reference. |
 | `Prepend fields to each chunk` is off in the target after deploying a search index | Known issue: the deploy can drop the chunking "prepend fields" setting, which orphans chunks and degrades retrieval. Re-enable the chunking configuration on the search index in the target org and rebuild. |
