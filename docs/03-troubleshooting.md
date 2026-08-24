@@ -63,6 +63,8 @@ Use [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) for the happy p
 | Experience Builder chat does not appear | Confirm the Embedded Messaging component is on the site, the correct deployment, service URL, and site endpoint are selected, and the site domain is allowed in CORS. |
 | Authenticated chat opens as an unauthenticated session | Confirm User Verification or equivalent auth configuration was completed in the target org. Treat auth settings as target-org values unless validated as metadata for that org. |
 | Conversation does not route | Check the Omni routing flow, queue, routing configuration, and agent/channel connection in the target org. |
+| No new `MessagingSession` after website or test-page chat | Fix publish status, snippet or Embedded Messaging component selection, CORS/domain settings, and routing before declaring the channel ready. |
+| Session stays `Waiting` and no `AgentWork` appears | Confirm queue membership, service presence configuration, Omni user availability, and routing. Presence alone is not a website smoke test. |
 
 ## What to send for help
 

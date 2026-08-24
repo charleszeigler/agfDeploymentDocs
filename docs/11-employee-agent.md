@@ -237,6 +237,12 @@ Without `--on-behalf-of`, the command assigns access only to the running admin. 
 
 Who runs what: live preview needs the Agent Platform Builder system permission. Publish needs Modify All Data and Manage AI Agents. Assign those system permissions with a permission set if the runner is not a system administrator.
 
+Validate the deployed bundle:
+
+```bash
+sf agent validate authoring-bundle --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_ALIAS>
+```
+
 Start live preview before publishing:
 
 ```bash
@@ -385,6 +391,7 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 - [ ] Test classes are included for production deploys.
 - [ ] First clean-target package does not include `agentAccesses`.
 - [ ] `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned before live preview.
+- [ ] Deployed bundle validates in the target org before live preview.
 - [ ] Employee access package with `agentAccesses` is deployed after publish and activation.
 - [ ] `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` or permission set group is assigned.
 - [ ] Employees have the Salesforce-provided Agentforce user access required for the Lightning panel.

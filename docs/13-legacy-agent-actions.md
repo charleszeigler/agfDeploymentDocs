@@ -21,6 +21,25 @@ Legacy action metadata:
 | Lead Nurture Agent template or Salesforce-managed setup | No |
 | Draft Agent Script source in `.agent` files | No, use the Service or Employee Agent guide |
 
+## Create the package folder
+
+Create or open one Salesforce DX project folder for this package:
+
+```bash
+sf template generate project --name deploy-legacy-actions --template empty --default-package-dir force-app --api-version 67.0
+mkdir -p deploy-legacy-actions/manifest
+```
+
+```text
+deploy-legacy-actions/
++-- sfdx-project.json
++-- manifest/
+|   +-- package.xml
++-- force-app/main/default/
+```
+
+Generated `sfdx-project.json` is local CLI config (not deployed). Keep an existing project’s file. `sourceApiVersion` should be `67.0` unless a generated Data Kit manifest says otherwise.
+
 ## Prepare the package
 
 Copy `manifests/legacy-agent-actions-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. `GenAiPlugin` and unused Apex stay commented unless the action requires them. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
@@ -43,6 +62,13 @@ Common dependencies:
 
 Use when the source sandbox already shows the action as a legacy Agent Builder asset.
 
+Authenticate the source alias if needed, then confirm it is the expected sandbox:
+
+```bash
+sf org login web --json --alias <SOURCE_ORG_ALIAS> --instance-url https://test.salesforce.com
+sf org display --json --target-org <SOURCE_ORG_ALIAS>
+```
+
 Confirm the asset names:
 
 List legacy plugin or topic wrapper metadata:
@@ -60,7 +86,7 @@ sf org list metadata --json --metadata-type GenAiFunction --target-org <SOURCE_O
 Retrieve the package:
 
 ```bash
-sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
+sf project retrieve start --json --manifest manifest/package.xml --target-org <SOURCE_ORG_ALIAS>
 ```
 
 Confirm the retrieve result is `Succeeded`.
@@ -75,7 +101,7 @@ sf org display --json --target-org <TARGET_ORG_ALIAS>
 Production deploys must run Apex tests if Apex is included. Validate first:
 
 ```bash
-sf project deploy validate --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
+sf project deploy validate --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
 ```
 
 If validation succeeds, copy `result.id` and quick deploy:
@@ -87,13 +113,13 @@ sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TAR
 For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
 
 ```bash
-sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
 If the dry run succeeds:
 
 ```bash
-sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
+sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
 Continue only after the deploy result is `Succeeded`.
@@ -149,6 +175,7 @@ This can reduce rebuild work for custom actions. It does not make Lead Nurture A
 
 ## Checklist
 
+- [ ] DX project folder exists and `manifest/package.xml` is the filled copy of `manifests/legacy-agent-actions-package.xml`.
 - [ ] Action is custom, not Salesforce-managed setup.
 - [ ] Legacy `GenAiFunction` and required `GenAiPlugin` names are exact members in `package.xml`.
 - [ ] Backing Apex, Flow, prompt template, object, field, permission, and applicable Custom Lightning Type dependencies are included when used.
