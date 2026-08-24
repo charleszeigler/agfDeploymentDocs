@@ -11,6 +11,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | Quick deploy cannot find the job | Quick deploy promotes a successful `sf project deploy validate` job, not a sandbox `--dry-run` job. |
 | Apex coverage fails in production | Include matching test classes and use `RunLocalTests`, or fix org-wide coverage before deploy. |
 | Deploy succeeds but expected components are missing | Confirm the component is listed in `package.xml` and was retrieved into `force-app/main/default`. |
+| CLI `--wait` times out | Timeout is not a deploy failure. Default `--wait` is 33 minutes. Resume with `sf project deploy resume` or check `sf project deploy report`. Never use `--ignore-errors` on production. |
 
 ## Service and Employee Agents
 
@@ -20,7 +21,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | `AgentApiNotFound` | Confirm the org and running admin user can access Agentforce APIs. |
 | `Required fields are missing: [BundleType]` | The `.bundle-meta.xml` file is malformed. It must include `<bundleType>AGENT</bundleType>`. |
 | `Unknown metadata type 'Agent'` | Do not put `Agent` in `package.xml`. Use explicit metadata types. |
-| Live preview fails on `default_agent_user` | Fix the Service Agent user in the target org. Publishing will not fix it. |
+| Live preview fails on `default_agent_user` | Official Agent Script puts the field under `access:`, not `config:`. Set `access.default_agent_user` to the target-org username and fix the Service Agent user in the target org. Publishing will not fix it. See [Agent Script Blocks](https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html). |
 | Live preview reaches the action but returns blank data | Check object, field, and record access for the running user. Service Agents run as the dedicated agent user. Employee Agents run as the logged-in employee. |
 | Employee access permission set deploy fails before publish | The permission set includes `agentAccesses` too early. Deploy the Employee Agent source first, publish and activate it, then deploy the access permission set. |
 | Published Employee Agent preview fails with `Invalid user ID provided on start session` | Confirm the agent is active, the employee has Salesforce Agentforce user access, the package permission set includes `agentAccesses`, and the permission set is assigned. Then test from the Lightning Agentforce panel as the assigned user. |
@@ -41,11 +42,11 @@ Use [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) for the happy p
 
 | Symptom | What to do |
 |---|---|
-| `FUNCTIONALITY_NOT_ENABLED ... [CdpDataKit]` | Complete Data 360 provisioning and DevOps Data Kit access before packaging or deploying. |
+| `FUNCTIONALITY_NOT_ENABLED ... [CdpDataKit]` | Complete Data 360 provisioning and DevOps Data Kit access before packaging or deploying. Provision can take up to 60 minutes. |
 | Missing `FieldSrcTrgtRelationship` | Retrieve the exact missing relationship members from the source org, remove related key qualifier files, and redeploy in a sandbox first. |
 | Connectors are inactive after deploy | Reauthorize connectors in the target org, then deploy Data Kit components again if needed. |
 | Agent returns no Data 360 result | Confirm data streams, mappings, identity, calculated insights, search indexes, and data graphs have completed in the target org. |
-| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A DevOps Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index. The retriever is metadata only and has nothing to rebuild. |
+| Agent RAG or knowledge action returns nothing even though the search index shows Ready | A DevOps Data Kit moves metadata, not data. Refresh the data stream, confirm the DMO has rows in Data Explorer or Query Editor, then rebuild the search index until it is Ready and has rows. Only no-code retrievers are kit-supported; recreate a Pro-code/ADL retriever with the Agentforce Data Library in the target org. The retriever is metadata only and has nothing to rebuild. |
 | Retriever works in the prompt template tester but fails through the agent | The tester runs as your admin; the agent runs as the bot (Run-As) user. Grant the bot user Data Cloud access and the retriever's data space on the bot user's permission set. Granting the data space to the admin does not cover the bot user. |
 | Retriever activation or deploy fails after the search index is Ready and references were removed | The retriever is referenced by an ensemble retriever version, active or inactive. Delete every retriever version that still references it. Editing the current ensemble is not enough, because prior versions are immutable and still hold the reference. |
 | `Prepend fields to each chunk` is off in the target after deploying a search index | Known issue: the deploy can drop the chunking "prepend fields" setting, which orphans chunks and degrades retrieval. Re-enable the chunking configuration on the search index in the target org and rebuild. |
@@ -54,7 +55,7 @@ Use [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) for the happy p
 
 | Symptom | What to do |
 |---|---|
-| Deployment plan expects change sets to move Enhanced Web Chat | Stop. Salesforce change sets list Embedded Service Deployment only for standard Chat, not Enhanced Chat. |
+| Deployment plan expects change sets to move Enhanced Web Chat | Rebuild and publish in the target org. That is the supported path. Do not treat change sets as supported unless you re-verify the [Components Available in Change Sets](https://help.salesforce.com/s/articleView?id=platform.changesets_about_components.htm&type=5) Help table for Enhanced Chat. |
 | `Label data too large:(max length:80)` during Web Chat metadata deploy | Rebuild and publish the web deployment in the target org, then reconnect the agent and routing configuration. Salesforce documents this as a migration limitation for generated-site metadata scenarios. |
 | Chat button does not load | Check the target org deployment is published, the website domain is in CORS, the snippet or Embedded Messaging component points at the target deployment, and the page referrer policy is compatible. |
 | Experience Builder chat does not appear | Confirm the Embedded Messaging component is on the site, the correct deployment, service URL, and site endpoint are selected, and the site domain is allowed in CORS. |

@@ -20,11 +20,11 @@ Write a staged coordinator only when an operator must run this repo's packages i
 Use one Salesforce DX project folder per deployment package, or use an existing project if it already has the right package directory.
 
 ```bash
-sf template generate project --name deploy-package --template empty --default-package-dir force-app --api-version 66.0
+sf template generate project --name deploy-package --template empty --default-package-dir force-app --api-version 67.0
 mkdir -p deploy-package/manifest
 ```
 
-API version policy: use `66.0` for Agent Script packages unless Salesforce examples change. Use `67.0` for Data Kit REST calls and generated DevOps Data Kit or legacy action manifests unless the generated file says otherwise.
+Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
 Expected shape:
 
@@ -43,7 +43,7 @@ Before retrieve or deploy:
 - Replace placeholders with exact API names.
 - Remove unused `<types>` blocks.
 - Keep only one package concern in the folder.
-- Keep Data 360 metadata out of agent packages unless the Data 360 guide says otherwise.
+- Keep Data 360 metadata out of agent packages. Winter ’25 forbids mixing Data 360 and platform metadata in a single package; separate packages or projects are the supported path.
 - Remove usernames, website domains, generated snippets, credential secrets, OAuth tokens, connector auth, and runtime state.
 
 ## 2. Build package.xml from exact source names
@@ -128,6 +128,8 @@ sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
 Use `https://test.salesforce.com` instead of `https://login.salesforce.com` for a sandbox target.
+
+Default `--wait` is 33 minutes. A wait timeout is not a deploy failure; resume with `sf project deploy resume` or check `sf project deploy report`. Never use `--ignore-errors` on production.
 
 Production deploys should validate first and run Apex tests:
 

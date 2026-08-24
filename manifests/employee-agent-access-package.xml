@@ -12,7 +12,8 @@
   In a clean target org, deploying that permission set before publish can fail
   because the target agent is not available for access assignment yet.
 
-  API version: 66.0 for Agent Script packages unless Salesforce examples change.
+  API version: Summer '26 Metadata API is 67.0. Use 67.0 unless a generated
+  Data Kit manifest or current Agentforce DX example says otherwise.
 -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
   <types>
@@ -28,5 +29,5 @@
   </types>
   -->
 
-  <version>66.0</version>
+  <version>67.0</version>
 </Package>
