@@ -87,7 +87,7 @@ Align the coordinator with this repo's order. Stop on the first real failure. A 
 | 3 | Kit component deploy / reauth / refresh | Human deploys kit components, reauthorizes connectors, and refreshes data. Operator types `DONE` |
 | 4 | Platform dependencies | Objects, fields, Flows, permission sets without `agentAccesses`, named/external credentials, Custom Lightning Types |
 | 5 | Prompt templates + activate | Deploy `GenAiPromptTemplate`. Confirm published/active in Prompt Builder **before** Apex |
-| 6 | Apex + tests | Deploy project Apex and its tests only after prompts are active |
+| 6 | Apex + tests | Deploy project Apex and its tests only after prompts are active. The coordinator recognizes test classes by a `Test` / `Tests` suffix; declare any other naming convention in `APEX_TESTS` so it is not coverage-gated as a unit class |
 | 7 | Agent package | Deploy `AiAuthoringBundle` (Service or Employee source). Service Agent: `default_agent_user` under `access:` uses the target-org username. Lead Nurture: dependencies only; do not deploy the agent |
 | 8 | Preview | Live-action preview. Fix access before publish |
 | 9 | Publish / activate | `sf agent publish authoring-bundle --skip-retrieve`, then `sf agent activate`. Lead Nurture: configure in Builder instead |
@@ -143,7 +143,7 @@ Cite these commands. Do not invent substitutes.
 
 | Job | Command | Do not |
 |---|---|---|
-| Production dry-run | `sf project deploy validate` then `sf project deploy quick --job-id <ID>` | Do not run validate/quick on a sandbox. The CLI is intended for production and forbids that path |
+| Production dry-run | `sf project deploy validate` then `sf project deploy quick --job-id <ID>` | Do not run validate/quick on a sandbox. Salesforce documents this command as intended for production orgs |
 | Sandbox dry-run | `sf project deploy start --dry-run` then `sf project deploy start` | Do not pass a dry-run job Id to `quick` |
 | Watch | Default wait is 33 minutes | Do not treat a wait timeout as deploy failure. Use `sf project deploy resume` or `sf project deploy report` |
 | Job Id lifetime | Job Ids last 10 days from start | Prefer an explicit `--job-id`. `--use-most-recent` only sees about 3 days |

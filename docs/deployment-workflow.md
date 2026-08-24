@@ -10,6 +10,7 @@ Use this page as a shared Salesforce CLI reference when a deployment guide tells
 | Confirm `package.xml` member syntax | [Build package.xml from exact source names](#2-build-packagexml-from-exact-source-names) |
 | Retrieve source metadata | [Retrieve source files when needed](#3-retrieve-source-files-when-needed) |
 | Validate or deploy a reviewed package | [Validate and deploy](#4-validate-and-deploy) |
+| Save evidence after a deploy | [Capture go-live proof](#5-capture-go-live-proof) |
 
 Do not use this page as a substitute for a primary deployment guide. Agent publish, activation, channel setup, Data 360 readiness, and feature-specific validation belong in the guide for that deployment path. Service Agent is one primary path, not the only one.
 
