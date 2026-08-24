@@ -371,6 +371,12 @@ function looksUnsupported(text) {
   );
 }
 
+function looksLikeBadFlag(text) {
+  return /nonexistent flag|unexpected argument|unknown argument|is not a valid flag/i.test(
+    String(text || ''),
+  );
+}
+
 function alreadyAssigned(text) {
   return /already assigned|duplicate value|DUPLICATE_VALUE|already has the permission set/i.test(
     String(text || ''),
@@ -492,11 +498,12 @@ class Coordinator {
           jobId,
           '--wait',
           WAIT_MINUTES,
-          '--api-version',
-          API_VERSION,
         ],
         { allowFail: true },
       );
+      if (looksLikeBadFlag(report.text)) {
+        this.fail(`sf rejected a flag on project deploy report: ${summarizeSfError(report.parsed, report.text)}`);
+      }
       if (isWaitTimeout(report.exitCode, report.parsed, report.text)) {
         this.printTimeoutHelp(report.parsed);
         await sleep(POLL_MS);
@@ -808,8 +815,9 @@ class Coordinator {
       .split(',')
       .map((name) => name.trim())
       .filter(Boolean);
-    const tests = [...new Set([...classes.filter(isTestClassName), ...extraTests])];
-    const units = classes.filter((name) => !isTestClassName(name));
+    const testSet = new Set([...classes.filter(isTestClassName), ...extraTests]);
+    const tests = [...testSet];
+    const units = classes.filter((name) => !testSet.has(name));
     if (!manifest && !units.length && !tests.length) {
       this.log('Apex folder exists but has no classes. Skipping.');
       return;

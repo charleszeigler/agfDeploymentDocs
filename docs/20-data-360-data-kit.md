@@ -91,6 +91,15 @@ Preview first:
 3. Search the same folder for files whose names start with `KQ_`.
 4. Write down the matching file paths.
 
+Then remove:
+
+5. Confirm each path is key qualifier metadata, not a field the agent reads or writes.
+6. Delete the confirmed `<usageTag>KeyQualifier</usageTag>` field files and the confirmed `KQ_` object folders from the local package.
+7. Remove the matching `<members>` entries from `package.xml` if the generated manifest named them.
+8. Re-run the retrieve or a dry-run deploy and confirm the package still resolves.
+
+**Stop if:** A path matches only one of the two searches and you cannot confirm what it is. Leave it in the package and validate in a sandbox first.
+
 ## Deploy the DevOps Data Kit package
 
 Authenticate the target alias if needed, then confirm it is the expected org. Use `https://login.salesforce.com` for production or `https://test.salesforce.com` for a sandbox:

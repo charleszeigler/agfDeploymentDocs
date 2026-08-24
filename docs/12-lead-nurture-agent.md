@@ -26,6 +26,25 @@ When Lead Nurture Agent also uses Data 360 or legacy actions, keep this order:
 
 Legacy project actions can move separately with [Legacy Agent Actions](13-legacy-agent-actions.md). They can reduce manual rebuild work because the target agent can add them from the Asset Library.
 
+## Create the package folder
+
+Create or open one Salesforce DX project folder for this package:
+
+```bash
+sf template generate project --name deploy-lead-nurture-deps --template empty --default-package-dir force-app --api-version 67.0
+mkdir -p deploy-lead-nurture-deps/manifest
+```
+
+```text
+deploy-lead-nurture-deps/
++-- sfdx-project.json
++-- manifest/
+|   +-- package.xml
++-- force-app/main/default/
+```
+
+Generated `sfdx-project.json` is local CLI config (not deployed). Keep an existing project’s file. `sourceApiVersion` should be `67.0` unless a generated Data Kit manifest says otherwise.
+
 ## Prepare the dependency package
 
 Copy `manifests/lead-nurture-agent-package.xml` to `manifest/package.xml`; replace XML-safe placeholders with real API names and remove unused blocks. The template is not retrieve-ready or deploy-ready if copied blindly. Use [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names) for member-name formats. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise. The live permission-set member is project-owned data access only. Do not package Salesforce-provided Lead Nurture Agent setup permission sets.
