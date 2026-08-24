@@ -12,6 +12,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | Apex coverage fails in production | Include matching test classes and use `RunLocalTests`, or fix org-wide coverage before deploy. |
 | Deploy succeeds but expected components are missing | Confirm the component is listed in `package.xml` and was retrieved into `force-app/main/default`. |
 | CLI `--wait` times out | Timeout is not a deploy failure. Default `--wait` is 33 minutes. Resume with `sf project deploy resume` or check `sf project deploy report`. Never use `--ignore-errors` on production. |
+| `fetch failed` / socket closed | CLI or network. Retry the same command. Not necessarily a bad Apex compile or test. |
 
 ## Service and Employee Agents
 
