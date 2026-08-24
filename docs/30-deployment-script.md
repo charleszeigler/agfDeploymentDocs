@@ -12,6 +12,7 @@ This page is for someone writing or running that coordinator. It is not a substi
 | Packages | Service Agent, Employee Agent, Lead Nurture dependencies, DevOps Data Kit, Enhanced Web Chat rebuild |
 | Script | Local `deploy.mjs` you write. This repo does not ship one |
 | Runtime | Node, built-in modules only, if any operator uses Windows |
+| API version | `67.0` (Summer '26) unless a generated manifest says otherwise |
 
 **Stop if:** The plan is one Metadata API push of `force-app`. Split the work into the phases below.
 
@@ -54,15 +55,26 @@ Always pass `--json`. Confirm the target with `sf org display`. Do not write acc
 | Item | What it is | Coordinator rule |
 |---|---|---|
 | `AiAuthoringBundle` | Editable Agent Script source | Deploy this. This repo's recommended path is bundle-only, then publish in the target org |
+| `default_agent_user` | Service Agent run-as username | Required for Service Agent. Put it under `access:`, not `config:`. Official CLI help that says `config:` is stale. Omit it for Employee Agent |
 | Published `Bot`, `BotVersion`, planner snapshots | Created when you publish | Add them to `.forceignore`. Publish with `sf agent publish authoring-bundle --skip-retrieve`. Do not MDAPI-deploy the snapshot as if it were source |
 | `GenAiPromptTemplate` | Prompt template definition | Deploy, then confirm published/active in Prompt Builder. Deploy is not activate |
-| DevOps Data Kit metadata | Kit definition from the generated manifest | Separate package. Then UI or reviewed API component Deploy to the **same** data space |
-| Search indexes and retrievers | Data 360 metadata | Move through the DevOps Data Kit. `Ready` is not rows |
+| DevOps Data Kit metadata | Kit definition from the generated manifest | Keep it in its own package (packaging rule). Then UI or reviewed API component Deploy to the **same** data space |
+| Search indexes | Data 360 metadata | Move through the DevOps Data Kit when the generated manifest includes them. `Ready` is not rows |
+| Retrievers | Data 360 metadata | Official Extensibility matrix: no-code retrievers move in Standard and DevOps kits. Pro-code/ADL retrievers do **not** (No/No). Ensemble retrievers do **not**. Recreate Pro-code/ADL and ensemble retrievers in the target org. Do not plan a kit move for them |
 | `ssot__` / `KQ_` | Data 360 and key-qualifier artifacts | Leave confirmed `KQ_` files out of the handoff package. Do not treat leftover `ssot__` / `KQ_` files as normal platform metadata. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) |
 | Customer Admin profiles | Org-specific profile | Do not deploy |
 | Hardcoded org IDs | Org-specific IDs in retrieved source | Blank them in the handoff package. Fill only after target publish creates the target IDs |
 
+Winter '25 "do not mix Data 360 and platform metadata" is a **packaging** rule: keep kit metadata out of the agent/platform package. It is not a CLI law that forbids one `sf project deploy` from seeing both kinds of files. The coordinator still deploys them as separate packages.
+
 **Stop if:** The package includes customer Admin profiles, source-org usernames, website domains, generated Web Chat snippets, credential secrets, OAuth tokens, connector auth, or runtime state.
+
+**Stop if:** The Service Agent `.agent` file sets `default_agent_user` under `config:`. Move it under `access:`.
+
+```text
+access:
+    default_agent_user: "agent.user@example.com"
+```
 
 ## Phase spine
 
@@ -76,7 +88,7 @@ Align the coordinator with this repo's order. Stop on the first real failure. A 
 | 4 | Platform dependencies | Objects, fields, Flows, permission sets without `agentAccesses`, named/external credentials, Custom Lightning Types |
 | 5 | Prompt templates + activate | Deploy `GenAiPromptTemplate`. Confirm published/active in Prompt Builder **before** Apex |
 | 6 | Apex + tests | Deploy project Apex and its tests only after prompts are active |
-| 7 | Agent package | Deploy `AiAuthoringBundle` (Service or Employee source). Lead Nurture: dependencies only; do not deploy the agent |
+| 7 | Agent package | Deploy `AiAuthoringBundle` (Service or Employee source). Service Agent: `default_agent_user` under `access:` uses the target-org username. Lead Nurture: dependencies only; do not deploy the agent |
 | 8 | Preview | Live-action preview. Fix access before publish |
 | 9 | Publish / activate | `sf agent publish authoring-bundle --skip-retrieve`, then `sf agent activate`. Lead Nurture: configure in Builder instead |
 | 10 | Employee access | After publish and activation, deploy the `agentAccesses` package. Skip for Service Agent |
@@ -137,6 +149,7 @@ Cite these commands. Do not invent substitutes.
 | Job Id lifetime | Job Ids last 10 days from start | Prefer an explicit `--job-id`. `--use-most-recent` only sees about 3 days |
 | Errors | Omit `--ignore-errors` | Never `--ignore-errors` on production. Successful components would save and failed ones would skip |
 | Org confirm | `sf org display` | Do not log tokens from `--json` |
+| API version | Prefer `--api-version 67.0` (Summer '26) | Do not keep `66.0` as the coordinator default. Use another version only when a generated manifest says otherwise |
 
 Existing guides pass `--wait 30`. That is an explicit watch window, not a different CLI contract. Timeout still returns a job Id.
 
@@ -180,6 +193,9 @@ UI checkpoints (Data Kit component deploy, connector reauth, data refresh, Promp
 | Trap | What to do |
 |---|---|
 | Prompt access during Apex tests | Activate templates first. Mock Einstein / `ConnectApi` / Data 360 in tests |
+| `default_agent_user` under `config:` | Official Agent Script puts it under `access:`. CLI help that says `config:` is stale. Fix the `.agent` file before deploy |
+| Pro-code/ADL or ensemble retriever in a Data Kit | Extensibility matrix is No/No for both kit types. Recreate in the target org. Only no-code retrievers are kit-supported |
+| Mixed Data 360 + platform files in one package | Packaging rule, not a CLI prohibition. Split into a kit package and a platform package |
 | `DEPLOY` confirmation | Comparison is case-sensitive. Accept only `DEPLOY` |
 | CMDT enqueue is async | Custom metadata written through Apex `Metadata.Operations.enqueueDeployment` is not immediately queryable. Wait for the deploy callback or a later phase |
 | `UNKNOWN_EXCEPTION` on `ssot__` / `KQ_` | Leftover Data 360 or key-qualifier files are in a platform package. Remove confirmed `KQ_` files per [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) and retry in a sandbox |
@@ -194,7 +210,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 
 1. Confirm the path: Service Agent ([Deploy and Activate a Service Agent](10-service-agent.md)), Employee Agent ([Deploy and Activate an Employee Agent](11-employee-agent.md)), and/or Lead Nurture dependencies ([Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md)).
 2. List only the packages this handoff includes. Add [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) and [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) only when used.
-3. Create `deploy.mjs` next to the DX project, not inside `force-app`. Use Node built-ins only if Windows operators exist.
+3. Create `deploy.mjs` next to the DX project, not inside `force-app`. Use Node built-ins only if Windows operators exist. Prefer API `67.0` unless a generated manifest says otherwise.
 4. Resolve `sf` / `sf.cmd`. Spawn every child with stdin ignored and `--json`. Parse stdout from the first `{`.
 5. Open `~/.agf-deployment/<alias>/<timestamp>/deploy.log` before the first `sf` call.
 6. Implement `--validate-only`, `--deploy`, `--target-org`, `--operator`, `--start-at`, and `--non-interactive`.
@@ -203,7 +219,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 9. Gate production with a `DEPLOY` prompt. Gate Data Kit, Prompt Builder, and web chat with `DONE`. `--non-interactive` fails those gates.
 10. Split prompt-template deploy and activate from Apex. Mock Einstein / `ConnectApi` / Data 360 in tests.
 11. For your Apex package use `RunSpecifiedTests`. For this repo's Agentforce packages keep `RunLocalTests` on production validate unless the operator is targeting a messy customer org and has accepted that risk.
-12. Forceignore published bot/planner snapshots. Publish with `--skip-retrieve`. Deploy Employee `agentAccesses` only after publish.
+12. Forceignore published bot/planner snapshots. Publish with `--skip-retrieve`. For Service Agent, set `default_agent_user` under `access:`. Deploy Employee `agentAccesses` only after publish. Do not expect Pro-code/ADL or ensemble retrievers to move in the Data Kit.
 13. Rehearse on a fresh Developer sandbox. Encode coverage gates. Use a full sandbox for data-shaped smoke.
 14. Capture go-live proof for that target org only. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 
@@ -219,6 +235,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 | Resume | `--start-at <PHASE> --target-org <ALIAS>` |
 | CI / no keyboard | `--non-interactive` fails at `DEPLOY` / `DONE`; do not skip |
 | Data 360 | [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md), then type `DONE` after component deploy, reauth, and refresh |
+| Service Agent user | Set `access.default_agent_user` to the target-org username. Not `config:` |
 | Employee access | After publish, deploy `manifests/employee-agent-access-package.xml` |
 | Web chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) after the Service Agent is active |
 | Failure | [Troubleshooting](03-troubleshooting.md). Do not publish after a failed validate |
@@ -249,4 +266,6 @@ A staged `deploy.mjs` is a Node coordinator that confirms the org, sequences thi
 - Running tests / `RunSpecifiedTests` 75% per class: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm
 - `GenAiPromptTemplate` status (Published vs Draft): https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_genaiprompttemplate.htm
 - Apex `Metadata.Operations.enqueueDeployment` is async: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/enqueued-apex-deployments.htm
+- Agent Script blocks (`default_agent_user` in the Access block): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
+- Data 360 Extensibility Readiness Matrix (retrievers: no-code Yes/Yes; Pro-code/ADL No/No; ensemble No/No): https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
 - DevOps Data Kits: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html
