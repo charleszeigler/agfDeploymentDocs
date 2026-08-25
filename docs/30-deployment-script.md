@@ -2,7 +2,7 @@
 
 Write a Node coordinator that runs this repo's packages in order from sandbox to production. Do not treat one `sf project deploy start --source-dir force-app` as an Agentforce handoff.
 
-This page is for someone writing or running that coordinator. It is not a substitute for [Deploy and Activate a Service Agent](10-service-agent.md), [Deploy and Activate an Employee Agent](11-employee-agent.md), or [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md). Follow those guides when you are stepping a single package by hand.
+Not a substitute for [Deploy and Activate a Service Agent](10-service-agent.md), [Deploy and Activate an Employee Agent](11-employee-agent.md), or [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md). Follow those guides when stepping one package by hand.
 
 ## When this applies
 
@@ -10,7 +10,7 @@ This page is for someone writing or running that coordinator. It is not a substi
 |---|---|
 | Audience | Operator writing or running a staged CLI coordinator |
 | Packages | Service Agent, Employee Agent, Lead Nurture dependencies, DevOps Data Kit, Enhanced Web Chat rebuild |
-| Script | Starting template: [`templates/deploy.mjs`](../templates/deploy.mjs). Copy it next to retrieved packages and fill env/placeholders. Not a tested org deployer |
+| Script | Starting template: [`templates/deploy.mjs`](../templates/deploy.mjs). Copy it next to retrieved packages. Fill env and placeholders. Not a tested org deployer |
 | Runtime | Node, built-in modules only, if any operator uses Windows |
 | API version | `67.0` (Summer ’26) unless a generated manifest says otherwise |
 
@@ -20,35 +20,125 @@ This page is for someone writing or running that coordinator. It is not a substi
 
 ## What the script is
 
-The script sequences Salesforce CLI commands, human checkpoints, and this repo's package order. It is a coordinator.
+A coordinator. It sequences Salesforce CLI commands, human checkpoints, and this repo's package order.
 
 It is not:
 
 - a replacement for `sf project deploy start --source-dir force-app`
 - a substitute for licenses, Einstein, Prompt Builder, or Data 360 entitlements
 - a way to deploy Lead Nurture Agent itself
-- a way to move an Enhanced Web Chat deployment by Metadata API
+- a way to move Enhanced Web Chat by Metadata API
 
-Lead Nurture Agent is configured in the target org after its custom dependencies deploy. Enhanced Web Chat is rebuilt and published in the target org. See [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md) and [Migrate Enhanced Web Chat](21-enhanced-web-chat.md).
+See [Lead Nurture](12-lead-nurture-agent.md) and [Enhanced Web Chat](21-enhanced-web-chat.md).
 
-## Prefer Node when Windows operators exist
+## Write the coordinator
 
-Use Node (`deploy.mjs`) and Node built-ins only (`child_process`, `fs`, `path`, `os`, `readline`) if any operator runs on Windows.
+1. Confirm the path: [Service Agent](10-service-agent.md), [Employee Agent](11-employee-agent.md), and/or [Lead Nurture dependencies](12-lead-nurture-agent.md).
+2. List only the packages this handoff includes. Add [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) and [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) only when used. Legacy actions are a separate hand package, not a coordinator phase. See [Legacy Agent Actions](13-legacy-agent-actions.md).
+3. Copy `templates/deploy.mjs` next to the DX project, not inside `force-app`. Fill env. Replace ALL_CAPS placeholders in copied manifests. The template refuses unfilled members.
+4. Keep Node built-ins only (`child_process`, `fs`, `path`, `os`, `readline`) if any operator is on Windows. Do not ship a `.sh` coordinator.
+5. Keep the flags, `--start-at` names, and CLI mapping below. Fail on the first real error. A wait timeout is not a failure; resume or report the job.
+6. Split `PROMPTS_*` and `APEX_*` only when Apex tests would run against missing templates. If those env paths are unset, `platform-deps` deploys the combined shipped manifest.
+7. Assign access the coordinator does not. See [Access the coordinator does not assign](#access-the-coordinator-does-not-assign).
+8. Rehearse on a **fresh** Developer sandbox before production. Encode coverage gates in the script. Use a full sandbox for data-shaped smoke (Data 360 rows, search, web chat).
+9. Capture go-live proof for that target org only. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 
-| Reason | Detail |
+**Stop if:** The only rehearsal org already has the prompt templates, Data Kit components, or agent from a prior attempt.
+
+If you write from scratch instead of copying the template, keep the same flags, phase names, and CLI mapping. Also:
+
+| Rule | Detail |
 |---|---|
-| No bash | Stock Windows has no bash. Do not ship a `.sh` coordinator |
+| No bash | Stock Windows has no bash |
 | `sf.cmd` | On Windows the CLI is `sf.cmd`. Resolve `sf` through `PATHEXT` or call `sf.cmd` explicitly |
-| Long Data 360 paths | Retrieved DevOps Data Kit trees and publish-retrieved bot/planner snapshots can exceed Windows path limits |
-| `--json` prefix | `sf --json` can print warnings before the object. Parse from the first `{` |
-| stdin | Child `sf` must not inherit stdin. Later checkpoints need the operator's keyboard |
-| Logs | Write `~/.agf-deployment/<alias>/<timestamp>/deploy.log`. Never write logs under `force-app` or `/tmp` |
-
-`force-app` is retrieve and deploy source. `/tmp` is shared and ephemeral. Home-dir logs stay off both.
-
-Always pass `--json`. Confirm the target with `sf org display`. Do not write access tokens from `--json` output into the log.
+| Long Data 360 paths | Retrieved kit trees and publish-retrieved bot/planner snapshots can exceed Windows path limits |
+| `--json` | Always pass `--json`. Parse from the first `{`. Warnings can print before the object |
+| stdin | Spawn every child `sf` with stdin ignored. Later checkpoints need the keyboard |
+| Logs | `~/.agf-deployment/<alias>/<timestamp>/deploy.log` before the first `sf` call. Not under `force-app` or `/tmp` |
+| Tokens | `sf org display` to confirm the target. Do not log access tokens from `--json` output |
 
 **Stop if:** A child `sf` process is attached to the operator's stdin. Spawn with stdin ignored.
+
+## Env
+
+All optional. A missing path skips that phase.
+
+| Env | Use |
+|---|---|
+| `API_VERSION` | Default `67.0` |
+| `WAIT_MINUTES` | Default `33` |
+| `TEST_LEVEL` | Agentforce packages. Default `RunLocalTests` |
+| `PLATFORM_PACKAGE` | Service, Employee, or Lead manifest. Else the template looks up the shipped name |
+| `DATA360_KIT_MANIFEST` / `DATA360_PACKAGE` | Generated DevOps Data Kit manifest |
+| `PROMPTS_MANIFEST` / `PROMPTS_PACKAGE` | Optional split prompt-template package |
+| `APEX_MANIFEST` / `APEX_PACKAGE` / `APEX_SOURCE_DIR` | Optional split Apex package or class dir |
+| `APEX_TESTS` | Extra test class names. Use when tests are not `*Test` / `*Tests` |
+| `EMPLOYEE_ACCESS_MANIFEST` | `agentAccesses` package. After publish |
+| `AGENT_API_NAME` | Required for preview and publish. Skip those phases if unset |
+| `PERMSET_NAME` | Assigned to each `--operator` after `employee-access` |
+| `PREVIEW_UTTERANCE` | Default `Test the main happy path` |
+| `SKIP_WEB_CHAT=1` | Skip the web-chat `DONE` checkpoint |
+| `REQUIRE_DATA360_UI` | Force the Data Kit `DONE` checkpoint even with no kit path |
+| `REQUIRE_PROMPTS_ACTIVATE` | Force the Prompt Builder `DONE` checkpoint even with no prompts path |
+
+## Operator flags
+
+| Flag | Required behavior |
+|---|---|
+| `--validate-only` | Preflight and dry-run/validate only. Do not save past that |
+| `--deploy` | Mutate after successful validation. Choose this or `--validate-only`, not both |
+| `--target-org` | Required. Alias passed to every `sf` command |
+| `--operator` | Repeatable. Username for `PERMSET_NAME` assign. Also logged |
+| `--start-at` | Resume at a named phase from [`templates/deploy.mjs`](../templates/deploy.mjs) only after earlier phases really completed. Do not replay succeeded phases |
+| `--non-interactive` | Fail at any `DEPLOY` or `DONE` checkpoint. Do not skip |
+| `--help` | Print usage |
+
+Production confirmation: type exactly `DEPLOY`. Any other string aborts.
+
+UI checkpoints (Data Kit component deploy, connector reauth, data refresh, Prompt Builder activate, web chat rebuild): type exactly `DONE`.
+
+**Stop if:** `--non-interactive` is set and a phase requires `DEPLOY` or `DONE`. Exit non-zero. Do not skip.
+
+## Phase spine
+
+Align `--start-at` with the names in [`templates/deploy.mjs`](../templates/deploy.mjs). Stop on the first real failure. A watch timeout is not a failure; resume or report the job. There is no separate `agent-package` phase.
+
+| Order | `--start-at` | What runs | Skip when |
+|---|---|---|---|
+| 1 | `preflight` | Authenticate. `sf org display`. Confirm username, org Id, and instance URL. Do not log tokens | Never. `--start-at` still re-runs org confirm |
+| 2 | `data360-kit` | Confirm Data 360 and the same data space. Deploy the generated DevOps Data Kit metadata package | No kit manifest |
+| 3 | `data360-ui` | Human deploys kit components, reauthorizes connectors, and refreshes data. Type `DONE` | `--validate-only`, or no kit path unless `REQUIRE_DATA360_UI` |
+| 4 | `platform-deps` | Deploy the shipped Service, Employee, or Lead manifest. That file already includes `AiAuthoringBundle` (or Lead dependencies only) plus first-pass deps | No platform manifest |
+| 5 | `prompts` | Optional split `GenAiPromptTemplate` package | No `PROMPTS_*` / `prompts-package.xml` |
+| 6 | `prompts-activate` | Confirm published/active in Prompt Builder **before** Apex. Type `DONE` | `--validate-only`, or no prompts path unless `REQUIRE_PROMPTS_ACTIVATE` |
+| 7 | `apex` | Optional split Apex package. Test classes are a `Test` / `Tests` suffix unless listed in `APEX_TESTS` | No `APEX_*` path and no Apex classes |
+| 8 | `agent-preview` | Live-action preview. Service Agent: `default_agent_user` under `access:` uses the target-org username. Unsupported CLI is a log, not a fail | `--validate-only`, or no `AGENT_API_NAME` |
+| 9 | `agent-publish` | `sf agent publish authoring-bundle --skip-retrieve`, then `sf agent activate`. Lead Nurture: configure in Builder instead | `--validate-only`, Lead path, or no `AGENT_API_NAME` |
+| 10 | `employee-access` | After publish and activation, deploy the `agentAccesses` package | No access manifest, or Service Agent path |
+| 11 | `permset-assign` | Assign `PERMSET_NAME` to each `--operator` username | `--validate-only`, or missing `PERMSET_NAME` / `--operator` |
+| 12 | `web-chat` | Rebuild and publish Enhanced Web Chat in the target org. No package template | `--validate-only`, or `SKIP_WEB_CHAT=1` |
+
+**Stop if:** Data 360 is required and the target data space does not match the source, or target data is not refreshed. Do not deploy or preview the agent yet.
+
+**Stop if:** Prompt templates used by Apex are not published/active. Do not start the Apex phase.
+
+**Stop if:** Employee `agentAccesses` is in the first source package. Remove it, publish the agent, then deploy the access package.
+
+Hand-run of [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md) may keep prompts, Apex, and the bundle in one package. A coordinator only splits them when `PROMPTS_*` and `APEX_*` point at separate packages, so first-install Apex tests do not run against missing templates.
+
+`web-chat` still prompts `DONE` on Employee and Lead paths. Set `SKIP_WEB_CHAT=1` when that channel is not in the handoff.
+
+## Access the coordinator does not assign
+
+`permset-assign` runs after `employee-access` and only assigns `PERMSET_NAME` to each `--operator`. Do these by hand from the agent guide, or `--start-at` after they are done:
+
+| Path | Assign before | Command lives in |
+|---|---|---|
+| Service Agent | `agent-preview` | `AGENT_ACCESS_PERMISSION_SET_API_NAME` to the agent user. [Deploy and Activate a Service Agent](10-service-agent.md) |
+| Employee Agent | `agent-preview` | `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` to the preview user. [Deploy and Activate an Employee Agent](11-employee-agent.md) |
+| Employee Agent | After `employee-access` | `EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME` (or group) to employees. Set `PERMSET_NAME` + `--operator` for this one |
+
+**Stop if:** Employee live preview starts before `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned.
 
 ## Inventory: what is not a normal MDAPI deploy
 
@@ -76,68 +166,6 @@ access:
     default_agent_user: "agent.user@example.com"
 ```
 
-## Phase spine
-
-Align the coordinator with the `--start-at` names in [`templates/deploy.mjs`](../templates/deploy.mjs). Stop on the first real failure. A watch timeout is not a failure; resume or report the job. There is no separate `agent-package` phase.
-
-| Order | `--start-at` | What runs |
-|---|---|---|
-| 1 | `preflight` | Authenticate. `sf org display`. Confirm username, org Id, and instance URL. Do not log tokens |
-| 2 | `data360-kit` | Confirm Data 360 and the same data space. Deploy the generated DevOps Data Kit metadata package |
-| 3 | `data360-ui` | Human deploys kit components, reauthorizes connectors, and refreshes data. Operator types `DONE` |
-| 4 | `platform-deps` | Deploy the shipped Service, Employee, or Lead manifest. That file already includes `AiAuthoringBundle` (or Lead dependencies only) plus first-pass deps |
-| 5 | `prompts` | Optional split `GenAiPromptTemplate` package, only when `PROMPTS_MANIFEST` / `prompts-package.xml` exists |
-| 6 | `prompts-activate` | Confirm published/active in Prompt Builder **before** Apex. Operator types `DONE` |
-| 7 | `apex` | Optional split Apex package, only when `APEX_MANIFEST` / `apex-package.xml` or an Apex source dir exists. The coordinator recognizes test classes by a `Test` / `Tests` suffix; declare any other naming convention in `APEX_TESTS` so it is not coverage-gated as a unit class |
-| 8 | `agent-preview` | Live-action preview. Service Agent: `default_agent_user` under `access:` uses the target-org username. Lead Nurture: skip publish later and configure in Builder |
-| 9 | `agent-publish` | `sf agent publish authoring-bundle --skip-retrieve`, then `sf agent activate`. Lead Nurture: configure in Builder instead |
-| 10 | `employee-access` | After publish and activation, deploy the `agentAccesses` package. Skip for Service Agent |
-| 11 | `permset-assign` | Assign `PERMSET_NAME` to each `--operator` username |
-| 12 | `web-chat` | Rebuild and publish Enhanced Web Chat in the target org. No package template |
-
-**Stop if:** Data 360 is required and the target data space does not match the source, or target data is not refreshed. Do not deploy or preview the agent yet.
-
-**Stop if:** Prompt templates used by Apex are not published/active. Do not start the Apex phase.
-
-**Stop if:** Employee `agentAccesses` is in the first source package. Remove it, publish the agent, then deploy the access package.
-
-When following [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) by hand, prompts, Apex, and the bundle may travel in one package. A coordinator only splits them when you point `PROMPTS_*` and `APEX_*` at separate packages, so first-install Apex tests do not run against missing templates. If those env paths are unset, `platform-deps` deploys the combined shipped manifest.
-
-## Critical production lesson
-
-Do not run Apex tests that create live `AiJobRun` records or call live prompt targets before those templates exist and are activated.
-
-Warm orgs hide first-install failures. Templates already present in a reused sandbox or production org make a combined package look safe. A fresh org fails the same tests during validate.
-
-Fix:
-
-1. Deploy prompt templates and activate them before Apex.
-2. Tests mock Einstein, `ConnectApi`, and Data 360. Do not enqueue live prompt jobs from a deploy test.
-
-**Stop if:** A test class creates a live prompt job or calls a prompt template that is not yet in the target org.
-
-## Test levels
-
-Official Metadata API / CLI rules:
-
-| Test level | What Salesforce enforces |
-|---|---|
-| `RunSpecifiedTests` | Only the tests you list. Each Apex class and trigger **in the deployment package** needs 75% coverage from those tests, computed per class, not org-wide |
-| `RunLocalTests` | All local tests in the org except managed/unlocked package tests. Default for production deploys that include Apex |
-| Sandbox | Does not enforce production coverage. Default sandbox deploy is `NoTestRun` |
-
-Use two different jobs. Do not collapse them.
-
-**(a) Shipping your own packaged Apex** in a coordinator: run the project's tests. Use `RunSpecifiedTests` and list those classes. Meet 75% per deployed class.
-
-**(b) This repo's Agentforce metadata packages that include Apex:** keep production `sf project deploy validate` + `--test-level RunLocalTests`, then `sf project deploy quick --job-id`, as [Deploy and Activate a Service Agent](10-service-agent.md), [Deploy and Activate an Employee Agent](11-employee-agent.md), [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md), and [Package CLI Reference](deployment-workflow.md) already say.
-
-Never make `RunLocalTests` the default for (a) on a customer org. Their unrelated failing tests will fail your Apex package.
-
-If (b) is aimed at a messy customer org whose local tests are already broken, `RunLocalTests` can fail a valid Agentforce package. That is the risk of following the existing guides in that org. Call it. Do not silently switch (b) to `RunSpecifiedTests` and pretend the Service or Employee Agent guides changed. If the operator still switches, they accept the `RunSpecifiedTests` per-class 75% rule and a deviation from those guides.
-
-Encode production coverage gates in the script. Sandboxes will not do it for you.
-
 ## Official CLI mapping
 
 Cite these commands. Do not invent substitutes.
@@ -152,7 +180,7 @@ Cite these commands. Do not invent substitutes.
 | Org confirm | `sf org display` | Do not log tokens from `--json` |
 | API version | Prefer `--api-version 67.0` (Summer ’26) | Do not keep `66.0` as the coordinator default. Use another version only when a generated manifest says otherwise |
 
-Existing guides pass `--wait 30`. That is an explicit watch window, not a different CLI contract. Timeout still returns a job Id.
+Guides 10/11/12 pass `--wait 30`. Same CLI contract; timeout still returns a job Id.
 
 Publish after a successful preview:
 
@@ -163,31 +191,19 @@ sf agent activate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_AL
 
 `--skip-retrieve` keeps published `Bot` / `BotVersion` / planner files out of the local project. That is the Windows-safe publish path.
 
-## Operator surface
+## Test levels
 
-| Flag | Required behavior |
-|---|---|
-| `--validate-only` | Run preflight and dry-run/validate phases. Do not save to the org past a dry-run or validate job |
-| `--deploy` | Run the real deploy path after successful validation |
-| `--target-org` | Alias passed to every `sf` command |
-| `--operator` | Optional username for permset assign after Employee access deploy. Also recorded in the log header |
-| `--start-at` | Resume at a named phase from [`templates/deploy.mjs`](../templates/deploy.mjs) only after earlier phases really completed. Do not replay succeeded phases |
-| `--non-interactive` | Fail at any human checkpoint. Do not skip the checkpoint |
+| Job | Test level | Why |
+|---|---|---|
+| Your Apex (`apex` phase) | `RunSpecifiedTests` | 75% per class in that package. Customer org local tests must not gate your Apex |
+| This repo's Agentforce packages | `RunLocalTests` on production `validate` then `quick --job-id` | Same contract as [Service Agent](10-service-agent.md), [Employee Agent](11-employee-agent.md), [Lead Nurture](12-lead-nurture-agent.md), and [Package CLI Reference](deployment-workflow.md) |
+| Sandbox | Default `NoTestRun`. Does not enforce production coverage | Encode the production gate in the script |
 
-Production confirmation: the operator types exactly `DEPLOY`. Any other string aborts.
+Do not collapse those jobs. Do not silently switch Agentforce packages to `RunSpecifiedTests` and pretend guides 10/11 changed. If the operator still switches, they accept the per-class 75% rule and a deviation from those guides. Call it when a messy customer org's `RunLocalTests` would fail a valid package.
 
-UI checkpoints (Data Kit component deploy, connector reauth, data refresh, Prompt Builder activate, web chat rebuild): the operator types exactly `DONE`.
+Warm orgs hide first-install failures. Activate prompt templates before Apex. Tests mock Einstein, `ConnectApi`, and Data 360.
 
-**Stop if:** `--non-interactive` is set and a phase requires `DEPLOY` or `DONE`. Exit non-zero. Do not skip.
-
-## Rehearse before production
-
-1. Rehearse the coordinator on a **fresh** Developer sandbox before production.
-2. Sandboxes do not enforce production coverage. Encode `RunLocalTests` / `RunSpecifiedTests` gates in the script.
-3. Use a full sandbox for data-shaped smoke (Data 360 rows, search, web chat).
-4. Do not treat a warm sandbox as first-install proof.
-
-**Stop if:** The only rehearsal org already has the prompt templates, Data Kit components, or agent from a prior attempt.
+**Stop if:** A test class creates a live `AiJobRun` or calls a prompt template that is not yet in the target org.
 
 ## Trap catalog
 
@@ -205,25 +221,10 @@ UI checkpoints (Data Kit component deploy, connector reauth, data refresh, Promp
 | Data Kit metadata ≠ data | Metadata deploy does not run streams or reauthorize connectors. Wait for the human `DONE` checkpoint |
 | `agentAccesses` too early | Employee access package deploys only after publish and activation. See [Deploy and Activate an Employee Agent](11-employee-agent.md) |
 | Coverage missing after a green deploy | Do not read coverage until the Apex test run is terminal |
+| Apex returns no rows at API `67.0` | User mode / `with sharing` default. Grant the running user object, field, and record access. See [Troubleshooting](03-troubleshooting.md) |
+| Preview before data-access assign | Employee: assign `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` first. Not a coordinator phase |
 
 If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Troubleshooting](03-troubleshooting.md).
-
-## Procedure to write a new script
-
-1. Confirm the path: Service Agent ([Deploy and Activate a Service Agent](10-service-agent.md)), Employee Agent ([Deploy and Activate an Employee Agent](11-employee-agent.md)), and/or Lead Nurture dependencies ([Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md)).
-2. List only the packages this handoff includes. Add [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) and [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) only when used.
-3. Copy `templates/deploy.mjs` next to the DX project, not inside `force-app`. Fill env and placeholders. Use Node built-ins only if Windows operators exist. Prefer API `67.0` unless a generated manifest says otherwise.
-4. Resolve `sf` / `sf.cmd`. Spawn every child with stdin ignored and `--json`. Parse stdout from the first `{`.
-5. Open `~/.agf-deployment/<alias>/<timestamp>/deploy.log` before the first `sf` call.
-6. Implement `--validate-only`, `--deploy`, `--target-org`, `--operator`, `--start-at`, and `--non-interactive`.
-7. Implement the phase spine. Fail on the first real error. Resume or report on wait timeout.
-8. For production, call `validate` then `quick --job-id`. For sandbox, call `start --dry-run` then `start`. Never `--ignore-errors` on production.
-9. Gate production with a `DEPLOY` prompt. Gate Data Kit, Prompt Builder, and web chat with `DONE`. `--non-interactive` fails those gates.
-10. Split prompt-template deploy and activate from Apex. Mock Einstein / `ConnectApi` / Data 360 in tests.
-11. For your Apex package use `RunSpecifiedTests`. For this repo's Agentforce packages keep `RunLocalTests` on production validate unless the operator is targeting a messy customer org and has accepted that risk.
-12. Follow [Inventory: what is not a normal MDAPI deploy](#inventory-what-is-not-a-normal-mdapi-deploy) and [Trap catalog](#trap-catalog).
-13. Rehearse on a fresh Developer sandbox. Encode coverage gates. Use a full sandbox for data-shaped smoke.
-14. Capture go-live proof for that target org only. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 
 ## Operator cheat sheet
 
@@ -231,7 +232,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 |---|---|
 | See the path | Start at [docs/index.md](index.md) |
 | Starting template | Copy [`templates/deploy.mjs`](../templates/deploy.mjs) next to the retrieved DX project and fill env/placeholders |
-| Hand-run one agent package | Use [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md), not this page |
+| Hand-run one agent package | Use [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md), not this page |
 | CLI verbs only | [Package CLI Reference](deployment-workflow.md) |
 | Dry-run production | `--validate-only --target-org <ALIAS>` |
 | Deploy production | `--deploy --target-org <ALIAS>`, then type `DEPLOY` |
@@ -239,25 +240,24 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 | CI / no keyboard | `--non-interactive` fails at `DEPLOY` / `DONE`; do not skip |
 | Data 360 | [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md), then type `DONE` after component deploy, reauth, and refresh |
 | Service Agent user | See [Inventory](#inventory-what-is-not-a-normal-mdapi-deploy) for `access.default_agent_user` |
-| Employee access | After publish, deploy `manifests/employee-agent-access-package.xml` |
+| Employee data access | Assign by hand before `agent-preview`. See [Employee Agent](11-employee-agent.md) |
+| Employee access package | After publish, deploy `manifests/employee-agent-access-package.xml` |
 | Web chat | [Migrate Enhanced Web Chat](21-enhanced-web-chat.md) after the Service Agent is active |
 | Failure | [Troubleshooting](03-troubleshooting.md). Do not publish after a failed validate |
 
-## Summary
+## Checklist
 
-Start from [`templates/deploy.mjs`](../templates/deploy.mjs). A staged coordinator confirms the org, sequences this repo's Data 360 → platform → prompts → Apex → agent → publish → Employee access → web chat order, and stops on the first real failure. [Inventory](#inventory-what-is-not-a-normal-mdapi-deploy) and [Trap catalog](#trap-catalog) are the source for those rules.
-
-## Related guides
-
-- [docs/index.md](index.md)
-- [Deploy and Activate a Service Agent](10-service-agent.md)
-- [Deploy and Activate an Employee Agent](11-employee-agent.md)
-- [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md)
-- [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md)
-- [Migrate Enhanced Web Chat](21-enhanced-web-chat.md)
-- [Package CLI Reference](deployment-workflow.md)
-- [Legacy Agent Actions](13-legacy-agent-actions.md)
-- [Troubleshooting](03-troubleshooting.md)
+- [ ] Path confirmed (Service, Employee, and/or Lead Nurture). Guides 10/11/12 followed for package contents.
+- [ ] `templates/deploy.mjs` copied next to the DX project. Env filled. ALL_CAPS placeholders replaced.
+- [ ] `--validate-only` rehearsed on a fresh Developer sandbox before `--deploy`.
+- [ ] Data 360 kit + `DONE` completed before agent deploy, if used.
+- [ ] Prompt templates published/active before the `apex` phase, if split.
+- [ ] Service Agent: `access.default_agent_user` is the target-org username. Custom access permset assigned to the agent user before preview.
+- [ ] Employee Agent: data-access permset assigned before preview. `agentAccesses` package deploys only after publish.
+- [ ] Lead Nurture: dependencies only. Configure the agent in Builder. Do not publish a packaged agent.
+- [ ] Production uses `validate` then `quick --job-id`. Never `--ignore-errors`.
+- [ ] Go-live proof saved for this target org. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
+- [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
 
