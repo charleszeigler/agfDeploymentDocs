@@ -118,7 +118,7 @@ function assertWellFormedXml(xml, file) {
 
 const mdFiles = ['README.md', ...walkFiles('docs', '.md')];
 for (const file of mdFiles) {
-  const md = read(file);
+  const md = stripFencedCode(read(file));
   for (const href of mdLinks(md)) {
     if (/^https?:/i.test(href)) continue;
     checkRelativeLink(file, href);

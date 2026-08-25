@@ -132,7 +132,7 @@ Hand-run of [Service Agent](10-service-agent.md) or [Employee Agent](11-employee
 
 `permset-assign` runs after `employee-access` and only assigns `PERMSET_NAME` to each `--operator`. Do these by hand from the agent guide, or `--start-at` after they are done:
 
-| Path | Assign before | Command lives in |
+| Path | Assign before | What to assign |
 |---|---|---|
 | Service Agent | `agent-preview` | `AGENT_ACCESS_PERMISSION_SET_API_NAME` to the agent user. [Deploy and Activate a Service Agent](10-service-agent.md) |
 | Employee Agent | `agent-preview` | `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` to the preview user. [Deploy and Activate an Employee Agent](11-employee-agent.md) |
