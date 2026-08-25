@@ -1,0 +1,182 @@
+#!/usr/bin/env node
+/**
+ * Repo integrity checks for docs, nav, manifests, and coordinator phase names.
+ * Node built-ins only. Does not call Salesforce or fetch external URLs.
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const errors = [];
+
+function fail(message) {
+  errors.push(message);
+}
+
+function read(rel) {
+  return fs.readFileSync(path.join(ROOT, rel), 'utf8');
+}
+
+function exists(rel) {
+  return fs.existsSync(path.join(ROOT, rel));
+}
+
+function walkFiles(dir, suffix, out = []) {
+  for (const entry of fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+    const rel = path.join(dir, entry.name);
+    if (entry.isDirectory()) walkFiles(rel, suffix, out);
+    else if (entry.name.endsWith(suffix)) out.push(rel);
+  }
+  return out;
+}
+
+function stripFencedCode(md) {
+  return md.replace(/```[\s\S]*?```/g, '');
+}
+
+function githubSlug(heading) {
+  return heading
+    .replace(/`+/g, '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{M}\p{N}\p{Pc}\- ]+/gu, '')
+    .replace(/\s+/g, '-');
+}
+
+function headingSlugs(md) {
+  const slugs = new Map();
+  for (const line of stripFencedCode(md).split(/\r?\n/)) {
+    const match = line.match(/^#{1,6}\s+(.+)$/);
+    if (!match) continue;
+    const base = githubSlug(match[1]);
+    const count = slugs.get(base) || 0;
+    slugs.set(count ? `${base}-${count}` : base, true);
+    slugs.set(base, count + 1);
+  }
+  return slugs;
+}
+
+function collectNavSlugs(node, out = []) {
+  if (typeof node === 'string') {
+    out.push(node);
+    return out;
+  }
+  if (Array.isArray(node)) {
+    for (const child of node) collectNavSlugs(child, out);
+    return out;
+  }
+  if (node && typeof node === 'object') {
+    if (typeof node.slug === 'string' && node.slug) out.push(node.slug);
+    if (node.pages) collectNavSlugs(node.pages, out);
+  }
+  return out;
+}
+
+function mdLinks(md) {
+  return [...md.matchAll(/\[(?:[^\]]|\\.)+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g)].map((m) => m[1]);
+}
+
+function checkRelativeLink(fromFile, href) {
+  if (/^(https?:|mailto:|#)/i.test(href)) return;
+  const [rawPath, hash] = href.split('#');
+  const targetPath = rawPath
+    ? path.normalize(path.join(path.dirname(fromFile), decodeURIComponent(rawPath)))
+    : fromFile;
+  if (!exists(targetPath)) {
+    fail(`${fromFile}: broken link ${href}`);
+    return;
+  }
+  if (!hash || !targetPath.endsWith('.md')) return;
+  const slugs = headingSlugs(read(targetPath));
+  if (!slugs.has(hash.toLowerCase())) {
+    fail(`${fromFile}: missing heading #${hash} in ${targetPath}`);
+  }
+}
+
+function assertWellFormedXml(xml, file) {
+  const live = xml.replace(/<!--[\s\S]*?-->/g, '').replace(/<\?xml[\s\S]*?\?>/g, '');
+  const stack = [];
+  const re = /<(\/)?([A-Za-z_][\w:.-]*)([^>]*?)(\/)?>/g;
+  let match;
+  while ((match = re.exec(live))) {
+    const [, close, name, , self] = match;
+    if (self) continue;
+    if (close) {
+      const expected = stack.pop();
+      if (expected !== name) {
+        fail(`${file}: XML tag mismatch, got </${name}> expected </${expected || '?'}>`);
+        return;
+      }
+    } else {
+      stack.push(name);
+    }
+  }
+  if (stack.length) fail(`${file}: unclosed XML tags: ${stack.join(', ')}`);
+}
+
+const mdFiles = ['README.md', ...walkFiles('docs', '.md')];
+for (const file of mdFiles) {
+  const md = read(file);
+  for (const href of mdLinks(md)) {
+    if (/^https?:/i.test(href)) continue;
+    checkRelativeLink(file, href);
+  }
+}
+
+const meta = JSON.parse(read('docs/meta.json'));
+const navSlugs = collectNavSlugs(meta.pages);
+for (const slug of navSlugs) {
+  if (!exists(path.join('docs', `${slug}.md`))) {
+    fail(`docs/meta.json: no docs/${slug}.md for nav slug "${slug}"`);
+  }
+}
+
+const docNames = walkFiles('docs', '.md').map((file) => path.basename(file, '.md'));
+for (const name of docNames) {
+  if (name === 'meta') continue;
+  if (!navSlugs.includes(name)) {
+    fail(`docs/${name}.md is not listed in docs/meta.json`);
+  }
+}
+
+const manifestFiles = walkFiles('manifests', '.xml');
+if (!manifestFiles.length) fail('no manifests/*.xml files');
+for (const file of manifestFiles) {
+  const xml = read(file);
+  if (!/<Package[\s>]/.test(xml) || !/<\/Package>/.test(xml)) {
+    fail(`${file}: missing Package wrapper`);
+  }
+  assertWellFormedXml(xml, file);
+}
+
+const readme = read('README.md');
+for (const file of manifestFiles) {
+  if (!readme.includes(file)) fail(`README.md does not mention ${file}`);
+}
+
+const template = read('templates/deploy.mjs');
+const phaseBlock = template.match(/const PHASES = \[([\s\S]*?)\];/);
+if (!phaseBlock) {
+  fail('templates/deploy.mjs: could not read PHASES');
+} else {
+  const phases = [...phaseBlock[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
+  const guide = read('docs/30-deployment-script.md');
+  for (const phase of phases) {
+    if (!guide.includes(`\`${phase}\``)) {
+      fail(`docs/30-deployment-script.md is missing coordinator phase \`${phase}\``);
+    }
+  }
+}
+
+if (!exists('templates/deploy.mjs')) fail('templates/deploy.mjs is missing');
+
+if (errors.length) {
+  process.stderr.write(errors.map((line) => `ERROR ${line}`).join('\n') + '\n');
+  process.exit(1);
+}
+
+process.stdout.write(
+  `OK ${mdFiles.length} markdown files, ${navSlugs.length} nav slugs, ${manifestFiles.length} manifests\n`,
+);

@@ -43,3 +43,15 @@ There is no Enhanced Web Chat `package.xml` template. Rebuild and publish the Em
 ## API versions
 
 Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
+
+## Checks
+
+GitHub Actions runs on push to `main` and on pull requests. No Salesforce org. No deploy.
+
+```bash
+node --check templates/deploy.mjs
+node --test tests/deploy.test.mjs
+node scripts/ci-check.mjs
+```
+
+The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, and coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md).
