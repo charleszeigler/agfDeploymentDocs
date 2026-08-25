@@ -2,7 +2,7 @@
 
 Public Markdown for moving existing Agentforce implementations from sandbox to production with Salesforce CLI.
 
-Last content review: August 24, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
+Last content review: August 25, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
 
 Start with [docs/index.md](docs/index.md).
 
