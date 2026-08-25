@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Docs, manifests, and coordinator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax-check coordinator
+        run: node --check templates/deploy.mjs
+
+      - name: Unit-test coordinator
+        run: node --test tests/deploy.test.mjs
+
+      - name: Check docs, nav, and manifests
+        run: node scripts/ci-check.mjs
