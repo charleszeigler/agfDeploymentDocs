@@ -1,28 +1,34 @@
 # CI for agfDeploymentDocs — Buildkite.
 #
 # Mirrors the three checks from .github/workflows/ci.yml. Each step runs in a
-# node:20 container via the Docker plugin, so the only agent requirement is
-# Docker. This works on Buildkite Hosted Agents (Linux) with nothing installed
-# on your own machine. See .buildkite/README.md for cloud setup.
+# node:20 container via the Docker plugin, on the org's hosted `linux-small`
+# queue (Buildkite-managed cloud compute — nothing runs on your machine).
+# See .buildkite/README.md.
 #
-# If your agents already have Node 20+ available, drop the `plugins:` blocks
+# If you move to agents with Node 20+ preinstalled, drop the `plugins:` blocks
 # and keep only the `command:` lines.
 
 steps:
   - label: ":nodejs: syntax-check coordinator"
     command: node --check templates/deploy.mjs
+    agents:
+      queue: linux-small
     plugins:
-      - docker#v5.11.0:
+      - docker#v5.14.0:
           image: "node:20"
 
   - label: ":nodejs: unit-test coordinator"
     command: node --test tests/deploy.test.mjs
+    agents:
+      queue: linux-small
     plugins:
-      - docker#v5.11.0:
+      - docker#v5.14.0:
           image: "node:20"
 
   - label: ":nodejs: docs, nav, and manifests"
     command: node scripts/ci-check.mjs
+    agents:
+      queue: linux-small
     plugins:
-      - docker#v5.11.0:
+      - docker#v5.14.0:
           image: "node:20"
