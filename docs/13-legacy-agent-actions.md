@@ -98,6 +98,18 @@ sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
+Retrieve from the Full or Partial Copy work org. Dress-rehearse on a fresh Developer sandbox before production. Commands match [Validate and deploy](deployment-workflow.md#4-validate-and-deploy).
+
+**Stop if:** The rehearsal org already contains this package from a prior attempt.
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`. If Apex is in the package, confirm tests ran.
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
 Production deploys must run Apex tests if Apex is included. Validate first:
 
 ```bash
@@ -109,20 +121,6 @@ If validation succeeds, copy `result.id` and quick deploy:
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
-
-For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
-
-```bash
-sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-If the dry run succeeds:
-
-```bash
-sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-Continue only after the deploy result is `Succeeded`.
 
 ## Path 2: rebuild a local-only action
 
@@ -179,6 +177,7 @@ This can reduce rebuild work for custom actions. It does not make Lead Nurture A
 - [ ] Action is custom, not Salesforce-managed setup.
 - [ ] Legacy `GenAiFunction` and required `GenAiPlugin` names are exact members in `package.xml`.
 - [ ] Backing Apex, Flow, prompt template, object, field, permission, and applicable Custom Lightning Type dependencies are included when used.
+- [ ] Real deploy to a fresh Developer sandbox with `RunLocalTests` succeeded before production. `--dry-run` is not rehearsal.
 - [ ] Rebuilt local-only actions are first deployed and retrieved as standalone assets from the source sandbox.
 - [ ] Action appears in **Add from Asset Library** in the target org.
 - [ ] Target agent preview passes before publish.

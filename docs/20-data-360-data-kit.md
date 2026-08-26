@@ -2,6 +2,8 @@
 
 Use this guide when an Agentforce deployment depends on Data 360 metadata. It covers moving Data 360 metadata by DevOps Data Kit, what happens to search indexes and retrievers, and why the Agentforce Data Library is recreated in the target org rather than deployed.
 
+A **DevOps Data Kit** is the Data 360 metadata package. It is not Salesforce DevOps Center. This repo uses Salesforce CLI and does not set up DevOps Center.
+
 **Data 360 prerequisite:** Data 360 metadata must be added to a DevOps Data Kit first. Starting in Winter ’25, do not mix Data 360 metadata and Salesforce Platform metadata in a **single package** ([Packages and Data Kits](https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html)). Separate packages or projects are the supported path; this repo already keeps them separate. Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
 ## What moves
@@ -13,17 +15,19 @@ A DevOps Data Kit moves metadata, not data. It moves definitions:
 - calculated insights
 - segments
 - search indexes
-- retrievers: no-code only (Standard Yes, DevOps Yes). Pro-code/ADL retrievers do not move (Standard No, DevOps No). Ensemble retrievers do not move (Standard No, DevOps No). See the [Data 360 Extensibility Readiness Matrix](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html).
+- retrievers: by **DevOps Data Kit** (this guide's path), no-code only (DevOps Yes). Pro-code/ADL and ensemble retrievers do not move by DevOps Data Kit (DevOps No). Standard unmanaged **packaging** is a separate path with wider support — see the packaging note below. Check the [Data 360 Extensibility Readiness Matrix](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html) for the target release.
 - data graphs
 - related Data 360 components
 
 It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
 
+**Packaging vs. DevOps Data Kit (retrievers).** The readiness matrix has two columns. This guide uses the **DevOps** path — a sandbox→production merge-back by change set or DevOps Data Kit — which moves no-code retrievers only. The **Standard** (unmanaged packaging) column is versioned and has expanded: as of Summer ’26, standard unmanaged packaging supports packaging all three retriever types (no-code, pro-code, and ensemble) for a subscriber org. Packaging is a separate cross-org path, not a change-set merge-back, and it does not change the DevOps Data Kit limits described below. Re-check the matrix and the target release’s Data 360 release notes before concluding that a Pro-code/ADL or ensemble retriever cannot move.
+
 ## What does not move: the Agentforce Data Library
 
 The Agentforce Data Library (ADL) *container* cannot be deployed between orgs by DevOps Data Kit or Metadata API. Salesforce documents this directly: "Making Agentforce Data Library changes in a sandbox and deploying those changes back to the production org or another sandbox org isn't supported" (`ai.data_library_sandbox.htm`).
 
-Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever in that org. The library container does not move. The generated Pro-code/ADL retriever does not deploy through a Data Kit; the Extensibility Readiness Matrix lists Retrievers: Pro-code/ADL as Standard No, DevOps No.
+Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever in that org. The library container does not move. The generated Pro-code/ADL retriever does not deploy through a DevOps Data Kit, so recreate it in the target org. Standard unmanaged packaging can package a Pro-code/ADL retriever separately — see the packaging note above.
 
 For a file-backed Data Library, uploads drive the pipeline in the target org (upload → search index → auto-created retriever). A retriever-backed Data Library is a thin wrapper over an existing retriever. Only a no-code retriever is kit-supported; recreate a Pro-code/ADL retriever in the target org.
 
@@ -77,7 +81,7 @@ sf project retrieve start --json --manifest manifest/package.xml --target-org <S
 
 Confirm the retrieve result is `Succeeded`.
 
-Only no-code retrievers are kit-supported. They cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by kit (Standard No, DevOps No). Retriever deployment via a DevOps Data Kit is limited to a sandbox→production merge-back. Salesforce documents no workaround for sandbox-to-sandbox or production-to-production retriever kit deploys (KA 005315426).
+Only no-code retrievers are kit-supported. They cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by kit (DevOps No; standard unmanaged packaging is a separate path — see the packaging note under [What moves](#what-moves)). Retriever deployment via a DevOps Data Kit is limited to a sandbox→production merge-back. Salesforce documents no workaround for sandbox-to-sandbox or production-to-production retriever kit deploys (KA 005315426).
 
 ## Recovery only: retriever API name changed
 
@@ -103,9 +107,9 @@ Then remove:
 5. Confirm each path is key qualifier metadata, not a field the agent reads or writes.
 6. Delete the confirmed `<usageTag>KeyQualifier</usageTag>` field files and the confirmed `KQ_` object folders from the local package.
 7. Remove the matching `<members>` entries from `package.xml` if the generated manifest named them.
-8. Re-run the retrieve or a dry-run deploy and confirm the package still resolves.
+8. Re-run the retrieve and confirm the package still resolves. Dress-rehearse with a real Developer-sandbox deploy before production.
 
-**Stop if:** A path matches only one of the two searches and you cannot confirm what it is. Leave it in the package and validate in a sandbox first.
+**Stop if:** A path matches only one of the two searches and you cannot confirm what it is. Leave it in the package and dress-rehearse in a Developer sandbox first.
 
 ## Deploy the DevOps Data Kit package
 
@@ -115,6 +119,20 @@ Authenticate the target alias if needed, then confirm it is the expected org. Us
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
+
+Retrieve the kit from the Full or Partial Copy work org. Dress-rehearse platform-shaped kit metadata on a fresh Developer sandbox before production. Commands match [Validate and deploy](deployment-workflow.md#4-validate-and-deploy).
+
+**Stop if:** The rehearsal org already contains this Data Kit from a prior attempt. Provision Data 360 and the same data space in the rehearsal org before deploying the kit.
+
+A Developer sandbox rehearsal proves kit **metadata** shape. Retriever kit deploys are documented as sandbox→production merge-back only; sandbox-to-sandbox retriever deploys may fail. Data-shaped smoke (rows, search) stays in the Full or Partial Copy work org. Do not skip the platform/agent dress rehearsal because a retriever kit cannot move sandbox to sandbox.
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`. If Apex is in the package, confirm tests ran.
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
 
 Production deploys must run Apex tests if Apex is included. Validate first:
 
@@ -127,20 +145,6 @@ If validation succeeds, copy `result.id` and quick deploy:
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
-
-For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
-
-```bash
-sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-If the dry run succeeds:
-
-```bash
-sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-Continue only after the deploy result is `Succeeded`.
 
 ## Deploy DevOps Data Kit components in the target org
 
@@ -206,7 +210,7 @@ API notes:
 - Flow path requires `dataKitNameInput`, optional `dataKitDataSpaceInput`, and `dataKitComponentsInput`.
 - Connect REST path uses component-type-specific payload configuration.
 - If the payload is not ready, use the UI path.
-- Use API deployment only after sandbox validation.
+- Use API deployment only after a real Developer-sandbox dress rehearsal of the kit metadata.
 
 **Stop if:** Row-count checks are part of acceptance and counts are zero for tables the agent needs. The Data Kit metadata can be correct while the target runtime is still not ready.
 
@@ -240,6 +244,7 @@ For RAG empty results, bot-user retriever access, ensemble reference locks, and 
 
 - [ ] Source and target use the same data space.
 - [ ] DX project folder exists and the generated DevOps Data Kit manifest is saved as `manifest/package.xml`, not a hand-built copy of the partial example.
+- [ ] Kit metadata dress-rehearsed with a real Developer-sandbox deploy before production. Retriever kit deploys may only succeed on sandbox→production merge-back.
 - [ ] Data Kit metadata deploy succeeded, then components were deployed and refreshed in the target org.
 - [ ] Target rows exist for the objects the agent uses. A DevOps Data Kit moves metadata, not data.
 - [ ] Required search indexes are Ready and have rows before agent publish.

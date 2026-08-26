@@ -1,6 +1,6 @@
 # Deploy and Activate a Service Agent
 
-Move an Agentforce Service Agent from sandbox to production.
+Move an Agentforce Service Agent from a Full or Partial Copy work org to production.
 
 ## When this applies
 
@@ -210,6 +210,18 @@ If the agent grounds on an Agentforce Data Library, recreate it in the target or
 
 ## Deploy the package
 
+Retrieve from the Full or Partial Copy work org. Dress-rehearse on a fresh Developer sandbox before production. Commands match [Validate and deploy](deployment-workflow.md#4-validate-and-deploy).
+
+**Stop if:** The rehearsal org already contains this package, agent, prompt templates, or Data Kit from a prior attempt. Provision Agentforce and Einstein in the rehearsal org.
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`. If Apex is in the package, confirm tests ran.
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
 Production deploys must run Apex tests. Validate first:
 
 ```bash
@@ -221,20 +233,6 @@ If validation succeeds, copy `result.id` and quick deploy:
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
-
-For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
-
-```bash
-sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-If the dry run succeeds:
-
-```bash
-sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-Continue only after the deploy result is `Succeeded`.
 
 ## Assign custom access to the agent user
 
@@ -335,6 +333,7 @@ To deploy this Service Agent to a web messaging channel, complete [Migrate Enhan
 - [ ] Agent API name replaced everywhere.
 - [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
+- [ ] Real deploy to a fresh Developer sandbox with `RunLocalTests` succeeded before production. `--dry-run` is not rehearsal.
 - [ ] Target agent user is active, licensed, and assigned `AgentforceServiceAgentBase`, `AgentforceServiceAgentUser`, and `EinsteinGPTPromptTemplateUser` (or the org's current equivalents).
 - [ ] `access.default_agent_user` uses the target-org username.
 - [ ] Custom permission set `AGENT_ACCESS_PERMISSION_SET_API_NAME` assigned to the agent user.

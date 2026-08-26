@@ -123,6 +123,11 @@ for (const file of mdFiles) {
     if (/^https?:/i.test(href)) continue;
     checkRelativeLink(file, href);
   }
+  for (const block of md.matchAll(/```[\s\S]*?```/g)) {
+    if (/--test-level\s+NoTestRun/.test(block[0])) {
+      fail(`${file}: fenced code uses --test-level NoTestRun; dress rehearsal and production use RunLocalTests`);
+    }
+  }
 }
 
 const meta = JSON.parse(read('docs/meta.json'));

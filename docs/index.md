@@ -1,6 +1,8 @@
 # Agentforce Deployment Guides
 
-Move an existing Agentforce implementation from sandbox to production with Salesforce CLI.
+Move an existing Agentforce implementation from a Full or Partial Copy work org to production with Salesforce CLI. Dress-rehearse with a real deploy to a fresh Developer sandbox, then production `validate` and `quick`.
+
+This repo uses Salesforce CLI. It does not set up Salesforce DevOps Center. A **DevOps Data Kit** is the Data 360 metadata package. It is not DevOps Center.
 
 Start with the agent guide that matches what you are moving. Service Agent and Employee Agent guides include the package, retrieve, deploy, target configuration, publish, activation, and validation steps for that path. Lead Nurture Agent is an agent path that deploys custom dependencies only. Use supporting guides only for the features your deployment includes.
 
@@ -20,11 +22,12 @@ The selected guide should be enough to run the deployment without switching page
 
 1. create the package folder
 2. build `package.xml` from exact source names
-3. retrieve source files when needed
-4. confirm the target org
-5. validate and deploy
-6. publish and activate the agent, or configure Lead Nurture Agent in the target org
-7. capture go-live proof
+3. retrieve source files from the Full or Partial Copy work org
+4. dress-rehearse with a real deploy to a fresh Developer sandbox (`RunLocalTests`). `--dry-run` is not rehearsal
+5. confirm the production org
+6. validate and quick-deploy to production
+7. publish and activate the agent, or configure Lead Nurture Agent in the target org
+8. capture go-live proof
 
 If retrieve, deploy, preview, publish, Data 360, email, or web messaging fails, use [Troubleshooting](03-troubleshooting.md).
 

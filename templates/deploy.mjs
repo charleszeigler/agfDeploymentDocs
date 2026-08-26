@@ -113,8 +113,8 @@ Usage:
   node deploy.mjs --help
 
 Flags:
-  --validate-only      Preflight + dry-run/validate only. Do not save past that.
-  --deploy             Mutate after successful validation. Type DEPLOY to continue.
+  --validate-only      Preflight only (sandbox dry-run or production validate). Does not save. Not a dress rehearsal.
+  --deploy             Save after successful preflight. On a sandbox this is the dress rehearsal. Type DEPLOY to continue.
   --target-org         Required. Alias passed to every sf command.
   --start-at           Resume at a named phase after earlier phases completed.
   --non-interactive    Fail at DEPLOY / DONE. Do not skip those gates.
@@ -728,7 +728,7 @@ class Coordinator {
     if (this.production) {
       this.log('Production path: validate then quick --job-id. Never --ignore-errors.');
     } else {
-      this.log('Sandbox path: start --dry-run then start. Do not pass a dry-run job to quick.');
+      this.log('Sandbox path: start --dry-run then start. Dress rehearsal is --deploy, not --validate-only. Do not pass a dry-run job to quick.');
     }
   }
 

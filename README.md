@@ -1,15 +1,29 @@
 # Agentforce Deployment Guides
 
-Public Markdown for moving existing Agentforce implementations from sandbox to production with Salesforce CLI.
+Public Markdown and `package.xml` templates for moving an **existing** Agentforce implementation from a work sandbox to production with Salesforce CLI.
 
-Last content review: August 25, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
+For consultants and FDEs on a short handoff. Not a customer ALM rollout.
 
-Start with [docs/index.md](docs/index.md).
+Start here: [docs/index.md](docs/index.md).
 
-- CLI package reference: [docs/deployment-workflow.md](docs/deployment-workflow.md)
-- Staged deploy script: [docs/30-deployment-script.md](docs/30-deployment-script.md). Coordinator template: [templates/deploy.mjs](templates/deploy.mjs) (starting skeleton, not a tested org deployer)
-- Public navigation: [docs/meta.json](docs/meta.json)
-- Scope rule: each guide lists only the values needed for that path.
+Last content review: August 26, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
+
+## Org path
+
+| Org | Job |
+|---|---|
+| Full or Partial Copy | Build and retrieve. Data-shaped smoke (Data 360 rows, search, web chat) |
+| Fresh Developer sandbox | Dress rehearsal: real `sf project deploy start --test-level RunLocalTests`. `--dry-run` does not count |
+| Production | `sf project deploy validate --test-level RunLocalTests` then `sf project deploy quick --job-id` |
+
+Fresh means this package is not already in that Developer sandbox. Provision Agentforce, Einstein, Prompt Builder, and Data 360 there if the handoff uses them.
+
+## What this is not
+
+- Not Salesforce **DevOps Center**. This repo does not set up a Git pipeline.
+- A **DevOps Data Kit** is the Data 360 metadata package. It is not DevOps Center. See [docs/20-data-360-data-kit.md](docs/20-data-360-data-kit.md).
+- Not a full-org retrieve. Each guide lists only the members for that path.
+- [`templates/deploy.mjs`](templates/deploy.mjs) is a starting skeleton, not a tested org deployer.
 
 ## Deployment Path
 
@@ -24,6 +38,11 @@ Use only the guides that match the package.
 | Failed retrieve, deploy, preview, or runtime check | `03-troubleshooting` |
 
 Shared deploy order when more than one path applies: Data 360 provision → DevOps Data Kit metadata → component deploy and refresh → agent package → preview → publish/activate → Employee access package → web chat.
+
+- CLI package reference: [docs/deployment-workflow.md](docs/deployment-workflow.md)
+- Staged deploy script: [docs/30-deployment-script.md](docs/30-deployment-script.md)
+- Public navigation: [docs/meta.json](docs/meta.json)
+- Scope rule: each guide lists only the values needed for that path.
 
 ## Package templates
 
@@ -44,6 +63,12 @@ There is no Enhanced Web Chat `package.xml` template. Rebuild and publish the Em
 
 Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
 
+## License
+
+[MIT](LICENSE). Copy the guides and templates.
+
+PRs welcome. `node scripts/ci-check.mjs` must pass. Do not expand this repo into a pipeline product.
+
 ## Checks
 
 GitHub Actions runs on push to `main` and on pull requests. No Salesforce org. No deploy.
@@ -54,4 +79,4 @@ node --test tests/deploy.test.mjs
 node scripts/ci-check.mjs
 ```
 
-The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, and coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md).
+The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md), and fenced `--test-level NoTestRun`.

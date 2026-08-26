@@ -8,8 +8,10 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 |---|---|
 | `Required scope (--manifest / --metadata / --source-dir) is required` | Run from the DX project folder and include `--manifest <PACKAGE_XML_PATH>`. |
 | Retrieve says a package member does not exist | Check the member format in `package.xml`: fields must be `Object.Field`, reports and email templates must be `Folder/DeveloperName`, and most other members use API name without a file extension. |
-| Quick deploy cannot find the job | Quick deploy promotes a successful `sf project deploy validate` job, not a sandbox `--dry-run` job. |
-| Apex coverage fails in production | Include matching test classes and use `RunLocalTests`, or fix org-wide coverage before deploy. |
+| Quick deploy cannot find the job | Quick deploy promotes a successful `sf project deploy validate` job, not a sandbox `--dry-run` job. Do not run `validate` / `quick` on a sandbox. |
+| `--dry-run` succeeded, real deploy failed | Expected. `--dry-run` does not save components and is not dress rehearsal. Deploy for real to a fresh Developer sandbox with `RunLocalTests` before production. |
+| Dress rehearsal skipped because the sandbox already has the package | Use a Developer sandbox that does not already contain this package, agent, prompt templates, or Data Kit. Warm orgs hide first-install failures. |
+| Apex coverage fails in production | Include matching test classes and use `RunLocalTests` on the Developer-sandbox dress rehearsal and on production `validate`, or fix org-wide coverage before deploy. |
 | Deploy succeeds but expected components are missing | Confirm the component is listed in `package.xml` and was retrieved into `force-app/main/default`. |
 | CLI `--wait` times out | Timeout is not a deploy failure. Default `--wait` is 33 minutes. Resume with `sf project deploy resume` or check `sf project deploy report`. Never use `--ignore-errors` on production. |
 | `fetch failed` / socket closed | CLI or network. Retry the same command. Not necessarily a bad Apex compile or test. |
@@ -22,6 +24,7 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | `AgentApiNotFound` | Confirm the org and running admin user can access Agentforce APIs. |
 | `Required fields are missing: [BundleType]` | The `.bundle-meta.xml` file is malformed. It must include `<bundleType>AGENT</bundleType>`. |
 | `Unknown metadata type 'Agent'` | Do not put `Agent` in `package.xml`. Use explicit metadata types. |
+| Refreshed sandbox has an empty Agent Script: `AiAuthoringBundle` retrieve returns only `.bundle-meta.xml` with no `.agent` files, `GenAiPlannerBundle` is missing, or the retrieve throws `UNKNOWN_EXCEPTION` | Known post-refresh gap: Agent Script source does not always carry into a sandbox refreshed from another org. Retrieve the bundle from the org that still has it, or rebuild/re-import the agent in the refreshed org. Do not treat the empty `.agent` retrieve as the source of truth. Keep the retrieve `ErrorId` and open a Salesforce support case if it persists. |
 | Live preview fails on `default_agent_user` | Official Agent Script puts the field under `access:`, not `config:`. Set `access.default_agent_user` to the target-org username and fix the Service Agent user in the target org. Publishing will not fix it. See [Agent Script Blocks](https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html). |
 | Live preview reaches the action but returns blank data | Check object, field, and record access for the running user. Service Agents run as the dedicated agent user. Employee Agents run as the logged-in employee. |
 | Apex action returns no rows for the agent user but works for an admin | Check the class API version in `.cls-meta.xml`. At 67.0 and later, Apex runs in user mode and defaults to `with sharing`. Grant the running user the object, field, and record access the action needs, or set the sharing and execution mode explicitly. |

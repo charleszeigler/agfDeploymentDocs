@@ -1,6 +1,6 @@
 # Deploy and Activate an Employee Agent
 
-Move an employee-facing Agentforce Employee Agent from sandbox to production.
+Move an employee-facing Agentforce Employee Agent from a Full or Partial Copy work org to production.
 
 ## When this applies
 
@@ -195,6 +195,18 @@ If the agent grounds on an Agentforce Data Library, recreate it in the target or
 
 ## Deploy the source package
 
+Retrieve from the Full or Partial Copy work org. Dress-rehearse on a fresh Developer sandbox before production. Commands match [Validate and deploy](deployment-workflow.md#4-validate-and-deploy).
+
+**Stop if:** The rehearsal org already contains this package, agent, prompt templates, or Data Kit from a prior attempt. Provision Agentforce and Einstein in the rehearsal org.
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`. If Apex is in the package, confirm tests ran.
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
 Production deploys must run Apex tests. Validate first:
 
 ```bash
@@ -206,20 +218,6 @@ If validation succeeds, copy `result.id` and quick deploy:
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
-
-For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
-
-```bash
-sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-If the dry run succeeds:
-
-```bash
-sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-Continue only after the deploy result is `Succeeded`.
 
 **Stop if:** The access permission set deploys before the agent is published and active. Remove the `agentAccesses` permission set from the first package, deploy the agent source, publish and activate it, then deploy the access package.
 
@@ -308,21 +306,20 @@ The Employee Agent access permission set must include `agentAccesses`:
 
 For a clean target org, copy `manifests/employee-agent-access-package.xml` to `manifest/employee-agent-access-package.xml`, then deploy it after publish and activation.
 
+Dress-rehearse the access package on the same fresh Developer sandbox after the agent is published and active there:
+
+```bash
+sf project deploy start --json --manifest manifest/employee-agent-access-package.xml --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+`RunLocalTests` is still the command when the access package has no Apex. Do not use `NoTestRun` on production. Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
 Production deploys should validate first and run Apex tests:
 
 ```bash
 sf project deploy validate --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
-
-Sandbox dry run, then deploy. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
-
-```bash
-sf project deploy start --json --dry-run --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-sf project deploy start --json --manifest manifest/employee-agent-access-package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-If the access package is permission-set-only and contains no Apex, confirm org policy before using `NoTestRun`. Do not use `NoTestRun` on the production alias unless that policy is explicit.
 
 ```bash
 sf org assign permset --json --name EMPLOYEE_AGENT_ACCESS_PERMISSION_SET_API_NAME --on-behalf-of <EMPLOYEE_USERNAME> --target-org <TARGET_ORG_ALIAS>
@@ -389,6 +386,7 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 - [ ] `default_agent_user` omitted from `access:` and `config:` in the Employee Agent source.
 - [ ] Every `apex://`, `flow://`, `prompt://`, `generatePromptResponse://`, `complex_data_type_name`, named-credential, object, field, and permission dependency is included when used.
 - [ ] Test classes are included for production deploys.
+- [ ] Real deploy to a fresh Developer sandbox with `RunLocalTests` succeeded before production. `--dry-run` is not rehearsal.
 - [ ] First clean-target package does not include `agentAccesses`.
 - [ ] `EMPLOYEE_DATA_ACCESS_PERMISSION_SET_API_NAME` is assigned before live preview.
 - [ ] Deployed bundle validates in the target org before live preview.

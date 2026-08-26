@@ -1,6 +1,6 @@
 # Build a staged Agentforce deploy script
 
-Write a Node coordinator that runs this repo's packages in order from sandbox to production. Do not treat one `sf project deploy start --source-dir force-app` as an Agentforce handoff.
+Write a Node coordinator that runs this repo's packages in order from a Full or Partial Copy work org to production. Do not treat one `sf project deploy start --source-dir force-app` as an Agentforce handoff.
 
 Not a substitute for [Deploy and Activate a Service Agent](10-service-agent.md), [Deploy and Activate an Employee Agent](11-employee-agent.md), or [Deploy Lead Nurture Agent Dependencies](12-lead-nurture-agent.md). Follow those guides when stepping one package by hand.
 
@@ -40,7 +40,7 @@ See [Lead Nurture](12-lead-nurture-agent.md) and [Enhanced Web Chat](21-enhanced
 5. Keep the flags, `--start-at` names, and CLI mapping below. Fail on the first real error. A wait timeout is not a failure; resume or report the job.
 6. Split `PROMPTS_*` and `APEX_*` only when Apex tests would run against missing templates. If those env paths are unset, `platform-deps` deploys the combined shipped manifest.
 7. Assign access the coordinator does not. See [Access the coordinator does not assign](#access-the-coordinator-does-not-assign).
-8. Rehearse on a **fresh** Developer sandbox before production. Encode coverage gates in the script. Use a full sandbox for data-shaped smoke (Data 360 rows, search, web chat).
+8. Rehearse with `--deploy` on a **fresh** Developer sandbox before production. That saves components and runs `RunLocalTests`. `--validate-only` on a sandbox is only a dry-run and does not count as rehearsal. Encode coverage gates in the script. Use the Full or Partial Copy work org for data-shaped smoke (Data 360 rows, search, web chat).
 9. Capture go-live proof for that target org only. See [Capture go-live proof](deployment-workflow.md#5-capture-go-live-proof).
 
 **Stop if:** The only rehearsal org already has the prompt templates, Data Kit components, or agent from a prior attempt.
@@ -85,8 +85,8 @@ All optional. A missing path skips that phase.
 
 | Flag | Required behavior |
 |---|---|
-| `--validate-only` | Preflight and dry-run/validate only. Do not save past that |
-| `--deploy` | Mutate after successful validation. Choose this or `--validate-only`, not both |
+| `--validate-only` | Preflight only. Sandbox: dry-run. Production: `validate`. Does not save. Not a dress rehearsal |
+| `--deploy` | Save after successful preflight. On a Developer sandbox this is the dress rehearsal. Choose this or `--validate-only`, not both |
 | `--target-org` | Required. Alias passed to every `sf` command |
 | `--operator` | Repeatable. Username for `PERMSET_NAME` assign. Also logged |
 | `--start-at` | Resume at a named phase from [`templates/deploy.mjs`](../templates/deploy.mjs) only after earlier phases really completed. Do not replay succeeded phases |
@@ -172,8 +172,9 @@ Cite these commands. Do not invent substitutes.
 
 | Job | Command | Do not |
 |---|---|---|
-| Production dry-run | `sf project deploy validate` then `sf project deploy quick --job-id <ID>` | Do not run validate/quick on a sandbox. Salesforce documents this command as intended for production orgs |
-| Sandbox dry-run | `sf project deploy start --dry-run` then `sf project deploy start` | Do not pass a dry-run job Id to `quick` |
+| Production | `sf project deploy validate` then `sf project deploy quick --job-id <ID>` | Do not run validate/quick on a sandbox. Salesforce documents this command as intended for production orgs |
+| Dress rehearsal | `sf project deploy start --test-level RunLocalTests` to a fresh Developer sandbox | `--dry-run` does not count. Do not pass a dry-run job Id to `quick` |
+| Optional sandbox check | `sf project deploy start --dry-run` | Syntax only. A green dry-run is not a pass to production |
 | Watch | Default wait is 33 minutes | Do not treat a wait timeout as deploy failure. Use `sf project deploy resume` or `sf project deploy report` |
 | Job Id lifetime | Job Ids last 10 days from start | Prefer an explicit `--job-id`. `--use-most-recent` only sees about 3 days |
 | Errors | Omit `--ignore-errors` | Never `--ignore-errors` on production. Successful components would save and failed ones would skip |
@@ -196,8 +197,8 @@ sf agent activate --json --api-name <AGENT_API_NAME> --target-org <TARGET_ORG_AL
 | Job | Test level | Why |
 |---|---|---|
 | Your Apex (`apex` phase) | `RunSpecifiedTests` | 75% per class in that package. Customer org local tests must not gate your Apex |
-| This repo's Agentforce packages | `RunLocalTests` on production `validate` then `quick --job-id` | Same contract as [Service Agent](10-service-agent.md), [Employee Agent](11-employee-agent.md), [Lead Nurture](12-lead-nurture-agent.md), and [Package CLI Reference](deployment-workflow.md) |
-| Sandbox | Default `NoTestRun`. Does not enforce production coverage | Encode the production gate in the script |
+| This repo's Agentforce packages | `RunLocalTests` on the Developer-sandbox dress rehearsal `start`, and on production `validate` then `quick --job-id` | Same contract as [Service Agent](10-service-agent.md), [Employee Agent](11-employee-agent.md), [Lead Nurture](12-lead-nurture-agent.md), and [Package CLI Reference](deployment-workflow.md) |
+| Optional `--dry-run` | Same `TEST_LEVEL` as the real deploy (`RunLocalTests` for Agentforce packages) | Does not save. Does not count as rehearsal |
 
 Do not collapse those jobs. Do not silently switch Agentforce packages to `RunSpecifiedTests` and pretend guides 10/11 changed. If the operator still switches, they accept the per-class 75% rule and a deviation from those guides. Call it when a messy customer org's `RunLocalTests` would fail a valid package.
 
@@ -234,8 +235,9 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 | Starting template | Copy [`templates/deploy.mjs`](../templates/deploy.mjs) next to the retrieved DX project and fill env/placeholders |
 | Hand-run one agent package | Use [Service Agent](10-service-agent.md) or [Employee Agent](11-employee-agent.md), not this page |
 | CLI verbs only | [Package CLI Reference](deployment-workflow.md) |
-| Dry-run production | `--validate-only --target-org <ALIAS>` |
-| Deploy production | `--deploy --target-org <ALIAS>`, then type `DEPLOY` |
+| Production preflight | `--validate-only --target-org <PROD_ALIAS>` |
+| Dress rehearsal | `--deploy --target-org <REHEARSAL_ALIAS>` on a fresh Developer sandbox, then type `DEPLOY` |
+| Deploy production | `--deploy --target-org <PROD_ALIAS>`, then type `DEPLOY` |
 | Resume | `--start-at <PHASE> --target-org <ALIAS>` |
 | CI / no keyboard | `--non-interactive` fails at `DEPLOY` / `DONE`; do not skip |
 | Data 360 | [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md), then type `DONE` after component deploy, reauth, and refresh |
@@ -249,7 +251,7 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 
 - [ ] Path confirmed (Service, Employee, and/or Lead Nurture). Guides 10/11/12 followed for package contents.
 - [ ] `templates/deploy.mjs` copied next to the DX project. Env filled. ALL_CAPS placeholders replaced.
-- [ ] `--validate-only` rehearsed on a fresh Developer sandbox before `--deploy`.
+- [ ] `--deploy` rehearsed on a fresh Developer sandbox (`RunLocalTests`) before production. `--validate-only` is not rehearsal.
 - [ ] Data 360 kit + `DONE` completed before agent deploy, if used.
 - [ ] Prompt templates published/active before the `apex` phase, if split.
 - [ ] Service Agent: `access.default_agent_user` is the target-org username. Custom access permset assigned to the agent user before preview.

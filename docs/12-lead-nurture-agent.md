@@ -114,6 +114,18 @@ sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
+Retrieve from the Full or Partial Copy work org. Dress-rehearse on a fresh Developer sandbox before production. Commands match [Validate and deploy](deployment-workflow.md#4-validate-and-deploy).
+
+**Stop if:** The rehearsal org already contains this package, prompt templates, or Data Kit from a prior attempt. Provision Agentforce and Einstein in the rehearsal org if the dependencies need them.
+
+```bash
+sf project deploy start --json --manifest manifest/package.xml --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`. If Apex is in the package, confirm tests ran.
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
 Production deploys must run Apex tests. Validate first:
 
 ```bash
@@ -125,20 +137,6 @@ If validation succeeds, copy `result.id` and quick deploy:
 ```bash
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
 ```
-
-For sandbox validation, run a dry run first. If your sandbox release policy requires tests, replace `NoTestRun` with `RunLocalTests`.
-
-```bash
-sf project deploy start --json --dry-run --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-If the dry run succeeds:
-
-```bash
-sf project deploy start --json --manifest manifest/package.xml --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-Continue only after the deploy result is `Succeeded`.
 
 ## Optional legacy agent actions
 
@@ -199,6 +197,7 @@ Before enabling automatic sending, confirm:
 - [ ] Data 360 DevOps Data Kit completed before the dependency package, if used.
 - [ ] Agent user, email connection, EAC, data library, cadence, assignment, and activation are documented as target-org steps, not `package.xml` members.
 - [ ] Target Lead Nurture configuration reviewed against the source-org behavior.
+- [ ] Real deploy to a fresh Developer sandbox with `RunLocalTests` succeeded before production. `--dry-run` is not rehearsal.
 - [ ] Dependency deploy succeeded.
 - [ ] Lead Nurture Agent is enabled in the target org.
 - [ ] Agent user email and EAC connection are active.

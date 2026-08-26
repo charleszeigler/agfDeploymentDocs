@@ -16,10 +16,9 @@ Use this guide to deploy an active Service Agent to a web messaging channel thro
 
 | Step | Confirm before go-live |
 |---|---|
-| Deploy validated metadata | Real target website or Experience Builder host page |
-| Publish the target Embedded Service Deployment | Target-org snippet or component selection |
-| Confirm the messaging channel | Allowed domains |
-| Set Omni availability | Authentication settings |
+| Rebuild and publish the Embedded Service Deployment | Real target website or Experience Builder host page |
+| Confirm the messaging channel | Target-org snippet or component selection |
+| Set Omni availability | Allowed domains and authentication settings |
 | Use the built-in test page | Smoke test that creates a `MessagingSession` |
 
 Temporary test host: useful for snippet testing, not final go-live evidence. Final evidence must come from the real website or Experience Builder page.
@@ -39,63 +38,9 @@ Before go-live, confirm:
 - Auth/User Verification, if used: configure target-org auth values and confirm the session resolves to the expected user context.
 - Runtime validation: run the agreed happy path from the target page and confirm a new `MessagingSession` appears for the target channel.
 
-## Package candidate metadata
-
-Use as a validation checklist, not a migration guarantee.
-
-| Area | Candidate metadata |
-|---|---|
-| Web Chat deployment | `EmbeddedServiceConfig` |
-| Messaging channel | `MessagingChannel` |
-| Generated site | `DigitalExperienceBundle`, `CustomSite`, `Network`, `StaticResource` |
-| Routing | `Flow`, `Queue`, `QueueRoutingConfig` |
-| Security and domains | `CorsWhitelistOrigin`, `CspTrustedSite`, generated site iframe allowed origins as applicable |
-| Agent dependency | Service Agent package from [Deploy and Activate a Service Agent](10-service-agent.md) |
-
-Include Aura `ExperienceBundle` for the generated site only when project-specific sandbox validation proves it is required and deployable.
-
-Use target-org snippets, generated iframe site URLs, and CORS/domain values after the target deployment is published.
-
-## Validate the metadata path in a sandbox
-
-If attempting metadata migration, validate in a sandbox before production.
-
-Build the manifest with exact source member names using [Build package.xml from exact source names](deployment-workflow.md#2-build-packagexml-from-exact-source-names). Do not copy generated domains, snippets, auth values, or publish state into the target org.
-
-Use the metadata list commands below as a menu, not a script. Run only the checks for candidate metadata you plan to package.
-
-```bash
-sf org list metadata --json --metadata-type EmbeddedServiceConfig --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type MessagingChannel --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type DigitalExperienceBundle --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type CustomSite --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type Network --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type Queue --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type QueueRoutingConfig --target-org <SOURCE_ORG_ALIAS>
-sf org list metadata --json --metadata-type CorsWhitelistOrigin --target-org <SOURCE_ORG_ALIAS>
-```
-
-Retrieve selected metadata, review source-org references, and dry-run deploy:
-
-Retrieve selected metadata:
-
-```bash
-sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
-```
-
-Dry-run deploy to the target sandbox:
-
-```bash
-sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-**Stop if:** The dry run fails on generated site metadata, missing site references, label length, or `EmbeddedServiceConfig` site fields. Rebuild the web deployment in the target org.
-
-If dry run succeeds, still complete [Rebuild in the target org](#rebuild-in-the-target-org).
-
 ## Rebuild in the target org
 
-Use this path when metadata migration has not been validated end to end.
+Rebuild and publish in each target org is the supported path. There is no `package.xml` template.
 
 1. Confirm the Service Agent package is deployed, live-previewed, published, and active.
 2. Confirm the Omni routing flow, queue, and routing configuration exist in the target org.
@@ -215,6 +160,36 @@ Presence alone is not a website smoke test.
 **Stop if:** No new `MessagingSession` appears after the website test. Fix publish status, snippet or component selection, CORS/domain settings, and routing before declaring the channel ready.
 
 **Stop if:** The session stays `Waiting` and no `AgentWork` appears. Confirm queue membership, service presence configuration, Omni user availability, and routing before declaring the channel ready.
+
+## Package candidate metadata
+
+Use as a validation checklist, not a migration guarantee.
+
+| Area | Candidate metadata |
+|---|---|
+| Web Chat deployment | `EmbeddedServiceConfig` |
+| Messaging channel | `MessagingChannel` |
+| Generated site | `DigitalExperienceBundle`, `CustomSite`, `Network`, `StaticResource` |
+| Routing | `Flow`, `Queue`, `QueueRoutingConfig` |
+| Security and domains | `CorsWhitelistOrigin`, `CspTrustedSite`, generated site iframe allowed origins as applicable |
+| Agent dependency | Service Agent package from [Deploy and Activate a Service Agent](10-service-agent.md) |
+
+Include Aura `ExperienceBundle` for the generated site only when a project-specific rehearsal proves it is required and deployable. Use target-org snippets, generated iframe site URLs, and CORS/domain values after the target deployment is published.
+
+## If you attempt a metadata deploy
+
+Not the supported path. Rebuild and publish in each target org anyway.
+
+If you still retrieve selected metadata, dress-rehearse with a real deploy to a fresh Developer sandbox before production:
+
+```bash
+sf project retrieve start --json --manifest <PACKAGE_XML_PATH> --target-org <SOURCE_ORG_ALIAS>
+sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
+**Stop if:** The real deploy fails on generated site metadata, missing site references, label length, or `EmbeddedServiceConfig` site fields. Rebuild the web deployment in the target org.
 
 ## Checklist
 

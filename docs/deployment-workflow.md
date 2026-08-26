@@ -9,7 +9,7 @@ Use this page as a shared Salesforce CLI reference when a deployment guide tells
 | Start a clean package folder | [Create the package folder](#1-create-the-package-folder) |
 | Confirm `package.xml` member syntax | [Build package.xml from exact source names](#2-build-packagexml-from-exact-source-names) |
 | Retrieve source metadata | [Retrieve source files when needed](#3-retrieve-source-files-when-needed) |
-| Validate or deploy a reviewed package | [Validate and deploy](#4-validate-and-deploy) |
+| Dress-rehearse, then production validate/quick | [Validate and deploy](#4-validate-and-deploy) |
 | Save evidence after a deploy | [Capture go-live proof](#5-capture-go-live-proof) |
 
 Do not use this page as a substitute for a primary deployment guide. Agent publish, activation, channel setup, Data 360 readiness, and feature-specific validation belong in the guide for that deployment path. Service Agent is one primary path, not the only one.
@@ -121,34 +121,52 @@ After retrieve, confirm:
 
 ## 4. Validate and deploy
 
-Confirm the target org before validating:
+Work in a Full or Partial Copy sandbox. Dress-rehearse in a fresh Developer sandbox. Then production.
+
+| Org | Job | Command |
+|---|---|---|
+| Full or Partial Copy | Build and retrieve. Data-shaped smoke (Data 360 rows, search, web chat) | n/a |
+| Fresh Developer sandbox | Dress rehearsal: save the same package and run Apex tests | `sf project deploy start --test-level RunLocalTests` |
+| Production | Gate, then save | `sf project deploy validate --test-level RunLocalTests` then `sf project deploy quick --job-id` |
+
+**Fresh** means this package is not already in that Developer sandbox. Provision Agentforce, Einstein, Prompt Builder, and Data 360 in the rehearsal org if the handoff uses them.
+
+**Stop if:** The only rehearsal org already contains this package, agent, prompt templates, or Data Kit from a prior attempt.
+
+A Developer sandbox rehearsal proves the package lands and Apex tests pass. It does not prove Data 360 rows, search quality, or web chat on the real site.
+
+Confirm the target org before deploying:
 
 ```bash
 sf org login web --json --alias <TARGET_ORG_ALIAS> --instance-url https://login.salesforce.com
 sf org display --json --target-org <TARGET_ORG_ALIAS>
 ```
 
-Use `https://test.salesforce.com` instead of `https://login.salesforce.com` for a sandbox target.
+Use `https://test.salesforce.com` for a sandbox target.
 
 Default `--wait` is 33 minutes. A wait timeout is not a deploy failure; resume with `sf project deploy resume` or check `sf project deploy report`. Never use `--ignore-errors` on production.
 
-Production deploys should validate first and run Apex tests:
+Do not run `sf project deploy validate` or `sf project deploy quick` on a sandbox. Salesforce documents that pair for production orgs.
+
+### Dress rehearsal
+
+Real deploy to a fresh Developer sandbox. This must save components.
+
+```bash
+sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <REHEARSAL_ORG_ALIAS> --test-level RunLocalTests --wait 30
+```
+
+Continue only after the deploy result is `Succeeded`. If Apex is in the package, confirm tests ran.
+
+Optional: `sf project deploy start --dry-run` is a syntax check. It does not save and does not count as rehearsal.
+
+`NoTestRun` is not the sandbox default. Use it only for a permission-set-only package with no Apex, and never on production.
+
+### Production
 
 ```bash
 sf project deploy validate --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level RunLocalTests --wait 30
 sf project deploy quick --json --job-id <JOB_ID_FROM_VALIDATE> --target-org <TARGET_ORG_ALIAS> --wait 30
-```
-
-Sandbox dry run:
-
-```bash
-sf project deploy start --json --dry-run --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
-```
-
-Sandbox deploy after a successful dry run:
-
-```bash
-sf project deploy start --json --manifest <PACKAGE_XML_PATH> --target-org <TARGET_ORG_ALIAS> --test-level NoTestRun --wait 30
 ```
 
 Check deploy status:
