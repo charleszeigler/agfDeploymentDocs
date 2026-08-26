@@ -71,7 +71,7 @@ PRs welcome. `node scripts/ci-check.mjs` must pass. Do not expand this repo into
 
 ## Checks
 
-GitHub Actions runs on push to `main` and on pull requests. No Salesforce org. No deploy.
+[Buildkite](.buildkite/README.md) runs on push to `main` and on pull requests, on hosted (cloud) agents. No Salesforce org. No deploy. The same three checks run locally:
 
 ```bash
 node --check templates/deploy.mjs
