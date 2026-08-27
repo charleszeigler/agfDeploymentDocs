@@ -6,19 +6,17 @@ This repo is Agentforce **deployment guides**, not a customer ALM app. Static CI
 
 ## What's left (owner, not repo code)
 
-The pipeline is already in the repo. What is left is **account access** this agent does not have and cannot invent.
-
-Rechecked: no `sf` / `sfdx` login, no `~/.sf` or `~/.sfdx`, no `SF_DEVHUB_AUTH_URL`, no `gcloud` login, no GitHub Actions secret list access (403), no matching file in Google Drive. Buildkite build #8 skipped the org step because the pipeline secret is unset.
+`.buildkite/` is gone. Pipeline logic is Dagger; the host is Cloud Build. What is left is **account access** this agent does not have.
 
 | # | You do | Why an agent cannot |
 |---|---|---|
-| 1 | Enable Dev Hub on a production or Developer Edition org you own, and allow scratch org creation | Requires your Salesforce identity. A new signup still needs your email and org setup. |
-| 2 | Create the auth URL: `sf org display --target-org <devhub> --verbose --json` → `result.sfdxAuthUrl` | Needs an already-authenticated `sf` session on a machine that has logged into that org. Do not commit this value. |
-| 3 | Store it as secured `SF_DEVHUB_AUTH_URL` on Buildkite pipeline `agf-deployment-docs` | This agent cannot write Buildkite pipeline secrets. |
-| 4 | Optional: same secret in Cloud Build / Secret Manager, then create the GitHub triggers in [GCP host](#gcp-host-google-cloud-build) | This agent has no GCP project login. You said you would host Cloud Build. |
-| 5 | Optional: after Cloud Build reports on GitHub, require that check and delete `.buildkite/` | Org policy / UI click in GitHub and Buildkite. |
+| 1 | Disable or delete Buildkite pipeline `agf-deployment-docs` and its GitHub webhook | The webhook is in your Buildkite org. If it stays, GitHub will keep a failing `buildkite/agf-deployment-docs` check because there is no `.buildkite/pipeline.yml`. |
+| 2 | Connect this repo to Cloud Build and create push/PR triggers from `cloudbuild.yaml` — [GCP host](#gcp-host-google-cloud-build) | This agent has no GCP project login. |
+| 3 | Enable Dev Hub on an org you own, and allow scratch org creation | Requires your Salesforce identity. |
+| 4 | Create the auth URL: `sf org display --target-org <devhub> --verbose --json` → `result.sfdxAuthUrl` | Needs an already-authenticated `sf` session. Do not commit this value. |
+| 5 | Store it as `SF_DEVHUB_AUTH_URL` in Cloud Build / Secret Manager | This agent cannot write GCP secrets. |
 
-After 1–3, the next Buildkite build runs: create scratch org → dry-run deploy → deploy `RunLocalTests` → Apex coverage ≥ 75% → Playwright Lightning frontdoor → delete org.
+After 2, static CI (`dagger call ci`) reports on GitHub. After 3–5, Cloud Build also runs: create scratch org → dry-run deploy → deploy `RunLocalTests` → Apex coverage ≥ 75% → Playwright Lightning frontdoor → delete org.
 
 Not a leftover task: Agentforce / Data 360 dress rehearsal on a scratch org. Salesforce does not provision those products on scratch. Keep using a fresh Developer sandbox for that path.
 
@@ -84,11 +82,7 @@ That script:
 6. Playwright Chromium opens Lightning through `/secur/frontdoor.jsp`
 7. deletes the scratch org (unless `SF_SKIP_ORG_DELETE=1`)
 
-Set `SF_DEVHUB_AUTH_URL` as a **secured** env var on Buildkite, or as a Cloud Build / Secret Manager secret named the same. If it is unset, hosts skip org CI and the static check still runs.
-
-## Live GitHub host: Buildkite
-
-[`.buildkite/pipeline.yml`](../.buildkite/pipeline.yml) is already wired (hosted `linux-small`, GitHub webhook). Static steps run in `node:20`. The Salesforce step runs `ci/sf/org-ci.sh` when `SF_DEVHUB_AUTH_URL` is set. See [`.buildkite/README.md`](../.buildkite/README.md).
+Set `SF_DEVHUB_AUTH_URL` as a Cloud Build / Secret Manager secret. If it is unset, Cloud Build skips org CI and the static check still runs.
 
 ## GCP host: Google Cloud Build
 
@@ -134,7 +128,7 @@ Set `SF_DEVHUB_AUTH_URL` as a **secured** env var on Buildkite, or as a Cloud Bu
    gcloud builds submit --config=cloudbuild.yaml
    ```
 
-5. Optional: GitHub → Settings → Branches → require the Cloud Build check on `main`. Then disable the Buildkite pipeline and delete `.buildkite/`.
+5. Optional: GitHub → Settings → Branches → require the Cloud Build check on `main`.
 
 ## Bump Dagger
 
@@ -143,8 +137,8 @@ Change these pins together, then run `dagger call ci --source .` locally:
 - `engineVersion` in `dagger.json`
 - `DAGGER_VERSION` in `cloudbuild.yaml`
 
-If Buildkite is switched to `dagger call ci`, pin `DAGGER_VERSION` there too. `node scripts/ci-check.mjs` fails if the Cloud Build pin drifts.
+`node scripts/ci-check.mjs` fails if the Cloud Build pin drifts.
 
 ## Retired
 
-GitHub Actions (`.github/workflows/ci.yml`) is removed. Do not add it back.
+GitHub Actions (`.github/workflows/ci.yml`) and Buildkite (`.buildkite/`) are removed. Do not add them back. CI is Dagger on Cloud Build.

@@ -71,7 +71,7 @@ PRs welcome. `node scripts/ci-check.mjs` must pass. Do not expand this repo into
 
 ## Checks
 
-[Dagger](https://dagger.io) is the portable pipeline. [Buildkite](.buildkite/README.md) is the live GitHub host. [Google Cloud Build](ci/README.md) is the GCP host.
+[Dagger](https://dagger.io) is the pipeline. [Google Cloud Build](ci/README.md) is the host (`cloudbuild.yaml`). Buildkite and GitHub Actions are removed.
 
 Static checks always run. They do not call a Salesforce org:
 
