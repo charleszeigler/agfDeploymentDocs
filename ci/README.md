@@ -6,16 +6,16 @@ This repo is Agentforce **deployment guides**, not a customer ALM app. Static CI
 
 ## What's left (owner, not repo code)
 
-Tried again from this VM: GitHub webhooks API 403, no Buildkite API token, no `gcloud` / GCP login, no `sf` session, no `SF_DEVHUB_AUTH_URL`. Deleting `.buildkite/` makes the existing webhook fail (Buildkite #10, 1 second). So the pipeline file stays; that is the fix for the GitHub check.
+GCP host is now live: `gcloud` is authenticated as `charleszeigler64@gmail.com`, project **`build-czeigler`** has the Cloud Build + Secret Manager APIs enabled, and `dagger call ci` is verified green there (build `e356ce32`, 2m30s). Deleting `.buildkite/` still makes the existing webhook fail (Buildkite #10, 1 second), so the pipeline file stays.
+
+Two things need your identity, not repo code:
 
 | # | You do | Why an agent cannot |
 |---|---|---|
-| 1 | Optional: connect Cloud Build triggers from `cloudbuild.yaml` — [GCP host](#gcp-host-google-cloud-build) | No GCP project login. You have a GCP billing account; this agent cannot open the console. |
-| 2 | Enable Dev Hub on an org you own, and allow scratch org creation | Requires your Salesforce identity. |
-| 3 | Create the auth URL: `sf org display --target-org <devhub> --verbose --json` → `result.sfdxAuthUrl` | Needs an already-authenticated `sf` session. Do not commit this value. |
-| 4 | Store it as secured `SF_DEVHUB_AUTH_URL` on Buildkite pipeline `agf-deployment-docs` (and Cloud Build / Secret Manager if you connect that host) | This agent cannot write those secrets. |
+| 1 | Install the Cloud Build GitHub App on `charleszeigler/agfDeploymentDocs` and add push/PR triggers — [GCP host](#gcp-host-google-cloud-build). Until then, run builds with `gcloud builds submit`; Buildkite already reports the push check. | The GitHub App install is a browser OAuth step; an agent cannot click it. |
+| 2 | Provide a Dev Hub sfdx auth URL and store it as the Secret Manager secret `SF_DEVHUB_AUTH_URL` — [Scratch-org secret](#scratch-org-secret-on-cloud-build). | The auth URL is a live Salesforce credential; the agent environment blocks reading and storing it. Do not commit this value. |
 
-After 2–4, the next Buildkite build runs: create scratch org → dry-run deploy → deploy `RunLocalTests` → Apex coverage ≥ 75% → Playwright Lightning frontdoor → delete org.
+After #2, the next `dagger call org-ci` (Cloud Build or local) runs: create scratch org → dry-run deploy → deploy `RunLocalTests` → Apex coverage ≥ 75% → Playwright Lightning frontdoor → delete org.
 
 Not a leftover task: Agentforce / Data 360 dress rehearsal on a scratch org. Salesforce does not provision those products on scratch. Keep using a fresh Developer sandbox for that path.
 
@@ -89,13 +89,15 @@ Set `SF_DEVHUB_AUTH_URL` as a **secured** env var on Buildkite, or as a Cloud Bu
 
 ## GCP host: Google Cloud Build
 
-`cloudbuild.yaml` installs Dagger 0.21.9, runs `dagger call ci`, then `dagger call org-ci` when `SF_DEVHUB_AUTH_URL` is present. Pin the CLI version to `engineVersion` in [`dagger.json`](../dagger.json). To enable org CI, add that env var (or a Secret Manager secret with `secretEnv`).
+`cloudbuild.yaml` installs Dagger 0.21.9, runs `dagger call ci`, then `dagger call org-ci` when `SF_DEVHUB_AUTH_URL` is present. Pin the CLI version to `engineVersion` in [`dagger.json`](../dagger.json). To enable org CI, add that env var (or a Secret Manager secret with `secretEnv` — see [Scratch-org secret](#scratch-org-secret-on-cloud-build)).
 
-1. Pick a GCP project. Enable the Cloud Build API:
+The host is **`build-czeigler`** (account `charleszeigler64@gmail.com`). The Cloud Build + Secret Manager APIs are enabled and the static tier is verified green (`gcloud builds submit` → build `e356ce32`, SUCCESS). Its build service account is `181768915183-compute@developer.gserviceaccount.com`.
+
+1. Project is set. To reproduce from scratch:
 
    ```bash
-   gcloud config set project PROJECT_ID
-   gcloud services enable cloudbuild.googleapis.com
+   gcloud config set project build-czeigler
+   gcloud services enable cloudbuild.googleapis.com secretmanager.googleapis.com
    ```
 
 2. Connect this GitHub repo to Cloud Build.
@@ -132,6 +134,37 @@ Set `SF_DEVHUB_AUTH_URL` as a **secured** env var on Buildkite, or as a Cloud Bu
    ```
 
 5. Optional: GitHub → Settings → Branches → require the Cloud Build check on `main`.
+
+### Scratch-org secret on Cloud Build
+
+`org-ci` needs a Dev Hub sfdx auth URL. Store it in Secret Manager and let the build read it — the value never lands in the repo or the logs:
+
+```bash
+# 1. Store the Dev Hub auth URL (piped straight in; never printed or committed).
+sf org display --target-org <devhub> --verbose --json | jq -r '.result.sfdxAuthUrl' \
+  | gcloud secrets create SF_DEVHUB_AUTH_URL --data-file=- --project build-czeigler
+
+# 2. Let the Cloud Build service account read it.
+gcloud secrets add-iam-policy-binding SF_DEVHUB_AUTH_URL --project build-czeigler \
+  --member=serviceAccount:181768915183-compute@developer.gserviceaccount.com \
+  --role=roles/secretmanager.secretAccessor
+```
+
+Then add this to `cloudbuild.yaml` so the step gets `SF_DEVHUB_AUTH_URL` (the `if [ -n ... ]` guard already runs `dagger call org-ci` once the var is set):
+
+```yaml
+steps:
+  - name: gcr.io/cloud-builders/docker
+    # ...existing step...
+    secretEnv:
+      - SF_DEVHUB_AUTH_URL
+availableSecrets:
+  secretManager:
+    - versionName: projects/build-czeigler/secrets/SF_DEVHUB_AUTH_URL/versions/latest
+      env: SF_DEVHUB_AUTH_URL
+```
+
+Rotate or revoke anytime with `gcloud secrets versions add` / `gcloud secrets delete SF_DEVHUB_AUTH_URL`.
 
 ## Bump Dagger
 
