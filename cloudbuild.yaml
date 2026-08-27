@@ -6,6 +6,8 @@ steps:
   - name: gcr.io/cloud-builders/docker
     id: dagger-ci
     entrypoint: bash
+    env:
+      - DAGGER_NO_NAG=1
     args:
       - -ceu
       - |
