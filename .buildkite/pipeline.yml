@@ -1,17 +1,28 @@
-# Host for the Dagger pipeline. Logic lives in dagger/src/index.ts.
-# Hosted linux-small agents already have Docker, so Dagger can start its engine
-# without the Docker plugin. See .buildkite/README.md and ci/README.md.
+# Live GitHub host. These are the same three checks `dagger call ci` runs.
+# Hosted linux-small + Docker plugin is already green on this pipeline.
+# Dagger/Cloud Build is the portable/GCP path; see ci/README.md.
 
 steps:
-  - label: ":dagger: ci"
-    command: |
-      set -euo pipefail
-      mkdir -p "$HOME/.local/bin"
-      curl -fsSL https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.9 BIN_DIR="$HOME/.local/bin" sh
-      export PATH="$HOME/.local/bin:$PATH"
-      export DAGGER_NO_NAG=1
-      dagger version
-      dagger call ci --source . --progress=plain
+  - label: ":nodejs: syntax-check coordinator"
+    command: node --check templates/deploy.mjs
     agents:
       queue: linux-small
-    timeout_in_minutes: 15
+    plugins:
+      - docker#v5.14.0:
+          image: "node:20"
+
+  - label: ":nodejs: unit-test coordinator"
+    command: node --test tests/deploy.test.mjs
+    agents:
+      queue: linux-small
+    plugins:
+      - docker#v5.14.0:
+          image: "node:20"
+
+  - label: ":nodejs: docs, nav, and manifests"
+    command: node scripts/ci-check.mjs
+    agents:
+      queue: linux-small
+    plugins:
+      - docker#v5.14.0:
+          image: "node:20"

@@ -1,14 +1,12 @@
 # Buildkite host
 
-Buildkite is the live GitHub status check. It runs the Dagger pipeline:
+Buildkite is the live GitHub status check. It runs the same three commands as `dagger call ci`:
 
-```bash
-dagger call ci --source .
-```
+1. `node --check templates/deploy.mjs`
+2. `node --test tests/deploy.test.mjs`
+3. `node scripts/ci-check.mjs`
 
-That is the same function [Google Cloud Build](../ci/README.md) runs. Pipeline logic is [`dagger/src/index.ts`](../dagger/src/index.ts), not the three Node commands copied into YAML.
-
-Hosted `linux-small` agents already have Docker, which Dagger uses to start its engine.
+Each step runs in `node:20` via the Docker plugin on hosted `linux-small`. Pipeline logic you can run locally or on GCP is the Dagger module; see [ci/README.md](../ci/README.md).
 
 ## How it's wired
 

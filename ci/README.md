@@ -41,7 +41,7 @@ node scripts/ci-check.mjs
 
 ## Live GitHub host: Buildkite
 
-[`.buildkite/pipeline.yml`](../.buildkite/pipeline.yml) is already wired (hosted `linux-small`, GitHub webhook). It installs Dagger 0.21.9 and runs `dagger call ci --source .`. See [`.buildkite/README.md`](../.buildkite/README.md).
+[`.buildkite/pipeline.yml`](../.buildkite/pipeline.yml) is already wired (hosted `linux-small`, GitHub webhook). It runs the three Node checks in `node:20` containers. See [`.buildkite/README.md`](../.buildkite/README.md). Those commands are the same ones `dagger call ci` runs.
 
 ## GCP host: Google Cloud Build
 
@@ -95,9 +95,8 @@ Change these pins together, then run `dagger call ci --source .` locally:
 
 - `engineVersion` in `dagger.json`
 - `DAGGER_VERSION` in `cloudbuild.yaml`
-- `DAGGER_VERSION` in `.buildkite/pipeline.yml`
 
-`node scripts/ci-check.mjs` fails if those pins drift.
+If Buildkite is switched to `dagger call ci`, pin `DAGGER_VERSION` there too. `node scripts/ci-check.mjs` fails if the Cloud Build pin drifts.
 
 ## Retired
 
