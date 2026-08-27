@@ -182,8 +182,46 @@ if (!phaseBlock) {
 
 if (!exists('templates/deploy.mjs')) fail('templates/deploy.mjs is missing');
 
+const orgFiles = [
+  'ci/sf/org-ci.sh',
+  'ci/sf/check-coverage.mjs',
+  'ci/sf/sfdx-project.json',
+  'ci/sf/config/project-scratch-def.json',
+  'ci/sf/force-app/main/default/classes/CiSmoke.cls',
+  'ci/sf/force-app/main/default/classes/CiSmokeTest.cls',
+  'ci/playwright/package.json',
+  'ci/playwright/package-lock.json',
+  'ci/playwright/playwright.config.ts',
+  'ci/playwright/tests/lightning-home.spec.ts',
+  'ci/README.md',
+];
+for (const file of orgFiles) {
+  if (!exists(file)) fail(`${file} is missing`);
+}
+const orgScript = read('ci/sf/org-ci.sh');
+if (/--test-level\s+NoTestRun/.test(orgScript)) {
+  fail('ci/sf/org-ci.sh uses --test-level NoTestRun; scratch CI uses RunLocalTests');
+}
+if (!orgScript.includes('--dry-run')) fail('ci/sf/org-ci.sh must dry-run deploy before saving');
+if (!/RunLocalTests/.test(orgScript)) fail('ci/sf/org-ci.sh must use RunLocalTests');
+if (!read('dagger/src/index.ts').includes('orgCi')) {
+  fail('dagger/src/index.ts is missing orgCi');
+}
+if (!read('ci/README.md').includes("What's left (owner, not repo code)")) {
+  fail('ci/README.md must document leftover owner work (Dev Hub / secret / host)');
+}
+if (!read('README.md').includes('ci/README.md#whats-left-owner-not-repo-code')) {
+  fail('README.md Checks must link leftover owner work in ci/README.md');
+}
+if (!read('ci/playwright/tests/lightning-home.spec.ts').includes('frontdoor.jsp')) {
+  fail('Playwright smoke must use Salesforce frontdoor login');
+}
+
 if (exists('.github/workflows/ci.yml')) {
   fail('.github/workflows/ci.yml is retired; CI is Dagger');
+}
+if (!exists('.buildkite/pipeline.yml')) {
+  fail('.buildkite/pipeline.yml is required while the Buildkite GitHub webhook is installed');
 }
 if (!exists('dagger.json')) fail('dagger.json is missing');
 if (!exists('dagger/src/index.ts')) fail('dagger/src/index.ts is missing');
@@ -203,6 +241,9 @@ if (!cloudbuild.includes(`DAGGER_VERSION=${expectedCli}`)) {
 if (!/dagger call ci\b/.test(cloudbuild)) {
   fail('cloudbuild.yaml must run dagger call ci');
 }
+if (!/dagger call org-ci\b/.test(cloudbuild)) {
+  fail('cloudbuild.yaml must run dagger call org-ci when SF_DEVHUB_AUTH_URL is set');
+}
 if (!/--source\s+\./.test(cloudbuild)) {
   fail('cloudbuild.yaml must pass --source . so Cloud Build does not depend on git defaultPath');
 }
@@ -217,6 +258,9 @@ if (exists('.buildkite/pipeline.yml')) {
     pipeline.includes('node scripts/ci-check.mjs');
   if (!usesDagger && !usesNodeChecks) {
     fail('.buildkite/pipeline.yml must run dagger call ci or the three Node checks');
+  }
+  if (!live.includes('ci/sf/org-ci.sh') && !/dagger call org-ci\b/.test(live)) {
+    fail('.buildkite/pipeline.yml must run scratch-org CI (ci/sf/org-ci.sh or dagger call org-ci)');
   }
   if (usesDagger) {
     if (!pipeline.includes(`DAGGER_VERSION=${expectedCli}`)) {

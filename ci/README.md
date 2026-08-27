@@ -1,14 +1,29 @@
 # Dagger CI
 
-Pipeline logic is a [Dagger](https://dagger.io) TypeScript module. It does not call a Salesforce org and it does not deploy.
+Pipeline logic is a [Dagger](https://dagger.io) TypeScript module.
 
-The three checks:
+This repo is Agentforce **deployment guides**, not a customer ALM app. Static CI never calls an org. Org CI is a scratch-org **fixture** (`ci/sf`) so Salesforce CLI, Apex tests, and Playwright stay honest. Scratch orgs do not provision Agentforce, Einstein, Prompt Builder, or Data 360. Dress rehearsal for those packages is still a fresh Developer sandbox (`RunLocalTests`), as the guides say.
+
+## What's left (owner, not repo code)
+
+Tried again from this VM: GitHub webhooks API 403, no Buildkite API token, no `gcloud` / GCP login, no `sf` session, no `SF_DEVHUB_AUTH_URL`. Deleting `.buildkite/` makes the existing webhook fail (Buildkite #10, 1 second). So the pipeline file stays; that is the fix for the GitHub check.
+
+| # | You do | Why an agent cannot |
+|---|---|---|
+| 1 | Optional: connect Cloud Build triggers from `cloudbuild.yaml` — [GCP host](#gcp-host-google-cloud-build) | No GCP project login. You have a GCP billing account; this agent cannot open the console. |
+| 2 | Enable Dev Hub on an org you own, and allow scratch org creation | Requires your Salesforce identity. |
+| 3 | Create the auth URL: `sf org display --target-org <devhub> --verbose --json` → `result.sfdxAuthUrl` | Needs an already-authenticated `sf` session. Do not commit this value. |
+| 4 | Store it as secured `SF_DEVHUB_AUTH_URL` on Buildkite pipeline `agf-deployment-docs` (and Cloud Build / Secret Manager if you connect that host) | This agent cannot write those secrets. |
+
+After 2–4, the next Buildkite build runs: create scratch org → dry-run deploy → deploy `RunLocalTests` → Apex coverage ≥ 75% → Playwright Lightning frontdoor → delete org.
+
+Not a leftover task: Agentforce / Data 360 dress rehearsal on a scratch org. Salesforce does not provision those products on scratch. Keep using a fresh Developer sandbox for that path.
+
+## Static checks
 
 1. `node --check templates/deploy.mjs`
-2. `node --test tests/deploy.test.mjs`
+2. `node --test tests/deploy.test.mjs tests/check-coverage.test.mjs`
 3. `node scripts/ci-check.mjs`
-
-Every host runs the same function:
 
 ```bash
 dagger call ci --source .
@@ -23,7 +38,7 @@ curl -fsSL https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.9 BIN_DI
 dagger call ci --source .
 ```
 
-Single check:
+Single static check:
 
 ```bash
 dagger call syntax --source .
@@ -31,21 +46,50 @@ dagger call unit --source .
 dagger call docs --source .
 ```
 
-Without Dagger, Node 20+ is enough:
+Without Dagger, Node 20+ is enough for the static path:
 
 ```bash
 node --check templates/deploy.mjs
-node --test tests/deploy.test.mjs
+node --test tests/deploy.test.mjs tests/check-coverage.test.mjs
 node scripts/ci-check.mjs
 ```
 
+## Scratch-org CI
+
+Requires a Dev Hub that can create scratch orgs. Auth is an sfdx auth URL (do not commit it):
+
+```bash
+sf org display --target-org <devhub> --verbose --json
+# use result.sfdxAuthUrl
+export SF_DEVHUB_AUTH_URL='force://...'
+dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL
+```
+
+Or without Dagger, with `sf` and Playwright browsers installed:
+
+```bash
+bash ci/sf/org-ci.sh
+```
+
+That script:
+
+1. logs in to the Dev Hub
+2. creates a 1-day Developer scratch org
+3. `sf project deploy start --dry-run --test-level RunLocalTests`
+4. `sf project deploy start --test-level RunLocalTests`
+5. `sf apex run test --code-coverage` and fails under 75%
+6. Playwright Chromium opens Lightning through `/secur/frontdoor.jsp`
+7. deletes the scratch org (unless `SF_SKIP_ORG_DELETE=1`)
+
+Set `SF_DEVHUB_AUTH_URL` as a **secured** env var on Buildkite, or as a Cloud Build / Secret Manager secret named the same. If it is unset, hosts skip org CI and the static check still runs.
+
 ## Live GitHub host: Buildkite
 
-[`.buildkite/pipeline.yml`](../.buildkite/pipeline.yml) is already wired (hosted `linux-small`, GitHub webhook). It runs the three Node checks in `node:20` containers. See [`.buildkite/README.md`](../.buildkite/README.md). Those commands are the same ones `dagger call ci` runs.
+[`.buildkite/pipeline.yml`](../.buildkite/pipeline.yml) is the live GitHub check (hosted `linux-small`). Static steps run in `node:20`. The Salesforce step runs `ci/sf/org-ci.sh` when `SF_DEVHUB_AUTH_URL` is set. See [`.buildkite/README.md`](../.buildkite/README.md).
 
 ## GCP host: Google Cloud Build
 
-`cloudbuild.yaml` installs Dagger 0.21.9 and runs the same command. Pin that CLI version to the `engineVersion` in [`dagger.json`](../dagger.json).
+`cloudbuild.yaml` installs Dagger 0.21.9, runs `dagger call ci`, then `dagger call org-ci` when `SF_DEVHUB_AUTH_URL` is present. Pin the CLI version to `engineVersion` in [`dagger.json`](../dagger.json). To enable org CI, add that env var (or a Secret Manager secret with `secretEnv`).
 
 1. Pick a GCP project. Enable the Cloud Build API:
 
@@ -87,7 +131,7 @@ node scripts/ci-check.mjs
    gcloud builds submit --config=cloudbuild.yaml
    ```
 
-5. Optional: GitHub → Settings → Branches → require the Cloud Build check on `main`. Then disable the Buildkite pipeline and delete `.buildkite/`.
+5. Optional: GitHub → Settings → Branches → require the Cloud Build check on `main`.
 
 ## Bump Dagger
 
@@ -96,7 +140,7 @@ Change these pins together, then run `dagger call ci --source .` locally:
 - `engineVersion` in `dagger.json`
 - `DAGGER_VERSION` in `cloudbuild.yaml`
 
-If Buildkite is switched to `dagger call ci`, pin `DAGGER_VERSION` there too. `node scripts/ci-check.mjs` fails if the Cloud Build pin drifts.
+`node scripts/ci-check.mjs` fails if the Cloud Build pin drifts.
 
 ## Retired
 

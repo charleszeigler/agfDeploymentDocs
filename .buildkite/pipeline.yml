@@ -1,6 +1,8 @@
 # Live GitHub host. These are the same three checks `dagger call ci` runs.
 # Hosted linux-small + Docker plugin is already green on this pipeline.
 # Dagger/Cloud Build is the portable/GCP path; see ci/README.md.
+# This file has to exist: the Buildkite GitHub webhook is still installed
+# and fails in ~1s if pipeline.yml is missing.
 
 steps:
   - label: ":nodejs: syntax-check coordinator"
@@ -12,7 +14,7 @@ steps:
           image: "node:20"
 
   - label: ":nodejs: unit-test coordinator"
-    command: node --test tests/deploy.test.mjs
+    command: node --test tests/deploy.test.mjs tests/check-coverage.test.mjs
     agents:
       queue: linux-small
     plugins:
@@ -26,3 +28,22 @@ steps:
     plugins:
       - docker#v5.14.0:
           image: "node:20"
+
+  - wait
+
+  - label: ":salesforce: scratch org"
+    command: |
+      set -euo pipefail
+      if [ -z "${SF_DEVHUB_AUTH_URL:-}" ]; then
+        echo "SKIP org CI: set SF_DEVHUB_AUTH_URL (Dev Hub sfdx auth url) on this pipeline"
+        exit 0
+      fi
+      docker run --rm \
+        -e SF_DEVHUB_AUTH_URL \
+        -e BUILDKITE_BUILD_ID \
+        -v "$PWD":/src -w /src \
+        mcr.microsoft.com/playwright:v1.55.0-jammy \
+        bash -lc 'npm install -g @salesforce/cli && bash ci/sf/org-ci.sh'
+    agents:
+      queue: linux-small
+    timeout_in_minutes: 30

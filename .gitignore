@@ -1,3 +1,10 @@
 .DS_Store
 dagger/sdk
 dagger/node_modules
+ci/playwright/node_modules
+ci/playwright/test-results
+ci/playwright/playwright-report
+ci/sf/.sf
+ci/sf/.sfdx
+.sf
+.sfdx
