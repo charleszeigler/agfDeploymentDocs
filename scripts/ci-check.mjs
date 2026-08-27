@@ -116,7 +116,12 @@ function assertWellFormedXml(xml, file) {
   if (stack.length) fail(`${file}: unclosed XML tags: ${stack.join(', ')}`);
 }
 
-const mdFiles = ['README.md', ...walkFiles('docs', '.md')];
+const mdFiles = [
+  'README.md',
+  ...walkFiles('docs', '.md'),
+  ...walkFiles('ci', '.md'),
+  ...(exists('.buildkite') ? walkFiles('.buildkite', '.md') : []),
+];
 for (const file of mdFiles) {
   const md = read(file);
   for (const href of mdLinks(md)) {
@@ -176,6 +181,35 @@ if (!phaseBlock) {
 }
 
 if (!exists('templates/deploy.mjs')) fail('templates/deploy.mjs is missing');
+
+if (exists('.github/workflows/ci.yml')) {
+  fail('.github/workflows/ci.yml is retired; CI is Dagger');
+}
+if (!exists('dagger.json')) fail('dagger.json is missing');
+if (!exists('dagger/src/index.ts')) fail('dagger/src/index.ts is missing');
+if (!exists('cloudbuild.yaml')) fail('cloudbuild.yaml is missing');
+if (!exists('ci/README.md')) fail('ci/README.md is missing');
+
+const dagger = JSON.parse(read('dagger.json'));
+const engineVersion = String(dagger.engineVersion || '');
+if (!/^v\d+\.\d+\.\d+$/.test(engineVersion)) {
+  fail(`dagger.json engineVersion must look like v0.21.9 (got ${JSON.stringify(dagger.engineVersion)})`);
+}
+const expectedCli = engineVersion.replace(/^v/, '');
+const hosts = ['cloudbuild.yaml'];
+if (exists('.buildkite/pipeline.yml')) hosts.push('.buildkite/pipeline.yml');
+for (const file of hosts) {
+  const text = read(file);
+  if (!text.includes(`DAGGER_VERSION=${expectedCli}`)) {
+    fail(`${file} must pin DAGGER_VERSION=${expectedCli} to match dagger.json ${engineVersion}`);
+  }
+  if (!/dagger call ci\b/.test(text)) {
+    fail(`${file} must run dagger call ci`);
+  }
+  if (!/--source\s+\./.test(text)) {
+    fail(`${file} must pass --source . so hosts do not depend on git defaultPath`);
+  }
+}
 
 if (errors.length) {
   process.stderr.write(errors.map((line) => `ERROR ${line}`).join('\n') + '\n');

@@ -1,40 +1,34 @@
-# Buildkite CI
+# Buildkite host
 
-`pipeline.yml` runs the three checks that CI enforces:
+Buildkite is the live GitHub status check. It runs the Dagger pipeline:
 
-1. `node --check templates/deploy.mjs`
-2. `node --test tests/deploy.test.mjs`
-3. `node scripts/ci-check.mjs`
+```bash
+dagger call ci --source .
+```
 
-Each step runs inside a `node:20` container via the Docker plugin, on the
-Buildkite org's **hosted `linux-small` queue** — Buildkite-managed cloud
-compute, so nothing runs on your machine.
+That is the same function [Google Cloud Build](../ci/README.md) runs. Pipeline logic is [`dagger/src/index.ts`](../dagger/src/index.ts), not the three Node commands copied into YAML.
+
+Hosted `linux-small` agents already have Docker, which Dagger uses to start its engine.
 
 ## How it's wired
 
-- **Org:** `charleszeigler` · **Cluster:** Default cluster · **Queue:**
-  `linux-small` (hosted). The Default cluster's default queue is `linux-small`.
-- **Pipeline:** `agf-deployment-docs`, repo
-  `git@github.com:charleszeigler/agfDeploymentDocs.git`, default branch `main`.
-- **Trigger:** a GitHub webhook created with `bk pipeline create --create-webhook`
-  builds every push and pull request.
-- The initial build step runs `buildkite-agent pipeline upload`, which reads
-  this `pipeline.yml` from the repo on each build.
+- **Org:** `charleszeigler` · **Cluster:** Default cluster · **Queue:** `linux-small` (hosted)
+- **Pipeline:** `agf-deployment-docs`, repo `git@github.com:charleszeigler/agfDeploymentDocs.git`
+- **Trigger:** GitHub webhook from `bk pipeline create --create-webhook`
+- The initial step runs `buildkite-agent pipeline upload`, which reads this `pipeline.yml`
 
 ## Operating it
 
 ```bash
-bk build create --pipeline agf-deployment-docs --branch main   # trigger a build
-bk build list --pipeline agf-deployment-docs                   # recent builds
-bk build watch <number> --pipeline agf-deployment-docs         # follow one
+bk build create --pipeline agf-deployment-docs --branch main
+bk build list --pipeline agf-deployment-docs
+bk build watch <number> --pipeline agf-deployment-docs
 ```
 
-Optional status badge for the top-level `README.md`:
-`[![Build status](https://badge.buildkite.com/<token>.svg)](https://buildkite.com/charleszeigler/agf-deployment-docs)`
-(get `<token>` from Pipeline Settings → Badges).
+## After Cloud Build is green
 
-## Agents with Node preinstalled
+When a Cloud Build trigger reports on GitHub and you want that to be the only host:
 
-If you switch to agents that already have Node 20+, simplify `pipeline.yml` by
-removing each `plugins:` block and keeping only the `command:` lines. Bump the
-Docker plugin (`docker#v5.14.0`) to the latest release as needed.
+1. Require the Cloud Build check on `main` if you use branch protection.
+2. Disable or delete the Buildkite pipeline `agf-deployment-docs` and its GitHub webhook.
+3. Delete `.buildkite/`.

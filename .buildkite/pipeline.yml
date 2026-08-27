@@ -1,34 +1,17 @@
-# CI for agfDeploymentDocs — Buildkite.
-#
-# Mirrors the three checks from .github/workflows/ci.yml. Each step runs in a
-# node:20 container via the Docker plugin, on the org's hosted `linux-small`
-# queue (Buildkite-managed cloud compute — nothing runs on your machine).
-# See .buildkite/README.md.
-#
-# If you move to agents with Node 20+ preinstalled, drop the `plugins:` blocks
-# and keep only the `command:` lines.
+# Host for the Dagger pipeline. Logic lives in dagger/src/index.ts.
+# Hosted linux-small agents already have Docker, so Dagger can start its engine
+# without the Docker plugin. See .buildkite/README.md and ci/README.md.
 
 steps:
-  - label: ":nodejs: syntax-check coordinator"
-    command: node --check templates/deploy.mjs
+  - label: ":dagger: ci"
+    command: |
+      set -euo pipefail
+      mkdir -p "$HOME/.local/bin"
+      curl -fsSL https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.9 BIN_DIR="$HOME/.local/bin" sh
+      export PATH="$HOME/.local/bin:$PATH"
+      export DAGGER_NO_NAG=1
+      dagger version
+      dagger call ci --source . --progress=plain
     agents:
       queue: linux-small
-    plugins:
-      - docker#v5.14.0:
-          image: "node:20"
-
-  - label: ":nodejs: unit-test coordinator"
-    command: node --test tests/deploy.test.mjs
-    agents:
-      queue: linux-small
-    plugins:
-      - docker#v5.14.0:
-          image: "node:20"
-
-  - label: ":nodejs: docs, nav, and manifests"
-    command: node scripts/ci-check.mjs
-    agents:
-      queue: linux-small
-    plugins:
-      - docker#v5.14.0:
-          image: "node:20"
+    timeout_in_minutes: 15

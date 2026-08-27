@@ -71,7 +71,13 @@ PRs welcome. `node scripts/ci-check.mjs` must pass. Do not expand this repo into
 
 ## Checks
 
-[Buildkite](.buildkite/README.md) runs on push to `main` and on pull requests, on hosted (cloud) agents. No Salesforce org. No deploy. The same three checks run locally:
+[Dagger](https://dagger.io) is the pipeline. [Buildkite](.buildkite/README.md) is the live GitHub host today. [Google Cloud Build](ci/README.md) is the GCP host. No Salesforce org. No deploy.
+
+```bash
+dagger call ci --source .
+```
+
+Without Dagger, Node 20+ is enough:
 
 ```bash
 node --check templates/deploy.mjs
@@ -79,4 +85,4 @@ node --test tests/deploy.test.mjs
 node scripts/ci-check.mjs
 ```
 
-The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md), and fenced `--test-level NoTestRun`.
+The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md), fenced `--test-level NoTestRun`, and the Dagger pins. Host setup: [ci/README.md](ci/README.md).
