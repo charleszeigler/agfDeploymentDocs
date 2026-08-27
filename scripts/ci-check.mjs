@@ -116,7 +116,12 @@ function assertWellFormedXml(xml, file) {
   if (stack.length) fail(`${file}: unclosed XML tags: ${stack.join(', ')}`);
 }
 
-const mdFiles = ['README.md', ...walkFiles('docs', '.md')];
+const mdFiles = [
+  'README.md',
+  ...walkFiles('docs', '.md'),
+  ...walkFiles('ci', '.md'),
+  ...(exists('.buildkite') ? walkFiles('.buildkite', '.md') : []),
+];
 for (const file of mdFiles) {
   const md = read(file);
   for (const href of mdLinks(md)) {
@@ -176,6 +181,52 @@ if (!phaseBlock) {
 }
 
 if (!exists('templates/deploy.mjs')) fail('templates/deploy.mjs is missing');
+
+if (exists('.github/workflows/ci.yml')) {
+  fail('.github/workflows/ci.yml is retired; CI is Dagger');
+}
+if (!exists('dagger.json')) fail('dagger.json is missing');
+if (!exists('dagger/src/index.ts')) fail('dagger/src/index.ts is missing');
+if (!exists('cloudbuild.yaml')) fail('cloudbuild.yaml is missing');
+if (!exists('ci/README.md')) fail('ci/README.md is missing');
+
+const dagger = JSON.parse(read('dagger.json'));
+const engineVersion = String(dagger.engineVersion || '');
+if (!/^v\d+\.\d+\.\d+$/.test(engineVersion)) {
+  fail(`dagger.json engineVersion must look like v0.21.9 (got ${JSON.stringify(dagger.engineVersion)})`);
+}
+const expectedCli = engineVersion.replace(/^v/, '');
+const cloudbuild = read('cloudbuild.yaml');
+if (!cloudbuild.includes(`DAGGER_VERSION=${expectedCli}`)) {
+  fail(`cloudbuild.yaml must pin DAGGER_VERSION=${expectedCli} to match dagger.json ${engineVersion}`);
+}
+if (!/dagger call ci\b/.test(cloudbuild)) {
+  fail('cloudbuild.yaml must run dagger call ci');
+}
+if (!/--source\s+\./.test(cloudbuild)) {
+  fail('cloudbuild.yaml must pass --source . so Cloud Build does not depend on git defaultPath');
+}
+
+if (exists('.buildkite/pipeline.yml')) {
+  const pipeline = read('.buildkite/pipeline.yml');
+  const live = pipeline.replace(/#[^\n]*/g, '');
+  const usesDagger = /dagger call ci\b/.test(live);
+  const usesNodeChecks =
+    pipeline.includes('node --check templates/deploy.mjs') &&
+    pipeline.includes('node --test tests/deploy.test.mjs') &&
+    pipeline.includes('node scripts/ci-check.mjs');
+  if (!usesDagger && !usesNodeChecks) {
+    fail('.buildkite/pipeline.yml must run dagger call ci or the three Node checks');
+  }
+  if (usesDagger) {
+    if (!pipeline.includes(`DAGGER_VERSION=${expectedCli}`)) {
+      fail(`.buildkite/pipeline.yml must pin DAGGER_VERSION=${expectedCli} to match dagger.json ${engineVersion}`);
+    }
+    if (!/--source\s+\./.test(pipeline)) {
+      fail('.buildkite/pipeline.yml must pass --source . when it runs Dagger');
+    }
+  }
+}
 
 if (errors.length) {
   process.stderr.write(errors.map((line) => `ERROR ${line}`).join('\n') + '\n');

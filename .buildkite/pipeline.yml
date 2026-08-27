@@ -1,12 +1,6 @@
-# CI for agfDeploymentDocs — Buildkite.
-#
-# Mirrors the three checks from .github/workflows/ci.yml. Each step runs in a
-# node:20 container via the Docker plugin, on the org's hosted `linux-small`
-# queue (Buildkite-managed cloud compute — nothing runs on your machine).
-# See .buildkite/README.md.
-#
-# If you move to agents with Node 20+ preinstalled, drop the `plugins:` blocks
-# and keep only the `command:` lines.
+# Live GitHub host. These are the same three checks `dagger call ci` runs.
+# Hosted linux-small + Docker plugin is already green on this pipeline.
+# Dagger/Cloud Build is the portable/GCP path; see ci/README.md.
 
 steps:
   - label: ":nodejs: syntax-check coordinator"

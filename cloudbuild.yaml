@@ -1,0 +1,26 @@
+# Host for the Dagger pipeline. Pipeline logic lives in dagger/src/index.ts.
+# Cloud Build only installs a pinned Dagger CLI and calls `dagger call ci`.
+# The docker builder image has a Docker client; Cloud Build mounts the daemon.
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: dagger-ci
+    entrypoint: bash
+    env:
+      - DAGGER_NO_NAG=1
+    args:
+      - -ceu
+      - |
+        if ! command -v curl >/dev/null 2>&1; then
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends curl ca-certificates
+        fi
+        mkdir -p /workspace/.bin
+        curl -fsSL https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.9 BIN_DIR=/workspace/.bin sh
+        export PATH="/workspace/.bin:$$PATH"
+        dagger version
+        dagger call ci --source . --progress=plain
+
+timeout: 900s
+options:
+  logging: CLOUD_LOGGING_ONLY
