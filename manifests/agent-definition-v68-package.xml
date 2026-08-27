@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AGENT DEFINITION (API v68+) MANIFEST  (TEMPLATE — not retrieve-ready or deploy-ready)
+  ============================================================================
+  This file is not retrieve-ready or deploy-ready until every placeholder is
+  replaced with a real API name.
+
+  Additive path, not a replacement for the other templates in this folder.
+  Requires the source AND target org both on API 68.0+ (Winter '27). If either
+  org is still on API 67, use manifests/service-agent-package.xml or
+  manifests/employee-agent-package.xml instead. See
+  docs/14-agent-dx-v68-metadata.md.
+
+  Retrieve everything named here, plus every Flow, Apex class, and Prompt
+  Template the agent's actions invoke, with one command:
+
+    sf project retrieve start --metadata AiAgentDefinitionVersion \
+      --root-type-with-dependencies AiAgentDefinitionVersion \
+      --target-org <SOURCE_ORG_ALIAS>
+
+  AiAgentDefinitionVersion members use # (unusual for Salesforce metadata):
+    AGENT_API_NAME#1  -- that one version only
+    AGENT_API_NAME#*  -- every version of that agent
+    *                 -- every agent version in the org
+
+  Do not mix this with AiAuthoringBundle / Bot / GenAiPlannerBundle in the
+  same deploy; that combination is unsupported and meant to fail validation.
+
+  The first deploy to a clean target org must include the full
+  AiAgentDefinition below, not AiAgentDefinitionVersion alone.
+-->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+  <types>
+    <members>AGENT_API_NAME</members>
+    <name>AiAgentDefinition</name>
+  </types>
+
+  <types>
+    <members>AGENT_API_NAME#*</members>
+    <name>AiAgentDefinitionVersion</name>
+  </types>
+
+  <version>68.0</version>
+</Package>

@@ -28,6 +28,10 @@
           "slug": "13-legacy-agent-actions"
         },
         {
+          "title": "AiAgentDefinition (API v68+)",
+          "slug": "14-agent-dx-v68-metadata"
+        },
+        {
           "title": "Data 360 DevOps Data Kit",
           "slug": "20-data-360-data-kit"
         },

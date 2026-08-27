@@ -6,7 +6,7 @@ For consultants and FDEs on a short handoff. Not a customer ALM rollout.
 
 Start here: [docs/index.md](docs/index.md).
 
-Last content review: August 26, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
+Last content review: August 27, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
 
 ## Org path
 
@@ -35,6 +35,7 @@ Use only the guides that match the package.
 | CLI reference | `deployment-workflow` when a package does not fit one primary guide |
 | Staged deploy script | `30-deployment-script` when writing or running a Node coordinator instead of stepping 10/11 by hand |
 | Dependencies | `13-legacy-agent-actions`, `20-data-360-data-kit`, or `21-enhanced-web-chat` when needed |
+| Both orgs already on API 68.0+ | `14-agent-dx-v68-metadata` — additive alternative to `AiAuthoringBundle`/`Bot`/`GenAiPlannerBundle` |
 | Failed retrieve, deploy, preview, or runtime check | `03-troubleshooting` |
 
 Shared deploy order when more than one path applies: Data 360 provision → DevOps Data Kit metadata → component deploy and refresh → agent package → preview → publish/activate → Employee access package → web chat.
@@ -56,12 +57,13 @@ Use [manifests](manifests) as starting points. These files are not retrieve-read
 | [manifests/lead-nurture-agent-package.xml](manifests/lead-nurture-agent-package.xml) | Lead Nurture Agent dependencies only |
 | [manifests/legacy-agent-actions-package.xml](manifests/legacy-agent-actions-package.xml) | Legacy Agent Actions |
 | [manifests/data-360-data-kit-package.xml](manifests/data-360-data-kit-package.xml) | Partial example of DevOps Data Kit manifest shape; prefer the source DevOps Data Kit generated manifest |
+| [manifests/agent-definition-v68-package.xml](manifests/agent-definition-v68-package.xml) | `AiAgentDefinition`/`AiAgentDefinitionVersion` package (API v68+, additive) |
 
 There is no Enhanced Web Chat `package.xml` template. Rebuild and publish the Embedded Service Deployment in the target org is the supported path.
 
 ## API versions
 
-Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise.
+Summer ’26 Metadata API is 67.0. Use 67.0 unless a generated Data Kit manifest or current Agentforce DX example says otherwise. Winter ’27 adds API 68.0's `AiAgentDefinition`/`AiAgentDefinitionVersion` as an additive path when source and target are both on 68.0+ — see [docs/14-agent-dx-v68-metadata.md](docs/14-agent-dx-v68-metadata.md).
 
 ## License
 

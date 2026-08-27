@@ -32,6 +32,18 @@ Use this when package deployment, agent publish or activation, Data 360, Lead Nu
 | Published Employee Agent preview fails with `Invalid user ID provided on start session` | Confirm the agent is active, the employee has Salesforce Agentforce user access, the package permission set includes `agentAccesses`, and the permission set is assigned. Then test from the Lightning Agentforce panel as the assigned user. |
 | Prompt template deploys but preview fails on a provider | Confirm the prompt template provider exists and is active in the target org. Some provider setup is Builder-managed. |
 
+## AiAgentDefinition (API v68+)
+
+Use [Move an Agent with AiAgentDefinition](14-agent-dx-v68-metadata.md) for the happy path.
+
+| Symptom | What to do |
+|---|---|
+| Deploy fails on a version with no parent definition | The first deploy to a clean target org must include the full `AiAgentDefinition`, not `AiAgentDefinitionVersion` alone. |
+| Validation fails when the package mixes old and new agent types | `Bot`/`GenAiPlannerBundle` alongside `AiAgentDefinition`/`AiAgentDefinitionVersion` in one deploy is unsupported by design. Pick one representation per deploy. |
+| Retrieve or deploy rejects `AiAgentDefinition`/`AiAgentDefinitionVersion` | Confirm both the source and target org are on API 68.0. A sandbox already on 68 with production still on 67 must stay on the old types until production catches up. |
+| Next sandbox version is blocked after fixing the agent user in production | Version numbers must match between orgs. Create the same version number in the sandbox that you created in production. |
+| Redeployed `AiAgentDefinitionVersion` behaves unexpectedly | Do not edit retrieved metadata. The one documented exception is the agent user for the target org. |
+
 ## Lead Nurture Agent
 
 | Symptom | What to do |

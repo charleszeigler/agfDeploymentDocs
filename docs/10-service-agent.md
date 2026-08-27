@@ -38,6 +38,8 @@ Salesforce documents draft, committed, and versioned representations in [Retriev
 
 This guide deploys `AiAuthoringBundle` only, then publishes and activates in the target org. That remains the recommended path. Do not add `Bot` or `BotVersion` to the package unless that is the actual retrieved state you intend to deploy. If you saved more bundle versions than you committed, the `AiAuthoringBundle` version can differ from `Bot`/`BotVersion`.
 
+If the source AND target org are both on API 68.0+ (Winter '27), retrieve and deploy `AiAgentDefinition`/`AiAgentDefinitionVersion` instead — see [Move an Agent with AiAgentDefinition](14-agent-dx-v68-metadata.md). Never mix that path with `AiAuthoringBundle`/`Bot`/`GenAiPlannerBundle` in the same deploy.
+
 ## Create the package folder
 
 Create or open one Salesforce DX project folder for this package:
