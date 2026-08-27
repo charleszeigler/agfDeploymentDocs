@@ -1,11 +1,14 @@
 /**
  * Repo CI for agfDeploymentDocs.
  *
- * `ci` is docs/coordinator checks (no Salesforce org). `orgCi` is a scratch-org
- * smoke — create, dry-run, deploy, Apex tests, Playwright — not an Agentforce
- * dress rehearsal. Hosts call `dagger call ci --source .` always, and
- * `dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL`
- * when a Dev Hub auth URL is configured.
+ * `ci` is docs/coordinator checks (no Salesforce org). `orgCi`/`orgCiJwt` are a
+ * scratch-org smoke — create, dry-run, deploy, Apex tests, Playwright — not an
+ * Agentforce dress rehearsal. Hosts call `dagger call ci --source .` always, then
+ * one Dev Hub path when configured:
+ *   `dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL`
+ *   `dagger call org-ci-jwt --source . --jwt-key env://SF_JWT_KEY \
+ *      --consumer-key <ck> --hub-username <user>`
+ * JWT is the headless path for a Dev Hub that never mints a refresh token.
  */
 import { argument, dag, Directory, func, object, Secret } from "@dagger.io/dagger"
 
@@ -87,6 +90,28 @@ export class Ci {
   ): Promise<string> {
     return this.orgWorkspace(source)
       .withSecretVariable("SF_DEVHUB_AUTH_URL", devhubAuthUrl)
+      .withExec(["bash", "ci/sf/org-ci.sh"])
+      .stdout()
+  }
+
+  /**
+   * Same scratch-org smoke, authed to the Dev Hub with JWT bearer flow.
+   * `jwtKey` is the RSA private key matching the connected app's cert.
+   * `consumerKey` and `hubUsername` are not secret; the private key is.
+   */
+  @func()
+  async orgCiJwt(
+    jwtKey: Secret,
+    consumerKey: string,
+    hubUsername: string,
+    @argument(SOURCE) source: Directory,
+    hubInstanceUrl = "https://login.salesforce.com",
+  ): Promise<string> {
+    return this.orgWorkspace(source)
+      .withSecretVariable("SF_JWT_KEY", jwtKey)
+      .withEnvVariable("SF_CONSUMER_KEY", consumerKey)
+      .withEnvVariable("SF_HUB_USERNAME", hubUsername)
+      .withEnvVariable("SF_HUB_INSTANCE_URL", hubInstanceUrl)
       .withExec(["bash", "ci/sf/org-ci.sh"])
       .stdout()
   }

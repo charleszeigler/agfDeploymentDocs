@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # Scratch-org smoke for this docs repo. Not an Agentforce dress rehearsal.
 # Scratch orgs do not provision Agentforce, Einstein, Prompt Builder, or Data 360.
-# Requires SF_DEVHUB_AUTH_URL (sfdx auth url for a Dev Hub that can create scratches).
+# Dev Hub auth is one of:
+#   * SF_DEVHUB_AUTH_URL                                    (sfdx auth url), or
+#   * SF_JWT_KEY + SF_CONSUMER_KEY + SF_HUB_USERNAME        (JWT bearer flow),
+#     optional SF_HUB_INSTANCE_URL (default https://login.salesforce.com).
+# JWT is the headless path for Dev Hubs that never mint a refresh token.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -12,8 +16,12 @@ WAIT_MINUTES="${WAIT_MINUTES:-15}"
 HUB_ALIAS="${HUB_ALIAS:-devhub}"
 display_json=""
 
-if [[ -z "${SF_DEVHUB_AUTH_URL:-}" ]]; then
-  echo "ERROR SF_DEVHUB_AUTH_URL is required (Dev Hub sfdx auth url)" >&2
+if [[ -n "${SF_DEVHUB_AUTH_URL:-}" ]]; then
+  AUTH_MODE="sfdxurl"
+elif [[ -n "${SF_JWT_KEY:-}" && -n "${SF_CONSUMER_KEY:-}" && -n "${SF_HUB_USERNAME:-}" ]]; then
+  AUTH_MODE="jwt"
+else
+  echo "ERROR need SF_DEVHUB_AUTH_URL, or SF_JWT_KEY + SF_CONSUMER_KEY + SF_HUB_USERNAME (JWT)" >&2
   exit 1
 fi
 
@@ -34,11 +42,25 @@ cleanup() {
 }
 trap cleanup EXIT
 
-authfile="$(mktemp)"
-chmod 600 "$authfile"
-printf '%s\n' "$SF_DEVHUB_AUTH_URL" >"$authfile"
-sf org login sfdx-url --sfdx-url-file "$authfile" --alias "$HUB_ALIAS" --set-default-dev-hub >/dev/null
-rm -f "$authfile"
+if [[ "$AUTH_MODE" == "sfdxurl" ]]; then
+  authfile="$(mktemp)"
+  chmod 600 "$authfile"
+  printf '%s\n' "$SF_DEVHUB_AUTH_URL" >"$authfile"
+  sf org login sfdx-url --sfdx-url-file "$authfile" --alias "$HUB_ALIAS" --set-default-dev-hub >/dev/null
+  rm -f "$authfile"
+else
+  keyfile="$(mktemp)"
+  chmod 600 "$keyfile"
+  printf '%s' "$SF_JWT_KEY" >"$keyfile"
+  sf org login jwt \
+    --client-id "$SF_CONSUMER_KEY" \
+    --jwt-key-file "$keyfile" \
+    --username "$SF_HUB_USERNAME" \
+    --instance-url "${SF_HUB_INSTANCE_URL:-https://login.salesforce.com}" \
+    --alias "$HUB_ALIAS" \
+    --set-default-dev-hub >/dev/null
+  rm -f "$keyfile"
+fi
 
 cd "$SF_DIR"
 echo "=== create scratch org $ALIAS ==="

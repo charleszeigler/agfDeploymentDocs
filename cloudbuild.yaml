@@ -1,6 +1,8 @@
 # Host for the Dagger pipeline. Pipeline logic lives in dagger/src/index.ts.
-# Installs a pinned Dagger CLI, runs static `dagger call ci`, then scratch-org
-# `dagger call org-ci` when SF_DEVHUB_AUTH_URL is set. Docker builder has a
+# Installs a pinned Dagger CLI, runs static `dagger call ci`, then the scratch-org
+# smoke: `dagger call org-ci-jwt` when SF_JWT_KEY is wired (JWT Dev Hub auth),
+# else `dagger call org-ci` when SF_DEVHUB_AUTH_URL is set, else skip. Wire the
+# secrets via availableSecrets/secretEnv (see ci/README.md). Docker builder has a
 # client; Cloud Build mounts the daemon.
 
 steps:
@@ -21,10 +23,16 @@ steps:
         export PATH="/workspace/.bin:$$PATH"
         dagger version
         dagger call ci --source . --progress=plain
-        if [ -n "$${SF_DEVHUB_AUTH_URL:-}" ]; then
+        if [ -n "$${SF_JWT_KEY:-}" ]; then
+          dagger call org-ci-jwt --source . \
+            --jwt-key env://SF_JWT_KEY \
+            --consumer-key "$${SF_CONSUMER_KEY}" \
+            --hub-username "$${SF_HUB_USERNAME}" \
+            --progress=plain
+        elif [ -n "$${SF_DEVHUB_AUTH_URL:-}" ]; then
           dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL --progress=plain
         else
-          echo "SKIP org CI: set SF_DEVHUB_AUTH_URL (Dev Hub sfdx auth url) or wire Secret Manager"
+          echo "SKIP org CI: wire SF_JWT_KEY (+ SF_CONSUMER_KEY, SF_HUB_USERNAME) or SF_DEVHUB_AUTH_URL"
         fi
 
 timeout: 2400s
