@@ -85,7 +85,7 @@ node --test tests/deploy.test.mjs tests/check-coverage.test.mjs
 node scripts/ci-check.mjs
 ```
 
-When `SF_DEVHUB_AUTH_URL` is set (Dev Hub sfdx auth url), CI also creates a scratch org, dry-run deploys, deploys with `RunLocalTests`, checks Apex coverage, and runs a Playwright Lightning smoke. That is a CI fixture in `ci/sf`, not an Agentforce dress rehearsal. Scratch orgs do not provision Agentforce, Einstein, Prompt Builder, or Data 360.
+When `SF_DEVHUB_AUTH_URL` is set (Dev Hub sfdx auth url), CI also creates a scratch org, dry-run deploys, deploys with `RunLocalTests`, checks Apex coverage, and runs a Playwright Lightning smoke. That is a CI fixture in `ci/sf`, not an Agentforce dress rehearsal. Scratch orgs do not provision Agentforce, Einstein, Prompt Builder, or Data 360. Owner steps that are still outside the repo: [What's left](ci/README.md#whats-left-owner-not-repo-code).
 
 ```bash
 dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL

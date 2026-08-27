@@ -193,6 +193,7 @@ const orgFiles = [
   'ci/playwright/package-lock.json',
   'ci/playwright/playwright.config.ts',
   'ci/playwright/tests/lightning-home.spec.ts',
+  'ci/README.md',
 ];
 for (const file of orgFiles) {
   if (!exists(file)) fail(`${file} is missing`);
@@ -205,6 +206,12 @@ if (!orgScript.includes('--dry-run')) fail('ci/sf/org-ci.sh must dry-run deploy 
 if (!/RunLocalTests/.test(orgScript)) fail('ci/sf/org-ci.sh must use RunLocalTests');
 if (!read('dagger/src/index.ts').includes('orgCi')) {
   fail('dagger/src/index.ts is missing orgCi');
+}
+if (!read('ci/README.md').includes("What's left (owner, not repo code)")) {
+  fail('ci/README.md must document leftover owner work (Dev Hub / secret / host)');
+}
+if (!read('README.md').includes('ci/README.md#whats-left-owner-not-repo-code')) {
+  fail('README.md Checks must link leftover owner work in ci/README.md');
 }
 if (!read('ci/playwright/tests/lightning-home.spec.ts').includes('frontdoor.jsp')) {
   fail('Playwright smoke must use Salesforce frontdoor login');

@@ -4,6 +4,24 @@ Pipeline logic is a [Dagger](https://dagger.io) TypeScript module.
 
 This repo is Agentforce **deployment guides**, not a customer ALM app. Static CI never calls an org. Org CI is a scratch-org **fixture** (`ci/sf`) so Salesforce CLI, Apex tests, and Playwright stay honest. Scratch orgs do not provision Agentforce, Einstein, Prompt Builder, or Data 360. Dress rehearsal for those packages is still a fresh Developer sandbox (`RunLocalTests`), as the guides say.
 
+## What's left (owner, not repo code)
+
+The pipeline is already in the repo. What is left is **account access** this agent does not have and cannot invent.
+
+Rechecked: no `sf` / `sfdx` login, no `~/.sf` or `~/.sfdx`, no `SF_DEVHUB_AUTH_URL`, no `gcloud` login, no GitHub Actions secret list access (403), no matching file in Google Drive. Buildkite build #8 skipped the org step because the pipeline secret is unset.
+
+| # | You do | Why an agent cannot |
+|---|---|---|
+| 1 | Enable Dev Hub on a production or Developer Edition org you own, and allow scratch org creation | Requires your Salesforce identity. A new signup still needs your email and org setup. |
+| 2 | Create the auth URL: `sf org display --target-org <devhub> --verbose --json` → `result.sfdxAuthUrl` | Needs an already-authenticated `sf` session on a machine that has logged into that org. Do not commit this value. |
+| 3 | Store it as secured `SF_DEVHUB_AUTH_URL` on Buildkite pipeline `agf-deployment-docs` | This agent cannot write Buildkite pipeline secrets. |
+| 4 | Optional: same secret in Cloud Build / Secret Manager, then create the GitHub triggers in [GCP host](#gcp-host-google-cloud-build) | This agent has no GCP project login. You said you would host Cloud Build. |
+| 5 | Optional: after Cloud Build reports on GitHub, require that check and delete `.buildkite/` | Org policy / UI click in GitHub and Buildkite. |
+
+After 1–3, the next Buildkite build runs: create scratch org → dry-run deploy → deploy `RunLocalTests` → Apex coverage ≥ 75% → Playwright Lightning frontdoor → delete org.
+
+Not a leftover task: Agentforce / Data 360 dress rehearsal on a scratch org. Salesforce does not provision those products on scratch. Keep using a fresh Developer sandbox for that path.
+
 ## Static checks
 
 1. `node --check templates/deploy.mjs`
