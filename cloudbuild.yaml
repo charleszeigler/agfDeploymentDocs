@@ -1,6 +1,7 @@
 # Host for the Dagger pipeline. Pipeline logic lives in dagger/src/index.ts.
-# Cloud Build only installs a pinned Dagger CLI and calls `dagger call ci`.
-# The docker builder image has a Docker client; Cloud Build mounts the daemon.
+# Installs a pinned Dagger CLI, runs static `dagger call ci`, then scratch-org
+# `dagger call org-ci` when SF_DEVHUB_AUTH_URL is set. Docker builder has a
+# client; Cloud Build mounts the daemon.
 
 steps:
   - name: gcr.io/cloud-builders/docker
@@ -20,7 +21,12 @@ steps:
         export PATH="/workspace/.bin:$$PATH"
         dagger version
         dagger call ci --source . --progress=plain
+        if [ -n "$${SF_DEVHUB_AUTH_URL:-}" ]; then
+          dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL --progress=plain
+        else
+          echo "SKIP org CI: set SF_DEVHUB_AUTH_URL (Dev Hub sfdx auth url) or wire Secret Manager"
+        fi
 
-timeout: 900s
+timeout: 2400s
 options:
   logging: CLOUD_LOGGING_ONLY

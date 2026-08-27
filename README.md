@@ -71,18 +71,24 @@ PRs welcome. `node scripts/ci-check.mjs` must pass. Do not expand this repo into
 
 ## Checks
 
-[Dagger](https://dagger.io) is the portable pipeline. [Buildkite](.buildkite/README.md) is the live GitHub host (same three Node checks). [Google Cloud Build](ci/README.md) is the GCP host. No Salesforce org. No deploy.
+[Dagger](https://dagger.io) is the portable pipeline. [Buildkite](.buildkite/README.md) is the live GitHub host. [Google Cloud Build](ci/README.md) is the GCP host.
+
+Static checks always run. They do not call a Salesforce org:
 
 ```bash
 dagger call ci --source .
 ```
 
-Without Dagger, Node 20+ is enough:
-
 ```bash
 node --check templates/deploy.mjs
-node --test tests/deploy.test.mjs
+node --test tests/deploy.test.mjs tests/check-coverage.test.mjs
 node scripts/ci-check.mjs
 ```
 
-The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md), fenced `--test-level NoTestRun`, and the Dagger pins. Host setup: [ci/README.md](ci/README.md).
+When `SF_DEVHUB_AUTH_URL` is set (Dev Hub sfdx auth url), CI also creates a scratch org, dry-run deploys, deploys with `RunLocalTests`, checks Apex coverage, and runs a Playwright Lightning smoke. That is a CI fixture in `ci/sf`, not an Agentforce dress rehearsal. Scratch orgs do not provision Agentforce, Einstein, Prompt Builder, or Data 360.
+
+```bash
+dagger call org-ci --source . --devhub-auth-url env://SF_DEVHUB_AUTH_URL
+```
+
+The checker walks Markdown links and heading anchors, `docs/meta.json` nav slugs, manifest XML, README manifest coverage, coordinator `--start-at` names in [docs/30-deployment-script.md](docs/30-deployment-script.md), fenced `--test-level NoTestRun`, Dagger pins, and the scratch-org fixture. Host setup: [ci/README.md](ci/README.md).
