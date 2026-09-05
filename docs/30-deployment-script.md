@@ -150,7 +150,7 @@ Hand-run of [Service Agent](10-service-agent.md) or [Employee Agent](11-employee
 | `GenAiPromptTemplate` | Prompt template definition | Deploy, then confirm published/active in Prompt Builder. Deploy is not activate |
 | DevOps Data Kit metadata | Kit definition from the generated manifest | Keep it in its own package (packaging rule). Then UI or reviewed API component Deploy to the **same** data space |
 | Search indexes | Data 360 metadata | Move through the DevOps Data Kit when the generated manifest includes them. `Ready` is not rows |
-| Retrievers | Data 360 metadata | Official Extensibility matrix: no-code retrievers move in Standard and DevOps kits. Pro-code/ADL retrievers do **not** (No/No). Ensemble retrievers do **not**. Recreate Pro-code/ADL and ensemble retrievers in the target org. Do not plan a kit move for them |
+| Retrievers | Data 360 metadata | Official Extensibility matrix (**Standard Data Kit** / **DevOps Data Kit**): Retrievers: No-code — Yes / Yes. Retrievers: Pro-code/ADL — No / No. Retrievers: Ensemble — No / No. Recreate Pro-code/ADL and ensemble retrievers in the target org. Do not plan a kit move for them |
 | `ssot__` / `KQ_` | Data 360 and key-qualifier artifacts | Leave confirmed `KQ_` files out of the handoff package. Do not treat leftover `ssot__` / `KQ_` files as normal platform metadata. See [Deploy a Data 360 DevOps Data Kit](20-data-360-data-kit.md) |
 | Customer Admin profiles | Org-specific profile | Do not deploy |
 | Hardcoded org IDs | Org-specific IDs in retrieved source | Blank them in the handoff package. Fill only after target publish creates the target IDs |
@@ -212,7 +212,7 @@ Warm orgs hide first-install failures. Activate prompt templates before Apex. Te
 |---|---|
 | Prompt access during Apex tests | Activate templates first. Mock Einstein / `ConnectApi` / Data 360 in tests |
 | `default_agent_user` under `config:` | Official Agent Script puts it under `access:`. CLI help that says `config:` is stale. Fix the `.agent` file before deploy |
-| Pro-code/ADL or ensemble retriever in a Data Kit | Extensibility matrix is No/No for both kit types. Recreate in the target org. Only no-code retrievers are kit-supported |
+| Pro-code/ADL or ensemble retriever in a Data Kit | Extensibility matrix is No / No for **Standard Data Kit** and **DevOps Data Kit**. Recreate in the target org. Only no-code retrievers are kit-supported (Yes / Yes) |
 | Mixed Data 360 + platform files in one package | Packaging rule, not a CLI prohibition. Split into a kit package and a platform package |
 | `DEPLOY` confirmation | Comparison is case-sensitive. Accept only `DEPLOY` |
 | CMDT enqueue is async | Custom metadata written through Apex `Metadata.Operations.enqueueDeployment` is not immediately queryable. Wait for the deploy callback or a later phase |
@@ -273,5 +273,5 @@ If retrieve, deploy, preview, publish, Data 360, or web messaging fails, use [Tr
 - `GenAiPromptTemplate` status (Published vs Draft): https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_genaiprompttemplate.htm
 - Apex `Metadata.Operations.enqueueDeployment` is async: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/enqueued-apex-deployments.htm
 - Agent Script blocks (`default_agent_user` in the Access block): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
-- Data 360 Extensibility Readiness Matrix (retrievers: no-code Yes/Yes; Pro-code/ADL No/No; ensemble No/No): https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
-- DevOps Data Kits: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html
+- Data 360 Extensibility Readiness Matrix (columns Standard Data Kit / DevOps Data Kit; retrievers: no-code Yes/Yes; Pro-code/ADL No/No; ensemble No/No): https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
+- Packages and Data Kits (add metadata to a data kit, then add the data kit to a package; unmanaged packages move kit metadata test→prod; the matrix is what is packageable): https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html

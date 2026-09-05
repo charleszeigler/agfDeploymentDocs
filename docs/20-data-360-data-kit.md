@@ -15,19 +15,19 @@ A DevOps Data Kit moves metadata, not data. It moves definitions:
 - calculated insights
 - segments
 - search indexes
-- retrievers: by **DevOps Data Kit** (this guide's path), no-code only (DevOps Yes). Pro-code/ADL and ensemble retrievers do not move by DevOps Data Kit (DevOps No). Standard unmanaged **packaging** is a separate path with wider support — see the packaging note below. Check the [Data 360 Extensibility Readiness Matrix](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html) for the target release.
+- retrievers: by **DevOps Data Kit** (this guide's path), no-code only (DevOps Yes). Official Extensibility matrix columns are **Standard Data Kit** and **DevOps Data Kit**: Retrievers: No-code — Yes / Yes; Retrievers: Pro-code/ADL — No / No; Retrievers: Ensemble — No / No. Recreate Pro-code/ADL and ensemble retrievers in the target org. Check the [Data 360 Extensibility Readiness Matrix](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html) for the target release.
 - data graphs
 - related Data 360 components
 
 It does not move records, ingested data, connector secrets, OAuth tokens, completed jobs, or runtime state.
 
-**Packaging vs. DevOps Data Kit (retrievers).** The readiness matrix has two columns. This guide uses the **DevOps** path — a sandbox→production merge-back by change set or DevOps Data Kit — which moves no-code retrievers only. The **Standard** (unmanaged packaging) column is versioned and has expanded: as of Summer ’26, standard unmanaged packaging supports packaging all three retriever types (no-code, pro-code, and ensemble) for a subscriber org. Packaging is a separate cross-org path, not a change-set merge-back, and it does not change the DevOps Data Kit limits described below. Re-check the matrix and the target release’s Data 360 release notes before concluding that a Pro-code/ADL or ensemble retriever cannot move.
+**Retriever packaging (official matrix).** The readiness matrix columns are **Standard Data Kit** and **DevOps Data Kit**. This guide uses the **DevOps Data Kit** path — sandbox→production merge-back — which moves no-code retrievers only (DevOps Yes). The same table lists Retrievers: Pro-code/ADL and Retrievers: Ensemble as No for both columns. Data 360 metadata must be added to a data kit, then the data kit is added to a package. Customer developers use unmanaged packages to move that kit metadata test→prod; the matrix is what is packageable. Unmanaged packaging is not a third path that moves Pro-code/ADL or ensemble retrievers. Recreate those types in the target org. Re-check the matrix for the target release.
 
 ## What does not move: the Agentforce Data Library
 
 The Agentforce Data Library (ADL) *container* cannot be deployed between orgs by DevOps Data Kit or Metadata API. Salesforce documents this directly: "Making Agentforce Data Library changes in a sandbox and deploying those changes back to the production org or another sandbox org isn't supported" (`ai.data_library_sandbox.htm`).
 
-Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever in that org. The library container does not move. The generated Pro-code/ADL retriever does not deploy through a DevOps Data Kit, so recreate it in the target org. Standard unmanaged packaging can package a Pro-code/ADL retriever separately — see the packaging note above.
+Recreate the Data Library in each target org. Creating it re-provisions its own data lake objects, mappings, search index, and retriever in that org. The library container does not move. The generated Pro-code/ADL retriever does not deploy through a Standard Data Kit or a DevOps Data Kit (matrix No / No), so recreate it in the target org.
 
 For a file-backed Data Library, uploads drive the pipeline in the target org (upload → search index → auto-created retriever). A retriever-backed Data Library is a thin wrapper over an existing retriever. Only a no-code retriever is kit-supported; recreate a Pro-code/ADL retriever in the target org.
 
@@ -81,7 +81,7 @@ sf project retrieve start --json --manifest manifest/package.xml --target-org <S
 
 Confirm the retrieve result is `Succeeded`.
 
-Only no-code retrievers are kit-supported. They cannot move in a standard CRM/Metadata API package or change set; they must go through the DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by kit (DevOps No; standard unmanaged packaging is a separate path — see the packaging note under [What moves](#what-moves)). Retriever deployment via a DevOps Data Kit is limited to a sandbox→production merge-back. Salesforce documents no workaround for sandbox-to-sandbox or production-to-production retriever kit deploys (KA 005315426).
+Only no-code retrievers are kit-supported (Standard Data Kit Yes, DevOps Data Kit Yes). They cannot move in a standard CRM/Metadata API package or change set; they must go through a data kit. This repo's path is DevOps Data Kit. Pro-code/ADL and ensemble retrievers do not move by Standard Data Kit or DevOps Data Kit (No / No); recreate them in the target org. Retriever deployment via a DevOps Data Kit is limited to a sandbox→production merge-back. Salesforce documents no workaround for sandbox-to-sandbox or production-to-production retriever kit deploys (KA 005315426).
 
 ## Recovery only: retriever API name changed
 
@@ -254,13 +254,13 @@ For RAG empty results, bot-user retriever access, ensemble reference locks, and 
 
 ## Sources
 
-- Packages and Data Kits: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html
+- Packages and Data Kits (add metadata to a data kit, then add the data kit to a package; unmanaged packages move kit metadata test→prod; the matrix is what is packageable): https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html
 - Agentforce Data Library sandbox/deployment limitation: https://help.salesforce.com/s/articleView?id=ai.data_library_sandbox.htm&type=5
 - Use CLI to Deploy Changes from a Sandbox to Data 360: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/dc-deploy_data_kit_using_cli.html
 - Deploy Data Kit Components by Using Deploy Data Kit Components Flow: https://developer.salesforce.com/docs/data/data-cloud-dev/guide/dc-deploy_data_kit_components.html
 - Supported Component Types for Data Kit Deployment: https://developer.salesforce.com/docs/data/connectapi/guide/deploy-data-kit-payloads.html
 - Data 360 Connect REST API Data Kits reference: https://developer.salesforce.com/docs/data/connectapi/references/spec#tag/Data-Kits
-- Data 360 Extensibility Readiness Matrix: https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
+- Data 360 Extensibility Readiness Matrix (columns Standard Data Kit / DevOps Data Kit; retrievers: no-code Yes/Yes; Pro-code/ADL No/No; ensemble No/No): https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360a-api-isv-readiness-data.html
 - DataKitObjectTemplate sourceObjectType values: https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_datakitobjecttemplate.htm
 - Set Up Your DX Environment (Data 360 provision timing): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html
 - Retriever DevOps Data Kit environment limitation (KA 005315426): https://help.salesforce.com/s/articleView?id=005315426&type=1
