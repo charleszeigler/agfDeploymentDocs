@@ -46,6 +46,8 @@ Use [Move an Agent with AiAgentDefinition](14-agent-dx-v68-metadata.md) for the 
 
 ## Lead Nurture Agent
 
+Salesforce Help now calls this product **Agentforce Engagement** (formerly Lead Nurture / Lead Nurturing). This repo keeps the Lead Nurture guide names. See [Considerations for Using Agentforce Engagement](https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_considerations.htm&type=5).
+
 | Symptom | What to do |
 |---|---|
 | Runtime metadata deploy fails for Lead Nurture Agent | Expected here. Deploy dependencies only, then configure Lead Nurture Agent in Builder. |
