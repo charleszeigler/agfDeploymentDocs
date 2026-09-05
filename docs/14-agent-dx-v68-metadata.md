@@ -70,7 +70,12 @@ Once retrieved, the [Validate and deploy](deployment-workflow.md#4-validate-and-
 
 - [ ] Source and target org both confirmed on API 68.0+ before starting.
 - [ ] CLI updated to the SDR 13.1.1+ Agentforce DX release.
-- [ ] Built `package.xml` first, then retrieved with `sf project retrieve start --manifest manifest/package.xml --target-org <org alias>`.
+- [ ] Built `package.xml` first, then retrieved with:
+
+```bash
+sf project retrieve start --manifest manifest/package.xml --target-org <org alias>
+```
+
 - [ ] `package.xml` uses `<version>68.0</version>` and only `AiAgentDefinition` / `AiAgentDefinitionVersion` — no `Bot`, `BotVersion`, or `GenAiPlannerBundle` in the same deploy.
 - [ ] First deploy to a clean target org includes the full `AiAgentDefinition`, not a version only.
 - [ ] Target agent user set on the retrieved version; nothing else edited.
