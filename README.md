@@ -8,39 +8,6 @@ Start here: [docs/index.md](docs/index.md).
 
 Last content review: August 27, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
 
-## Product home
-
-This repo is the product. GitHub is home. Guides, the index, and nav live in [docs](docs) ([docs/index.md](docs/index.md), [docs/meta.json](docs/meta.json)). Starting `package.xml` files live in [manifests](manifests). The staged deploy skeleton is [templates/deploy.mjs](templates/deploy.mjs).
-
-### Seats
-
-| Seat | Role |
-|---|---|
-| Product Manager | Scope, Now/Next/Later, accept |
-| Eng Manager | Sequence, review, unblock |
-| Engineer | Ship the Now item |
-| QA | Retest against accept |
-| UX Designer | README and docs clarity |
-
-### How we work
-
-- @ the seat you need. Do not pile on.
-- Escalate to CoS, not Charlie.
-- Most work stays in the Agentforce Team room.
-- One Now item → one PR.
-
-### Now / Next / Later
-
-| Horizon | Item |
-|---|---|
-| Now | This slice: Product home on this README |
-| Next | unnamed |
-| Later | unnamed |
-
-### Accept
-
-A new seat knows the product and can start from this README alone.
-
 ## Org path
 
 | Org | Job |
