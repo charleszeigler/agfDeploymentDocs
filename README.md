@@ -33,9 +33,9 @@ This repo is the product. GitHub is home. Guides, the index, and nav live in [do
 
 | Horizon | Item |
 |---|---|
-| Now | This slice: source-doc recheck of `10-service-agent`, `11-employee-agent`, and `12-lead-nurture-agent` |
+| Now | This slice: source-doc recheck of `13-legacy-agent-actions`, `14-agent-dx-v68-metadata`, `20-data-360-data-kit`, `21-enhanced-web-chat`, and `03-troubleshooting` |
 | Next | unnamed |
-| Later | supporting guides `13-legacy-agent-actions`, `14-agent-dx-v68-metadata`, `20-data-360-data-kit`, `21-enhanced-web-chat`, and `03-troubleshooting` |
+| Later | unnamed |
 
 ### Accept
 
