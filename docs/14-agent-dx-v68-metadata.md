@@ -1,6 +1,6 @@
 # Move an Agent with AiAgentDefinition (API v68+)
 
-Starting in API v68 (Winter '27), retrieve and deploy an Agentforce agent as two metadata types instead of hand-maintaining a `package.xml` dependency graph. This guide is additive. The [AiAuthoringBundle path](10-service-agent.md) remains the recommended default whenever any org in the path is still on API 67.
+Starting in API v68 (Winter '27), retrieve and deploy an Agentforce agent as two metadata types. Official Agentforce DX retrieve (API v68+) builds `package.xml` first, then runs `sf project retrieve start --manifest`. This guide is additive. The [AiAuthoringBundle path](10-service-agent.md) remains the recommended default whenever any org in the path is still on API 67.
 
 ## When this applies
 
@@ -14,17 +14,9 @@ Starting in API v68 (Winter '27), retrieve and deploy an Agentforce agent as two
 
 **Stop if:** the source or target org is still on API 67.0. Use [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) instead. Staying on the old types with `<version>67.0</version>` is fully supported; this is not a forced migration.
 
-## Retrieve everything with one command
-
-Name the agent's API name and the CLI resolves topic and action schemas, the agent graph, Agent Script source, and every Flow, Apex class, and Prompt Template an action invokes:
-
-```bash
-sf project retrieve start --metadata AiAgentDefinitionVersion --root-type-with-dependencies AiAgentDefinitionVersion --target-org <SOURCE_ORG_ALIAS>
-```
-
 ## Build package.xml
 
-Use [manifests/agent-definition-v68-package.xml](../manifests/agent-definition-v68-package.xml) as a starting point:
+Create or edit `package.xml` before retrieve. Use [manifests/agent-definition-v68-package.xml](../manifests/agent-definition-v68-package.xml) as a starting point. `AiAgentDefinition` members are the agent API name. `AiAgentDefinitionVersion` members use `#` syntax:
 
 ```xml
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
@@ -40,15 +32,23 @@ Use [manifests/agent-definition-v68-package.xml](../manifests/agent-definition-v
 </Package>
 ```
 
-`AiAgentDefinitionVersion` members use `#`, unlike any other metadata type in this repo:
-
 | Member | Moves |
 |---|---|
-| `AGENT_API_NAME#1` | That one version only |
+| `AGENT_API_NAME#2` | That one version only |
 | `AGENT_API_NAME#*` | Every version of that agent |
 | `*` | Every agent version in the org |
 
-**Stop if:** the first deploy to a clean target org lists only `AiAgentDefinitionVersion`. A version with no parent `AiAgentDefinition` in the same deploy fails outright. Always include both types on the first deploy to a target org.
+The system automatically retrieves the agent's flow, Apex, and prompt template actions, so you do not need to list those action types in the manifest. Add any other metadata types the agent needs, such as Data 360 dependencies or custom objects.
+
+**Stop if:** the first deploy to a target org includes only a version. The first time you deploy an agent in your target org, include the whole agent definition, not just a specific version.
+
+## Retrieve agent metadata
+
+After the manifest is defined, retrieve from the source org. Use the org alias you configured when authorizing that org:
+
+```bash
+sf project retrieve start --manifest manifest/package.xml --target-org <org alias>
+```
 
 ## Set the target agent user
 
@@ -70,6 +70,12 @@ Once retrieved, the [Validate and deploy](deployment-workflow.md#4-validate-and-
 
 - [ ] Source and target org both confirmed on API 68.0+ before starting.
 - [ ] CLI updated to the SDR 13.1.1+ Agentforce DX release.
+- [ ] Built `package.xml` first, then retrieved with:
+
+```bash
+sf project retrieve start --manifest manifest/package.xml --target-org <org alias>
+```
+
 - [ ] `package.xml` uses `<version>68.0</version>` and only `AiAgentDefinition` / `AiAgentDefinitionVersion` — no `Bot`, `BotVersion`, or `GenAiPlannerBundle` in the same deploy.
 - [ ] First deploy to a clean target org includes the full `AiAgentDefinition`, not a version only.
 - [ ] Target agent user set on the retrieved version; nothing else edited.
