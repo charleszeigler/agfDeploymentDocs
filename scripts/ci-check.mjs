@@ -124,7 +124,7 @@ const mdFiles = [
 ];
 for (const file of mdFiles) {
   const md = read(file);
-  for (const href of mdLinks(md)) {
+  for (const href of mdLinks(stripFencedCode(md))) {
     if (/^https?:/i.test(href)) continue;
     checkRelativeLink(file, href);
   }
