@@ -6,7 +6,7 @@ For consultants and FDEs on a short handoff. Not a customer ALM rollout.
 
 Start here: [docs/index.md](docs/index.md).
 
-Last content review: September 5, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
+Last content review: August 27, 2026. Re-check linked Salesforce source docs before deployment handoff because Agentforce, Data 360, and Enhanced Web Chat behavior changes frequently.
 
 ## Product home
 
@@ -33,9 +33,9 @@ This repo is the product. GitHub is home. Guides, the index, and nav live in [do
 
 | Horizon | Item |
 |---|---|
-| Now | This slice: source-doc recheck of `10-service-agent`, `11-employee-agent`, and `12-lead-nurture-agent` |
+| Now | This slice: Product home on this README |
 | Next | unnamed |
-| Later | supporting guides `13-legacy-agent-actions`, `14-agent-dx-v68-metadata`, `20-data-360-data-kit`, `21-enhanced-web-chat`, and `03-troubleshooting` |
+| Later | unnamed |
 
 ### Accept
 

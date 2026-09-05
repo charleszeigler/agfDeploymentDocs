@@ -2,9 +2,7 @@
 
 Move custom dependencies for Lead Nurture Agent.
 
-Salesforce Help now calls this product **Agentforce Engagement** (formerly Agentforce Lead Nurturing / Lead Nurture Agent). This repo keeps the Lead Nurture file and manifest names. See [Considerations for Using Agentforce Engagement](https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_considerations.htm&type=5).
-
-**Use this guide for custom dependencies only.** Do not move the Engagement / Lead Nurture Agent itself, or agent changes, by change set, Metadata API, or Salesforce CLI. Doing so can break the agent in the target org. Create and configure the agent directly in the target org after deploying dependencies ([Agentforce metadata deployment and retrieval limitations](https://help.salesforce.com/s/articleView?id=005228853&type=1)).
+**Use this guide for custom dependencies only.** Do not move Lead Nurture Agent itself, or Lead Nurture Agent changes, by change set, Metadata API, or Salesforce CLI. Create and configure the agent directly in the target org after deploying dependencies.
 
 ## Deployment order
 
@@ -212,7 +210,7 @@ Before enabling automatic sending, confirm:
 
 ## Sources
 
-- Salesforce Help: Considerations for Using Agentforce Engagement (formerly Lead Nurture): https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_considerations.htm&type=5
+- Salesforce Help: Lead Nurture Agent considerations: https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_considerations.htm&type=5
 - Agentforce metadata deployment and retrieval limitations knowledge article: https://help.salesforce.com/s/articleView?id=005228853&type=1
-- Salesforce Help: Set Up Agentforce Engagement: https://help.salesforce.com/s/articleView?id=sales.einstein_sdr_setup.htm&type=5
+- Salesforce Help: Set up Lead Nurture Agent: https://help.salesforce.com/s/articleView?id=sales.einstein_sdr_setup.htm&type=5
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html

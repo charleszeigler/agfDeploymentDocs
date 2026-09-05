@@ -38,13 +38,9 @@ Salesforce documents draft, committed, and versioned representations in [Retriev
 | Committed | `AiAuthoringBundle`, `Bot`, `BotVersion` | No. Create a new version |
 | Legacy agent | `Bot`, `BotVersion` | n/a |
 
-Unversioned bundles are draft. `sf agent publish authoring-bundle` can publish only a draft authoring bundle. See [Publish an Authoring Bundle to Your Org](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-nga-publish.html).
+This guide deploys `AiAuthoringBundle` only, then publishes and activates in the target org. That remains the recommended path. Do not add `Bot` or `BotVersion` to the package unless that is the actual retrieved state you intend to deploy. If you saved more bundle versions than you committed, the `AiAuthoringBundle` version can differ from `Bot`/`BotVersion`.
 
-This guide deploys a draft `AiAuthoringBundle` (plus confirmed dependencies), then publishes and activates in the target org. That remains the recommended path.
-
-If you deploy a committed agent to a clean target, include `AiAuthoringBundle` plus `Bot`/`BotVersion` and related `GenAi*` as retrieved. See [Troubleshoot Issues](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-troubleshooting.html). Do not add `Bot` or `BotVersion` to the package unless that is the actual retrieved state you intend to deploy. If you saved more bundle versions than you committed, the `AiAuthoringBundle` version can differ from `Bot`/`BotVersion`.
-
-Agent metadata is updated in API v68. Both orgs must be on API 68.0+ before using the `AiAgentDefinition`/`AiAgentDefinitionVersion` path. While the sandbox is Winter '27 and production is still Summer '26, continue the previous (v67) metadata types. After both orgs are on 68.0+, see [Move an Agent with AiAgentDefinition](14-agent-dx-v68-metadata.md). Never mix that path with `AiAuthoringBundle`/`Bot`/`GenAiPlannerBundle` in the same deploy.
+If the source AND target org are both on API 68.0+ (Winter '27), retrieve and deploy `AiAgentDefinition`/`AiAgentDefinitionVersion` instead — see [Move an Agent with AiAgentDefinition](14-agent-dx-v68-metadata.md). Never mix that path with `AiAuthoringBundle`/`Bot`/`GenAiPlannerBundle` in the same deploy.
 
 ## Create the package folder
 
@@ -408,8 +404,6 @@ sf agent preview end --json --api-name <AGENT_API_NAME> --session-id <SESSION_ID
 ## Sources
 
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
-- Publish an Authoring Bundle to Your Org (draft-only `sf agent publish authoring-bundle`): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-nga-publish.html
-- Troubleshoot Issues (committed-agent deploy to a new org): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-troubleshooting.html
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
 - Agent Script Blocks (`access.default_agent_user`): https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-blocks.html
 - Set Up Your DX Environment (preview/publish permissions): https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html
