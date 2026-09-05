@@ -4,6 +4,8 @@ Move custom legacy Agentforce actions from sandbox to another org.
 
 Use this guide only for legacy Agent Builder or saved Builder actions your team controls. For draft Agent Script source, use the Service or Employee Agent guide. For Lead Nurture Agent, create the agent in the target org and use this guide only for legacy actions that you add to it.
 
+Salesforce Help now calls this product **Agentforce Engagement** (formerly Lead Nurture / Lead Nurturing). This repo keeps the Lead Nurture guide names.
+
 ## What moves
 
 Legacy action metadata:
@@ -188,3 +190,4 @@ This can reduce rebuild work for custom actions. It does not make Lead Nurture A
 
 - Retrieve and deploy Agentforce metadata: https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-deploy-metadata.html
 - Agentforce metadata types: https://developer.salesforce.com/docs/ai/agentforce/references/agents-metadata-tooling/agents-metadata.html
+- Salesforce Help: Agentforce Engagement (formerly Lead Nurture / Lead Nurturing): https://help.salesforce.com/s/articleView?id=sales.sales_agent_sdr_considerations.htm&type=5
