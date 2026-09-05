@@ -43,7 +43,7 @@ Guides, the index, and nav live in [docs](docs) ([docs/index.md](docs/index.md),
 
 ### Accept
 
-A new seat knows the product and can start from this README alone.
+A new seat knows this is the deployment-docs product (not the robot) and can start from this README alone.
 
 ## Org path
 
