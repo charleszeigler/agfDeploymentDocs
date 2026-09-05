@@ -9,18 +9,10 @@ Starting in API v68 (Winter '27), retrieve and deploy an Agentforce agent as two
 | Metadata types | `AiAgentDefinition` (the agent), `AiAgentDefinitionVersion` (a version of it) |
 | Requires | Source AND target org both on API 68.0+ (Winter '27; preview sandboxes rolled out the week of August 24, 2026) |
 | Replaces | Hand-listing `AiAuthoringBundle`, `Bot`, `GenAiPlannerBundle`, and every `ApexClass`, `Flow`, `GenAiPromptTemplate`, `GenAiFunction`, `GenAiPlugin` the agent depends on |
-| Deploy path | Metadata API and change sets only. Not 1GP or 2GP/unlocked packaging |
-| CLI | Update to the Agentforce DX CLI shipped with SDR 13.1.1 or later |
+| Deploy path | Retrieve and deploy with Salesforce CLI and a Metadata API `package.xml` |
+| CLI | Latest Salesforce CLI; it must recognize `AiAgentDefinition` and `AiAgentDefinitionVersion` |
 
-**Stop if:** the source or target org is still on API 67.0. Use [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) instead. Staying on the old types with `<version>67.0</version>` is fully supported; this is not a forced migration.
-
-## Retrieve everything with one command
-
-Name the agent's API name and the CLI resolves topic and action schemas, the agent graph, Agent Script source, and every Flow, Apex class, and Prompt Template an action invokes:
-
-```bash
-sf project retrieve start --metadata AiAgentDefinitionVersion --root-type-with-dependencies AiAgentDefinitionVersion --target-org <SOURCE_ORG_ALIAS>
-```
+**Stop if:** the source or target org is still on API 67.0. Use [Deploy and Activate a Service Agent](10-service-agent.md) or [Deploy and Activate an Employee Agent](11-employee-agent.md) instead. Staying on the old types with `<version>67.0</version>` is fully supported; this is not a forced migration. While the sandbox is Winter '27 and production is still Summer '26, continue previous (v67) types.
 
 ## Build package.xml
 
@@ -48,11 +40,19 @@ Use [manifests/agent-definition-v68-package.xml](../manifests/agent-definition-v
 | `AGENT_API_NAME#*` | Every version of that agent |
 | `*` | Every agent version in the org |
 
+Salesforce automatically retrieves the agent's flow, Apex, and prompt template actions, so you do not need to list those action members. Add other dependencies (Data 360, custom objects) when the agent needs them.
+
 **Stop if:** the first deploy to a clean target org lists only `AiAgentDefinitionVersion`. A version with no parent `AiAgentDefinition` in the same deploy fails outright. Always include both types on the first deploy to a target org.
+
+## Retrieve with the manifest
+
+```bash
+sf project retrieve start --manifest manifest/package.xml --target-org <SOURCE_ORG_ALIAS>
+```
 
 ## Set the target agent user
 
-Same rule as the [AiAuthoringBundle path](10-service-agent.md#set-the-target-agent-user): do not edit retrieved metadata, with one documented exception — the agent user for the target org.
+Same rule as the [AiAuthoringBundle path](10-service-agent.md#set-the-target-agent-user): do not edit retrieved metadata, with one documented exception — string-replace the draft agent username for the target org. You cannot string-replace a committed agent; create a new version instead.
 
 ## Keep versions matched across orgs
 
@@ -69,12 +69,12 @@ Once retrieved, the [Validate and deploy](deployment-workflow.md#4-validate-and-
 ## Checklist
 
 - [ ] Source and target org both confirmed on API 68.0+ before starting.
-- [ ] CLI updated to the SDR 13.1.1+ Agentforce DX release.
+- [ ] Latest Salesforce CLI; it recognizes `AiAgentDefinition` / `AiAgentDefinitionVersion`.
 - [ ] `package.xml` uses `<version>68.0</version>` and only `AiAgentDefinition` / `AiAgentDefinitionVersion` — no `Bot`, `BotVersion`, or `GenAiPlannerBundle` in the same deploy.
 - [ ] First deploy to a clean target org includes the full `AiAgentDefinition`, not a version only.
-- [ ] Target agent user set on the retrieved version; nothing else edited.
+- [ ] Target agent user set on the retrieved draft; nothing else edited. Committed agents need a new version.
 - [ ] Version numbers matched between source and target after any target-only version bump.
-- [ ] Deploying via Metadata API or change set, not 1GP/2GP packaging.
+- [ ] Retrieved and deployed with Salesforce CLI and a Metadata API `package.xml`.
 - [ ] If a step fails, use [Troubleshooting](03-troubleshooting.md).
 
 ## Sources
